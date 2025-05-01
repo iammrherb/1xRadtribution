@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radtribution Dictionary - Complete Network Authentication Attributes Reference</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">R</div>
+                <div class="logo-text">Radtribution Dictionary</div>
+            </div>
+            <h1>Complete Network Authentication Attributes Reference</h1>
+            <p class="tagline">A comprehensive guide to RADIUS and TACACS+ vendor-specific attributes with implementation details for network access, VPN, QoS, and security enforcement</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for attributes, descriptions, examples, implementations, vendors...">
+        </div>
+
+        <div id="noResults">No matching attributes found. Try different search terms.</div>
+
+        <div class="filter-container">
+            <div class="filter-title">Filter by Feature Support:</div>
+            <div class="filter-options">
+                <div class="filter-option">
+                    <input type="checkbox" id="filterAcl" value="acl">
+                    <label for="filterAcl">ACL Support</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filterRole" value="role">
+                    <label for="filterRole">User Role Support</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filterVlan" value="vlan">
+                    <label for="filterVlan">VLAN Assignment</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filterUrl" value="url">
+                    <label for="filterUrl">URL Redirect</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filterCaptive" value="captive">
+                    <label for="filterCaptive">Captive Portal</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filterSgt" value="sgt">
+                    <label for="filterSgt">SGT Support</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filterDacl" value="dacl">
+                    <label for="filterDacl">DACL Support</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filterQos" value="qos">
+                    <label for="filterQos">QoS Support</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filterBandwidth" value="bandwidth">
+                    <label for="filterBandwidth">Bandwidth Control</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filterCoa" value="coa">
+                    <label for="filterCoa">CoA Support</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filterVpn" value="vpn">
+                    <label for="filterVpn">VPN Support</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="vendor-nav">
+                <button class="vendor-button active" data-vendor="all">All Vendors</button>
+                <button class="vendor-button" data-vendor="cisco">Cisco</button>
+                <button class="vendor-button" data-vendor="anyconnect">AnyConnect</button>
+                <button class="vendor-button" data-vendor="juniper">Juniper</button>
+                <button class="vendor-button" data-vendor="paloalto">Palo Alto</button>
+                <button class="vendor-button" data-vendor="fortinet">Fortinet</button>
+                <button class="vendor-button" data-vendor="aruba">Aruba</button>
+                <button class="vendor-button" data-vendor="hp">HP</button>
+                <button class="vendor-button" data-vendor="dell">Dell</button>
+                <button class="vendor-button" data-vendor="arista">Arista</button>
+                <button class="vendor-button" data-vendor="checkpoint">Check Point</button>
+                <button class="vendor-button" data-vendor="extreme">Extreme</button>
+                <button class="vendor-button" data-vendor="ruckus">Ruckus</button>
+                <button class="vendor-button" data-vendor="meraki">Meraki</button>
+            </div>
+
+            <div class="protocol-toggle">
+                <button class="protocol-button active" data-protocol="all">All Protocols</button>
+                <button class="protocol-button" data-protocol="radius">RADIUS</button>
+                <button class="protocol-button" data-protocol="tacacs">TACACS+</button>
+            </div>
+        </div>
+
+        <div id="resultsInfo"></div>
+        <!-- All Vendors Section -->
+        <section class="vendor-section active" id="all">
+            <h2>All Vendor-Specific Attributes</h2>
+            <div class="protocol-section active" id="all-all">
+                <p>This section shows all vendor-specific attributes for both RADIUS and TACACS+. Use the filters above to narrow down by vendor or protocol.</p>
+                <div class="table-container">
+                    <table id="attributesTable">
+                        <thead>
+                            <tr>
+                                <th>Vendor</th>
+                                <th>Protocol</th>
+                                <th>Attribute Name</th>
+                                <th>Attribute Number</th>
+                                <th class="description-col">Description</th>
+                                <th>Features</th>
+                                <th>Network</th>
+                                <th>Example</th>
+                                <th>Implementation</th>
+                                <th>Reference</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Fortinet RADIUS VSAs -->
+                            <tr class="row-item" data-vendor="fortinet" data-protocol="radius" data-acl="no" data-role="yes" data-vlan="no" data-url="no" data-captive="no" data-sgt="no" data-dacl="no" data-qos="no" data-bandwidth="no" data-coa="no" data-vpn="no">
+                                <td>Fortinet</td>
+                                <td>RADIUS</td>
+                                <td>Fortinet-Group-Name</td>
+                                <td>1</td>
+                                <td>Specifies the group name of the user. Used to assign users to specific user groups for policy enforcement.</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-no">ACLs</span>
+                                        <span class="badge badge-yes">User Roles</span>
+                                        <span class="badge badge-no">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-no">Captive Portals</span>
+                                        <span class="badge badge-no">SGT</span>
+                                        <span class="badge badge-no">DACL</span>
+                                        <span class="badge badge-no">QoS</span>
+                                        <span class="badge badge-no">Bandwidth</span>
+                                        <span class="badge badge-no">CoA</span>
+                                        <span class="badge badge-no">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>Fortinet-Group-Name = "Admins" for administrative group assignment</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Define the user group on the FortiGate (typically under User & Authentication > User Groups)</li>
+                                                <li>Configure your RADIUS server to return this VSA with the name of the group</li>
+                                                <li>The RADIUS server must support Fortinet VSAs (Vendor ID 12356)</li>
+                                                <li>The group name is case-sensitive and must match exactly with what is configured on the FortiGate</li>
+                                                <li>User groups can be used in firewall policies, VPN configurations, and web filtering policies</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas" target="_blank">Fortinet RADIUS VSA Documentation</a></td>
+                            </tr>
+                            <tr class="row-item" data-vendor="fortinet" data-protocol="radius" data-acl="no" data-role="no" data-vlan="no" data-url="no" data-captive="no" data-sgt="no" data-dacl="no" data-qos="no" data-bandwidth="no" data-coa="no" data-vpn="yes">
+                                <td>Fortinet</td>
+                                <td>RADIUS</td>
+                                <td>Fortinet-Client-IP-Address</td>
+                                <td>2</td>
+                                <td>Specifies the IP address to assign to the client. Commonly used in VPN scenarios to assign a specific IP address to the connecting user.</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-no">ACLs</span>
+                                        <span class="badge badge-no">User Roles</span>
+                                        <span class="badge badge-no">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-no">Captive Portals</span>
+                                        <span class="badge badge-no">SGT</span>
+                                        <span class="badge badge-no">DACL</span>
+                                        <span class="badge badge-no">QoS</span>
+                                        <span class="badge badge-no">Bandwidth</span>
+                                        <span class="badge badge-no">CoA</span>
+                                        <span class="badge badge-yes">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>Fortinet-Client-IP-Address = "192.168.1.100" for fixed IP assignment in VPN configurations</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Configure the RADIUS server to return this VSA with the specific IP address</li>
+                                                <li>Ensure IP addresses provided don't conflict with other address assignments</li>
+                                                <li>Commonly used with SSL VPN and IPsec VPN setups</li>
+                                                <li>Can be used to track usage by specific users through consistent IP assignments</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas" target="_blank">Fortinet RADIUS VSA Documentation</a></td>
+                            </tr>
+                            <tr class="row-item" data-vendor="fortinet" data-protocol="radius" data-acl="no" data-role="no" data-vlan="yes" data-url="no" data-captive="no" data-sgt="no" data-dacl="no" data-qos="no" data-bandwidth="no" data-coa="no" data-vpn="no">
+                                <td>Fortinet</td>
+                                <td>RADIUS</td>
+                                <td>Fortinet-Vdom-Name</td>
+                                <td>3</td>
+                                <td>Specifies the virtual domain (VDOM) name to which the user is tied. Used in multi-tenant environments to restrict users to specific VDOMs.</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-no">ACLs</span>
+                                        <span class="badge badge-no">User Roles</span>
+                                        <span class="badge badge-yes">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-no">Captive Portals</span>
+                                        <span class="badge badge-no">SGT</span>
+                                        <span class="badge badge-no">DACL</span>
+                                        <span class="badge badge-no">QoS</span>
+                                        <span class="badge badge-no">Bandwidth</span>
+                                        <span class="badge badge-no">CoA</span>
+                                        <span class="badge badge-no">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>Fortinet-Vdom-Name = "customer_A" to restrict user access to the customer_A VDOM only</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Enable multi-VDOM mode on the FortiGate</li>
+                                                <li>Create the VDOMs that will be used</li>
+                                                <li>Configure the RADIUS server to return this VSA with the VDOM name</li>
+                                                <li>The VDOM name is case-sensitive and must match exactly with the VDOM configured on the FortiGate</li>
+                                                <li>This is useful for managed service providers with multi-tenant environments</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas" target="_blank">Fortinet RADIUS VSA Documentation</a></td>
+                            </tr>
+
+                            <!-- Cisco RADIUS VSAs -->
+                            <tr class="row-item" data-vendor="cisco" data-protocol="radius" data-acl="yes" data-role="yes" data-vlan="yes" data-url="no" data-captive="no" data-sgt="yes" data-dacl="yes" data-qos="yes" data-bandwidth="yes" data-coa="yes" data-vpn="yes">
+                                <td>Cisco</td>
+                                <td>RADIUS</td>
+                                <td>Cisco-AVPair</td>
+                                <td>1</td>
+                                <td>General-purpose attribute used for various configurations (shell privilege level, ACL assignment, VLAN assignment, SGT assignment, QoS policy, Bandwidth control, etc.)</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-yes">ACLs</span>
+                                        <span class="badge badge-yes">User Roles</span>
+                                        <span class="badge badge-yes">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-no">Captive Portals</span>
+                                        <span class="badge badge-yes">SGT</span>
+                                        <span class="badge badge-yes">DACL</span>
+                                        <span class="badge badge-yes">QoS</span>
+                                        <span class="badge badge-yes">Bandwidth</span>
+                                        <span class="badge badge-yes">CoA</span>
+                                        <span class="badge badge-yes">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>Cisco-AVPair = "shell:priv-lvl=15" for admin access, Cisco-AVPair = "ip:sub-qos-policy-in=QOS_POLICY" for QoS policy assignment</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Use 'Cisco-AVPair' to reference ACL in the format 'ip:inacl#&lt;acl-name&gt;'.</li>
+                                                <li>Enable downloadable ACLs (dACLs) with 'aaa authorization network'.</li>
+                                                <li>For VLAN overrides, use 'Tunnel-Private-Group-ID' and configure dynamic VLANs on interfaces.</li>
+                                                <li>For SGT assignment, use 'cts:security-group-tag=xx' where xx is the tag number.</li>
+                                                <li>For QoS policy, use 'ip:sub-qos-policy-in=QOS_POLICY' and 'ip:sub-qos-policy-out=QOS_POLICY'.</li>
+                                                <li>For bandwidth control, use 'ip:sub-qos-policy-in=BANDWIDTH_POLICY' with rate limiting.</li>
+                                                <li>For VPN configurations, use 'vpn:addr-pool=VPN_POOL_NAME'.</li>
+                                                <li>For CoA triggers, configure 'aaa server radius dynamic-author'.</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_rad/configuration/15-mt/sec-usr-rad-15-mt-book/sec-rad-vsa.html" target="_blank">Cisco RADIUS VSA Documentation</a></td>
+                            </tr>
+                            <tr class="row-item" data-vendor="cisco" data-protocol="radius" data-acl="yes" data-role="no" data-vlan="no" data-url="no" data-captive="yes" data-sgt="no" data-dacl="yes" data-qos="no" data-bandwidth="no" data-coa="yes" data-vpn="no">
+                                <td>Cisco</td>
+                                <td>RADIUS</td>
+                                <td>Web-Auth-Redirect</td>
+                                <td>2</td>
+                                <td>Triggers a captive portal (web authentication) redirect for user authentication on networks without 802.1X.</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-yes">ACLs</span>
+                                        <span class="badge badge-no">User Roles</span>
+                                        <span class="badge badge-no">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-yes">Captive Portals</span>
+                                        <span class="badge badge-no">SGT</span>
+                                        <span class="badge badge-yes">DACL</span>
+                                        <span class="badge badge-no">QoS</span>
+                                        <span class="badge badge-no">Bandwidth</span>
+                                        <span class="badge badge-yes">CoA</span>
+                                        <span class="badge badge-no">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>Web-Auth-Redirect URL = "https://portal.company.com/login" to redirect users to a login page.</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Enable captive portal (web-auth) on the network device (WLC or switch).</li>
+                                                <li>On successful RADIUS authentication, return the redirect URL via this attribute.</li>
+                                                <li>Ensure the device intercepts HTTP/HTTPS and redirects to the provided URL.</li>
+                                                <li>The user completes authentication on the web portal before gaining access.</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://www.cisco.com/c/en/us/support/docs/security/identity-services-engine/200555-ISE-Guest-Access-Configuration-Example.html" target="_blank">Cisco Web Auth Redirect Docs</a></td>
+                            </tr>
+
+                            <!-- Juniper RADIUS VSAs -->
+                            <tr class="row-item" data-vendor="juniper" data-protocol="radius" data-acl="yes" data-role="yes" data-vlan="no" data-url="no" data-captive="no" data-sgt="no" data-dacl="no" data-qos="no" data-bandwidth="no" data-coa="yes" data-vpn="no">
+                                <td>Juniper</td>
+                                <td>RADIUS</td>
+                                <td>Juniper-Filter</td>
+                                <td>4</td>
+                                <td>Specifies a pre-defined filter to be applied to the user's session (similar to an ACL). Often required to be configured on the Juniper device.</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-yes">ACLs</span>
+                                        <span class="badge badge-yes">User Roles</span>
+                                        <span class="badge badge-no">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-no">Captive Portals</span>
+                                        <span class="badge badge-no">SGT</span>
+                                        <span class="badge badge-no">DACL</span>
+                                        <span class="badge badge-no">QoS</span>
+                                        <span class="badge badge-no">Bandwidth</span>
+                                        <span class="badge badge-yes">CoA</span>
+                                        <span class="badge badge-no">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>Juniper-Filter = "guest-access-filter" for guest network restrictions.</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Create a firewall filter (ACL) on the Juniper device and commit it.</li>
+                                                <li>On the RADIUS server, configure this attribute with the name of the filter (e.g., "guest-access-filter").</li>
+                                                <li>The Juniper device applies the filter to the user session upon successful authentication.</li>
+                                                <li>For CoA support, ensure Juniper device is configured to accept dynamic updates (e.g., via Juniper's dynamic AAA services).</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://www.juniper.net/documentation/en_US/junos/topics/concept/radius-junos-overview.html" target="_blank">Juniper RADIUS Documentation</a></td>
+                            </tr>
+                            <tr class="row-item" data-vendor="juniper" data-protocol="radius" data-acl="yes" data-role="yes" data-vlan="no" data-url="no" data-captive="no" data-sgt="no" data-dacl="no" data-qos="no" data-bandwidth="no" data-coa="yes" data-vpn="no">
+                                <td>Juniper</td>
+                                <td>RADIUS</td>
+                                <td>Juniper-Local-User-Name</td>
+                                <td>1</td>
+                                <td>Specifies a local user template/role on the Juniper device to apply for this authenticated user, granting a set of permissions defined on the device.</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-no">ACLs</span>
+                                        <span class="badge badge-yes">User Roles</span>
+                                        <span class="badge badge-no">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-no">Captive Portals</span>
+                                        <span class="badge badge-no">SGT</span>
+                                        <span class="badge badge-no">DACL</span>
+                                        <span class="badge badge-no">QoS</span>
+                                        <span class="badge badge-no">Bandwidth</span>
+                                        <span class="badge badge-yes">CoA</span>
+                                        <span class="badge badge-no">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>Juniper-Local-User-Name = "netadmin-template" to assign the netadmin permissions template to the user.</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Create a local user template (login class) on the Juniper device (e.g., netadmin-template).</li>
+                                                <li>Assign desired permissions and privileges to this template.</li>
+                                                <li>Configure the RADIUS server to send this attribute with the template name upon user authentication.</li>
+                                                <li>The Juniper device maps the user to the local template, granting the corresponding privileges.</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://www.juniper.net/documentation/en_US/junos/topics/concept/junos-login-class-radius.html" target="_blank">Juniper User Role via RADIUS</a></td>
+                            </tr>
+
+                            <!-- Palo Alto RADIUS VSAs -->
+                            <tr class="row-item" data-vendor="paloalto" data-protocol="radius" data-acl="no" data-role="yes" data-vlan="no" data-url="no" data-captive="no" data-sgt="no" data-dacl="no" data-qos="no" data-bandwidth="no" data-coa="no" data-vpn="yes">
+                                <td>Palo Alto</td>
+                                <td>RADIUS</td>
+                                <td>PaloAlto-Admin-Role</td>
+                                <td>1</td>
+                                <td>Assigns an administrative role to the user for Palo Alto Networks firewall management access (e.g., read-only vs superuser).</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-no">ACLs</span>
+                                        <span class="badge badge-yes">User Roles</span>
+                                        <span class="badge badge-no">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-no">Captive Portals</span>
+                                        <span class="badge badge-no">SGT</span>
+                                        <span class="badge badge-no">DACL</span>
+                                        <span class="badge badge-no">QoS</span>
+                                        <span class="badge badge-no">Bandwidth</span>
+                                        <span class="badge badge-no">CoA</span>
+                                        <span class="badge badge-yes">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>PaloAlto-Admin-Role = "superuser" for full administrative rights.</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Define administrative roles on the Palo Alto firewall</li>
+                                                <li>Configure RADIUS authentication for the firewall</li>
+                                                <li>Set up your RADIUS server to return this VSA with the appropriate role name</li>
+                                                <li>Ensure the role name exactly matches one defined on the firewall</li>
+                                                <li>Common roles include: superuser, superreader, devicereader, deviceadmin</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/configure-radius-authentication" target="_blank">Palo Alto RADIUS Documentation</a></td>
+                            </tr>
+                            <tr class="row-item" data-vendor="paloalto" data-protocol="radius" data-acl="no" data-role="yes" data-vlan="no" data-url="no" data-captive="no" data-sgt="no" data-dacl="no" data-qos="no" data-bandwidth="no" data-coa="no" data-vpn="yes">
+                                <td>Palo Alto</td>
+                                <td>RADIUS</td>
+                                <td>PaloAlto-User-Group</td>
+                                <td>2</td>
+                                <td>Assigns the authenticated user to a specific user group on the Palo Alto firewall for policy enforcement.</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-no">ACLs</span>
+                                        <span class="badge badge-yes">User Roles</span>
+                                        <span class="badge badge-no">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-no">Captive Portals</span>
+                                        <span class="badge badge-no">SGT</span>
+                                        <span class="badge badge-no">DACL</span>
+                                        <span class="badge badge-no">QoS</span>
+                                        <span class="badge badge-no">Bandwidth</span>
+                                        <span class="badge badge-no">CoA</span>
+                                        <span class="badge badge-yes">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>PaloAlto-User-Group = "contractors" to assign to the contractors user group.</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Create user groups on the Palo Alto firewall</li>
+                                                <li>Configure RADIUS authentication for the firewall or GlobalProtect VPN</li>
+                                                <li>Set up your RADIUS server to return this VSA with the group name</li>
+                                                <li>Ensure the group name exactly matches one defined on the firewall</li>
+                                                <li>Use the group in security policies to control access</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/configure-radius-authentication" target="_blank">Palo Alto RADIUS Documentation</a></td>
+                            </tr>
+
+                            <!-- Aruba RADIUS VSAs -->
+                            <tr class="row-item" data-vendor="aruba" data-protocol="radius" data-acl="yes" data-role="yes" data-vlan="yes" data-url="no" data-captive="no" data-sgt="no" data-dacl="no" data-qos="no" data-bandwidth="no" data-coa="no" data-vpn="no">
+                                <td>Aruba</td>
+                                <td>RADIUS</td>
+                                <td>Aruba-User-Role</td>
+                                <td>1</td>
+                                <td>Assigns a user role to the authenticated user. User roles on Aruba devices define access control policies, QoS settings, and other parameters.</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-yes">ACLs</span>
+                                        <span class="badge badge-yes">User Roles</span>
+                                        <span class="badge badge-yes">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-no">Captive Portals</span>
+                                        <span class="badge badge-no">SGT</span>
+                                        <span class="badge badge-no">DACL</span>
+                                        <span class="badge badge-no">QoS</span>
+                                        <span class="badge badge-no">Bandwidth</span>
+                                        <span class="badge badge-no">CoA</span>
+                                        <span class="badge badge-no">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>Aruba-User-Role = "employee" to assign the employee role defined on the Aruba device.</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Define user roles on the Aruba controller or switch</li>
+                                                <li>Configure access control rules, VLAN assignments, and other parameters for each role</li>
+                                                <li>Set up RADIUS authentication and configure the server to return this VSA</li>
+                                                <li>The Aruba device applies the assigned role upon successful authentication</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm" target="_blank">Aruba RADIUS VSA Documentation</a></td>
+                            </tr>
+                            <tr class="row-item" data-vendor="aruba" data-protocol="radius" data-acl="no" data-role="no" data-vlan="yes" data-url="no" data-captive="no" data-sgt="no" data-dacl="no" data-qos="no" data-bandwidth="no" data-coa="no" data-vpn="no">
+                                <td>Aruba</td>
+                                <td>RADIUS</td>
+                                <td>Aruba-VLAN</td>
+                                <td>2</td>
+                                <td>Assigns a VLAN to an authenticated user. Can be used for dynamic VLAN assignment based on user or device.</td>
+                                <td>
+                                    <div class="attribute-features">
+                                        <span class="badge badge-no">ACLs</span>
+                                        <span class="badge badge-no">User Roles</span>
+                                        <span class="badge badge-yes">VLAN Assignment</span>
+                                        <span class="badge badge-no">URL Redirects</span>
+                                        <span class="badge badge-no">Captive Portals</span>
+                                        <span class="badge badge-no">SGT</span>
+                                        <span class="badge badge-no">DACL</span>
+                                        <span class="badge badge-no">QoS</span>
+                                        <span class="badge badge-no">Bandwidth</span>
+                                        <span class="badge badge-no">CoA</span>
+                                        <span class="badge badge-no">VPN</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-both">Both</span></td>
+                                <td>Aruba-VLAN = "100" to place the user in VLAN 100.</td>
+                                <td>
+                                    <details>
+                                        <summary>Implementation Steps</summary>
+                                        <div>
+                                            <ol>
+                                                <li>Configure the VLANs on the Aruba device</li>
+                                                <li>Set up RADIUS authentication</li>
+                                                <li>Configure the RADIUS server to return this VSA with the desired VLAN ID</li>
+                                                <li>Can be used with Aruba-User-Role for more comprehensive access control</li>
+                                            </ol>
+                                        </div>
+                                    </details>
+                                </td>
+                                <td><a href="https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm" target="_blank">Aruba RADIUS VSA Documentation</a></td>
+                            </tr>
+
+                            <!-- Add more vendors and attributes here -->
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fortinet Section -->
+        <section class="vendor-section" id="fortinet">
+            <h2>Fortinet Vendor-Specific Attributes</h2>
+            <div class="protocol-section active" id="fortinet-all">
+                <div class="vendor-info">
+                    <h3>About Fortinet Authentication Attributes</h3>
+                    <p>Fortinet devices support a wide range of vendor-specific attributes (VSAs) for both RADIUS and TACACS+ authentication. These attributes allow for granular control over user access, including administrative privileges, VDOM restrictions, web filtering overrides, and more.</p>
+                    <p>The Fortinet RADIUS vendor ID is <strong>12356</strong>. For RADIUS VSAs to work properly, your RADIUS server must have the Fortinet dictionary installed to recognize these attributes.</p>
+                    <p><a href="https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas" target="_blank" class="documentation-link">Official Fortinet RADIUS VSA Documentation</a> | <a href="https://docs.fortinet.com/document/fortigate/7.0.0/administration-guide/651398/tacacs-servers" target="_blank" class="documentation-link">Official Fortinet TACACS+ Documentation</a></p>
+                </div>
+
+                <div class="implementation-note">
+                    <h4>Important Implementation Notes:</h4>
+                    <ul>
+                        <li>FortiGate devices require that the RADIUS or TACACS+ server be configured as an authentication source before VSAs can be used.</li>
+                        <li>For TACACS+ administrator authentication with attribute overrides, you must enable <code>accprofile-override</code> and/or <code>vdom-override</code> in the system admin configuration.</li>
+                        <li>Many VSAs are case-sensitive and must match exactly with the corresponding settings on the FortiGate.</li>
+                        <li>For multi-VDOM environments, make sure to configure RADIUS or TACACS+ servers in the correct VDOM.</li>
+                    </ul>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" data-target="fortinet-radius-vsas">RADIUS VSAs</div>
+                    <div class="tab" data-target="fortinet-tacacs-vsas">TACACS+ Attributes</div>
+                    <div class="tab" data-target="fortinet-admin-example">Admin Auth Example</div>
+                    <div class="tab" data-target="fortinet-filtering-example">Content Filtering Example</div>
+                </div>
+
+                <div class="tab-content active" id="fortinet-radius-vsas">
+                    <h3>Fortinet RADIUS VSAs</h3>
+                    <p>The following attributes are supported for RADIUS authentication with Fortinet devices. Vendor ID: 12356</p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute Name</th>
+                                    <th>Attribute Number</th>
+                                    <th>Description</th>
+                                    <th>Value Format</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Fortinet-Group-Name</td>
+                                    <td>1</td>
+                                    <td>Specifies the group name of the user. Used to assign users to specific user groups for policy enforcement.</td>
+                                    <td>String</td>
+                                    <td>Fortinet-Group-Name = "Admins"</td>
+                                </tr>
+                                <tr>
+                                    <td>Fortinet-Client-IP-Address</td>
+                                    <td>2</td>
+                                    <td>Specifies the IP address to assign to the client. Commonly used in VPN scenarios.</td>
+                                    <td>IP address</td>
+                                    <td>Fortinet-Client-IP-Address = 192.168.1.100</td>
+                                </tr>
+                                <tr>
+                                    <td>Fortinet-Vdom-Name</td>
+                                    <td>3</td>
+                                    <td>Specifies the virtual domain (VDOM) name to which the user is tied.</td>
+                                    <td>String</td>
+                                    <td>Fortinet-Vdom-Name = "root"</td>
+                                </tr>
+                                <tr>
+                                    <td>Fortinet-Client-IPv6-Address</td>
+                                    <td>4</td>
+                                    <td>Specifies the IPv6 address to assign to the client.</td>
+                                    <td>Octets</td>
+                                    <td>Fortinet-Client-IPv6-Address = "2001:db8::1"</td>
+                                </tr>
+                                <tr>
+                                    <td>Fortinet-Interface-Name</td>
+                                    <td>5</td>
+                                    <td>Specifies the name of the FortiGate interface to be used by the client.</td>
+                                    <td>String</td>
+                                    <td>Fortinet-Interface-Name = "port1"</td>
+                                </tr>
+                                <tr>
+                                    <td>Fortinet-Access-Profile</td>
+                                    <td>6</td>
+                                    <td>Specifies the access profile to assign to the user.</td>
+                                    <td>String</td>
+                                    <td>Fortinet-Access-Profile = "super_admin"</td>
+                                </tr>
+                                <!-- Add more Fortinet RADIUS attributes here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="fortinet-tacacs-vsas">
+                    <h3>Fortinet TACACS+ Attributes</h3>
+                    <p>The following attributes are supported for TACACS+ authentication with Fortinet devices.</p>
+                    <div class="warning-note">
+                        <strong>Important:</strong> For TACACS+ administrator authentication with attribute overrides, you must enable <code>accprofile-override</code> and/or <code>vdom-override</code> in the FortiGate system admin configuration.
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute Name</th>
+                                    <th>Description</th>
+                                    <th>Value Format</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Fortinet-Access-Profile</td>
+                                    <td>Assigns an access profile to the administrator session.</td>
+                                    <td>String</td>
+                                    <td>Fortinet-Access-Profile = "super_admin"</td>
+                                </tr>
+                                <tr>
+                                    <td>Fortinet-Vdom-Name</td>
+                                    <td>Specifies the virtual domain (VDOM) name to which the administrator is restricted.</td>
+                                    <td>String</td>
+                                    <td>Fortinet-Vdom-Name = "customer_A"</td>
+                                </tr>
+                                <tr>
+                                    <td>Fortinet-Group-Name</td>
+                                    <td>Specifies the group name for the administrator session.</td>
+                                    <td>String</td>
+                                    <td>Fortinet-Group-Name = "network_admins"</td>
+                                </tr>
+                                <!-- Add more Fortinet TACACS+ attributes here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="fortinet-admin-example">
+                    <h3>FortiGate Administrator Authentication Example</h3>
+                    <p>This example shows how to configure RADIUS and TACACS+ for FortiGate administrator authentication with proper attribute settings.</p>
+                    
+                    <h4>FortiGate Configuration</h4>
+                    <pre>
+config system admin
+    edit "radius-admin"
+        set remote-auth enable
+        set accprofile-override enable
+        set vdom-override enable
+        set remote-group "network-admins"
+    next
+end
+
+config user radius
+    edit "RadiusServer"
+        set server "192.168.1.100"
+        set secret "radiusSecret"
+        set auth-type auto
+    next
+end
+
+config user tacacs+
+    edit "TacacsServer"
+        set server "192.168.1.101"
+        set key "tacacsSecret"
+        set authen-type auto
+        set authorization enable
+    next
+end
+
+config system global
+    set admin-radius-server "RadiusServer"
+    set admin-tacacs+-server "TacacsServer"
+end
+</pre>
+
+                    <h4>RADIUS Server Configuration (Example: FreeRADIUS)</h4>
+                    <p>In the <code>users</code> file or equivalent user database:</p>
+                    <pre>
+admin_user   Cleartext-Password := "password"
+            Fortinet-Access-Profile = "super_admin",
+            Fortinet-Vdom-Name = "root"
+
+region_admin Cleartext-Password := "password"
+            Fortinet-Access-Profile = "prof_admin",
+            Fortinet-Vdom-Name = "europe_vdom"
+</pre>
+
+                    <h4>TACACS+ Server Configuration (Example: tac_plus)</h4>
+                    <pre>
+user = admin_user {
+    login = cleartext "password"
+    service = shell {
+        Fortinet-Access-Profile = "super_admin"
+        Fortinet-Vdom-Name = "root"
+    }
+}
+
+user = region_admin {
+    login = cleartext "password"
+    service = shell {
+        Fortinet-Access-Profile = "prof_admin"
+        Fortinet-Vdom-Name = "europe_vdom"
+    }
+}
+</pre>
+                </div>
+
+                <div class="tab-content" id="fortinet-filtering-example">
+                    <h3>FortiGate Content Filtering Example</h3>
+                    <p>This example shows how to use Fortinet RADIUS VSAs to customize web filtering and application control for specific users.</p>
+                    
+                    <h4>FortiGate Configuration</h4>
+                    <pre>
+config user radius
+    edit "ContentFilterRadiusServer"
+        set server "192.168.1.100"
+        set secret "radiusSecret"
+        set auth-type auto
+    next
+end
+
+config firewall policy
+    edit 1
+        set name "Internet_Access"
+        set srcintf "internal"
+        set dstintf "wan1"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set utm-status enable
+        set webfilter-profile "default"
+        set application-list "default"
+        set fsso enable
+        set groups "RADIUS_Users"
+    next
+end
+</pre>
+
+                    <h4>RADIUS Server Configuration (Example: FreeRADIUS)</h4>
+                    <p>In the <code>users</code> file or equivalent user database:</p>
+                    <pre>
+executive_user   Cleartext-Password := "password"
+                Fortinet-Group-Name = "RADIUS_Users",
+                Fortinet-Webfilter-Category-Allow = "News,Business",
+                Fortinet-AppCtrl-Category-Allow = "Web.Client"
+
+marketing_user   Cleartext-Password := "password"
+                Fortinet-Group-Name = "RADIUS_Users",
+                Fortinet-Webfilter-Category-Allow = "Social Networking,Marketing",
+                Fortinet-AppCtrl-Category-Block = "P2P,Game"
+
+restricted_user  Cleartext-Password := "password"
+                Fortinet-Group-Name = "RADIUS_Users",
+                Fortinet-Webfilter-Category-Block = "Social Networking,Gambling,Games",
+                Fortinet-AppCtrl-Risk-Block = "Critical,High"
+</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cisco Section -->
+        <section class="vendor-section" id="cisco">
+            <h2>Cisco Vendor-Specific Attributes</h2>
+            <div class="protocol-section active" id="cisco-all">
+                <div class="vendor-info">
+                    <h3>About Cisco Authentication Attributes</h3>
+                    <p>Cisco devices support a comprehensive set of RADIUS and TACACS+ vendor-specific attributes for controlling network access, assigning VLANs, implementing security groups, QoS policies, and more.</p>
+                    <p>The Cisco RADIUS vendor ID is <strong>9</strong>. Most Cisco RADIUS functionality is implemented through the versatile Cisco-AVPair attribute that can be used for various configuration settings.</p>
+                    <p><a href="https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_rad/configuration/15-mt/sec-usr-rad-15-mt-book/sec-rad-vsa.html" target="_blank" class="documentation-link">Official Cisco RADIUS VSA Documentation</a> | <a href="https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html" target="_blank" class="documentation-link">Official Cisco TACACS+ Documentation</a></p>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" data-target="cisco-avpair">Cisco-AVPair</div>
+                    <div class="tab" data-target="cisco-acl">ACL Implementation</div>
+                    <div class="tab" data-target="cisco-vlan">VLAN Assignment</div>
+                    <div class="tab" data-target="cisco-sgacl">SGT & SGACL</div>
+                    <div class="tab" data-target="cisco-examples">Configuration Examples</div>
+                </div>
+
+                <div class="tab-content active" id="cisco-avpair">
+                    <h3>Cisco-AVPair Attribute</h3>
+                    <p>The Cisco-AVPair attribute (vendor-specific attribute 1) is extremely versatile and can be used for numerous configuration options. Here are some of the most common uses:</p>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Purpose</th>
+                                    <th>Syntax</th>
+                                    <th>Example</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Admin Privilege Level</td>
+                                    <td>shell:priv-lvl=N</td>
+                                    <td>shell:priv-lvl=15</td>
+                                    <td>Sets the administrative privilege level (0-15) for CLI access</td>
+                                </tr>
+                                <tr>
+                                    <td>ACL Assignment</td>
+                                    <td>ip:inacl#N=ACL_ENTRY</td>
+                                    <td>ip:inacl#10=permit ip 10.0.0.0 0.255.255.255 any</td>
+                                    <td>Assigns an inbound ACL entry to the user session</td>
+                                </tr>
+                                <tr>
+                                    <td>Outbound ACL</td>
+                                    <td>ip:outacl#N=ACL_ENTRY</td>
+                                    <td>ip:outacl#20=deny ip any 192.168.0.0 0.0.255.255</td>
+                                    <td>Assigns an outbound ACL entry to the user session</td>
+                                </tr>
+                                <tr>
+                                    <td>VLAN Assignment</td>
+                                    <td>cisco-avpair="vlan=VLAN_ID"</td>
+                                    <td>cisco-avpair="vlan=100"</td>
+                                    <td>Assigns the user to a specific VLAN (alternative to IETF Tunnel attributes)</td>
+                                </tr>
+                                <tr>
+                                    <td>SGT Assignment</td>
+                                    <td>cts:security-group-tag=N</td>
+                                    <td>cts:security-group-tag=3</td>
+                                    <td>Assigns a Security Group Tag to the user session</td>
+                                </tr>
+                                <tr>
+                                    <td>QoS Policy</td>
+                                    <td>ip:sub-qos-policy-in=POLICY_NAME</td>
+                                    <td>ip:sub-qos-policy-in=HIGH_PRIORITY</td>
+                                    <td>Applies a QoS policy to inbound traffic</td>
+                                </tr>
+                                <tr>
+                                    <td>AnyConnect VPN Group</td>
+                                    <td>webvpn:vpn-group-policy=GROUP_NAME</td>
+                                    <td>webvpn:vpn-group-policy=SALES_VPN</td>
+                                    <td>Assigns the user to a specific VPN group policy on ASA</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add more Cisco tabs here -->
+            </div>
+        </section>
+
+        <!-- Juniper Section -->
+        <section class="vendor-section" id="juniper">
+            <h2>Juniper Vendor-Specific Attributes</h2>
+            <div class="protocol-section active" id="juniper-all">
+                <div class="vendor-info">
+                    <h3>About Juniper Authentication Attributes</h3>
+                    <p>Juniper devices support various RADIUS and TACACS+ vendor-specific attributes for controlling network access, applying filters, assigning users to roles, and more.</p>
+                    <p>The Juniper RADIUS vendor ID is <strong>2636</strong>. Juniper's VSAs provide powerful options for dynamically controlling access at user login time.</p>
+                    <p><a href="https://www.juniper.net/documentation/en_US/junos/topics/concept/radius-junos-overview.html" target="_blank" class="documentation-link">Official Juniper RADIUS Documentation</a></p>
+                </div>
+
+                <!-- Add Juniper tabs and content here -->
+            </div>
+        </section>
+
+        <!-- Palo Alto Section -->
+        <section class="vendor-section" id="paloalto">
+            <h2>Palo Alto Networks Vendor-Specific Attributes</h2>
+            <div class="protocol-section active" id="paloalto-all">
+                <div class="vendor-info">
+                    <h3>About Palo Alto Authentication Attributes</h3>
+                    <p>Palo Alto Networks firewalls support RADIUS and TACACS+ vendor-specific attributes for administrative access control, user group mapping, and VPN configurations.</p>
+                    <p>The Palo Alto RADIUS vendor ID is <strong>25461</strong>. These attributes provide fine-grained control over administrative access and user group assignments.</p>
+                    <p><a href="https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/configure-radius-authentication" target="_blank" class="documentation-link">Official Palo Alto RADIUS Documentation</a></p>
+                </div>
+
+                <!-- Add Palo Alto tabs and content here -->
+            </div>
+        </section>
+
+        <!-- Aruba Section -->
+        <section class="vendor-section" id="aruba">
+            <h2>Aruba Vendor-Specific Attributes</h2>
+            <div class="protocol-section active" id="aruba-all">
+                <div class="vendor-info">
+                    <h3>About Aruba Authentication Attributes</h3>
+                    <p>Aruba devices support RADIUS vendor-specific attributes for user role assignment, VLAN assignment, ACL implementation, and QoS settings.</p>
+                    <p>The Aruba RADIUS vendor ID is <strong>14823</strong>. Aruba's role-based access control model relies heavily on these attributes.</p>
+                    <p><a href="https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm" target="_blank" class="documentation-link">Official Aruba RADIUS VSA Documentation</a></p>
+                </div>
+
+                <!-- Add Aruba tabs and content here -->
+            </div>
+        </section>
+
+        <!-- Add other vendor sections here -->
+
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo-icon">R</div>
+                    <div class="logo-text">Radtribution Dictionary</div>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/yourusername/radtribution-dictionary" target="_blank">GitHub</a>
+                    <a href="#" id="contribute-link">Contribute</a>
+                    <a href="#" id="about-link">About</a>
+                </div>
+                <div class="footer-copyright">
+                    &copy; 2025 Radtribution Dictionary. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
