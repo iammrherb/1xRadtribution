@@ -1,46 +1,50 @@
 # Radtribution Dictionary
 
-A comprehensive reference for RADIUS and TACACS+ vendor-specific attributes with implementation details for network access, VPN, QoS, and security enforcement.
+A comprehensive reference for network authentication attributes used in RADIUS and TACACS+ protocols across multiple vendor platforms. The project aims to document all vendor-specific attributes (VSAs) with their implementations and use cases.
 
 ## Features
 
-- Complete catalog of RADIUS and TACACS+ attributes for major network vendors including:
-  - Cisco
-  - Fortinet
-  - Juniper
-  - Palo Alto Networks
-  - Aruba
-  - And more...
-- Implementation examples and guidance for each attribute
-- Interactive filtering by vendor, protocol, and feature support
-- Mobile-friendly responsive design
-- Search functionality for quick reference
+- **Multi-vendor support**: Cisco, Juniper, Palo Alto, Fortinet, Aruba/HP, Arista, Extreme Networks, and more
+- **Protocol coverage**: Both RADIUS and TACACS+ attributes
+- **Use case documentation**: Detailed implementation guides for various scenarios
+- **Searchable interface**: Easily find attributes by name, function, or vendor
+- **Feature filtering**: Filter attributes by capabilities (ACL, VLAN, QoS, etc.)
 
-## Supported Authentication Features
+## Use Cases
 
-- Access Control Lists (ACLs)
-- User Role Assignment
-- VLAN Assignment
-- URL Redirection
-- Captive Portal Configuration
-- Security Group Tags (SGT)
-- Downloadable ACLs (DACL)
-- Quality of Service (QoS)
-- Bandwidth Control
+The Radtribution Dictionary provides implementation guidance for:
+
+- VPN Authentication & Authorization
+- 802.1X Network Access Control
+- User Role-Based Access Control
+- Dynamic VLAN Assignment
+- QoS and Bandwidth Control
 - Change of Authorization (CoA)
-- VPN Access Control
+- Security Group Tags (SGT)
+- Administrative Access Control
+- URL Redirection & Captive Portals
+- Downloadable ACLs
 
-## Contributing
+## Vendors Covered
 
-Contributions are welcome! Please feel free to submit a pull request to enhance the attribute catalog, improve examples, or suggest design improvements.
+- Cisco (IOS, IOS-XE, NX-OS)
+- Juniper Networks
+- Palo Alto Networks
+- Fortinet
+- Aruba
+- HP
+- Arista
+- Extreme Networks
+- Check Point
+- Ruckus
+- Dell
+- Meraki
 
 ## Local Development
 
-To run this project locally:
+To run this project locally, simply clone the repository and open the index.html file in your web browser:
 
-1. Clone the repository
-2. Open `index.html` in a browser
-
-## License
-
-MIT
+```bash
+git clone https://github.com/your-username/radtribution-dictionary.git
+cd radtribution-dictionary
+# Open index.html in your preferred browser

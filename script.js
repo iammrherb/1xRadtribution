@@ -1,188 +1,165 @@
 document.addEventListener('DOMContentLoaded', function() {
-    let currentVendor = 'all';
-    let currentProtocol = 'all';
-    const vendorSections = document.querySelectorAll('section.vendor-section');
+    // References to DOM elements
+    const searchInput = document.getElementById('searchInput');
+    const noResults = document.getElementById('noResults');
     const vendorButtons = document.querySelectorAll('.vendor-button');
     const protocolButtons = document.querySelectorAll('.protocol-button');
-    const allSection = document.getElementById('all');
-    const searchInput = document.getElementById('searchInput');
-    const featureCheckboxes = document.querySelectorAll('.filter-options input[type="checkbox"]');
+    const vendorSections = document.querySelectorAll('.vendor-section');
+    const protocolSections = document.querySelectorAll('.protocol-section');
     const resultsInfo = document.getElementById('resultsInfo');
-    const noResults = document.getElementById('noResults');
-    const allTable = allSection.querySelector('table');
-    const allRows = allTable ? allTable.getElementsByTagName('tr') : [];
-    
+    const tableRows = document.querySelectorAll('.row-item');
+    const filterCheckboxes = document.querySelectorAll('.filter-option input[type="checkbox"]');
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const aboutLink = document.getElementById('aboutLink');
+    const aboutModal = document.getElementById('aboutModal');
+    const closeModal = document.querySelector('.close');
+
+    // Current filters state
+    let activeVendor = 'all';
+    let activeProtocol = 'all';
+    let activeFilters = [];
+
+    // Search functionality
+    searchInput.addEventListener('input', filterTable);
+
     // Vendor navigation
     vendorButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // set current vendor
-            const vendor = this.getAttribute('data-vendor');
-            if (currentVendor === vendor) return;
-            currentVendor = vendor;
-            
-            // update active button
             vendorButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             
-            // show corresponding section
-            vendorSections.forEach(sec => sec.classList.remove('active'));
-            const targetSection = document.getElementById(vendor);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
+            activeVendor = this.dataset.vendor;
             
-            // If not all vendors section, hide filter panel and reset search if needed
-            const filterContainer = document.querySelector('.filter-container');
-            if (vendor !== 'all') {
-                if(filterContainer) filterContainer.style.display = 'none';
-                if(resultsInfo) resultsInfo.style.display = 'none';
-                if(noResults) noResults.style.display = 'none';
-                
-                // Reset protocol buttons to All for vendor-specific view
-                currentProtocol = 'all';
-                protocolButtons.forEach(btn => {
-                    btn.classList.remove('active');
-                    if(btn.getAttribute('data-protocol') === 'all') {
-                        btn.classList.add('active');
-                    }
-                });
-            } else {
-                // if all vendor section, show filter container
-                if(filterContainer) filterContainer.style.display = 'block';
-                if(resultsInfo) resultsInfo.style.display = 'block';
-                
-                // Reapply filter in case search/checkbox was active
-                filterTable();
-            }
+            vendorSections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === activeVendor) {
+                    section.classList.add('active');
+                }
+            });
+            
+            updateProtocolSection();
+            filterTable();
         });
     });
-    
-    // Protocol toggle
+
+    // Protocol selection
     protocolButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const protocol = this.getAttribute('data-protocol');
-            if(currentProtocol === protocol) return;
-            currentProtocol = protocol;
-            
-            // Update active state
             protocolButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             
-            // If viewing All vendors, filter the table by protocol
-            if (currentVendor === 'all') {
-                filterTable();
-            } else {
-                // In specific vendor section, show relevant protocol subsection
-                const vendorSection = document.getElementById(currentVendor);
-                if(!vendorSection) return;
-                const protocolSections = vendorSection.querySelectorAll('.protocol-section');
-                protocolSections.forEach(sec => sec.classList.remove('active'));
-                const targetSection = document.getElementById(currentVendor + '-' + protocol);
-                if (targetSection) {
-                    targetSection.classList.add('active');
-                }
-            }
+            activeProtocol = this.dataset.protocol;
+            
+            updateProtocolSection();
+            filterTable();
         });
     });
-    
-    // Filtering function for All table
+
+    // Feature filters
+    filterCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                activeFilters.push(this.value);
+            } else {
+                activeFilters = activeFilters.filter(filter => filter !== this.value);
+            }
+            filterTable();
+        });
+    });
+
+    // Tabs functionality
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const targetId = this.dataset.target;
+            
+            // Deactivate all tabs in the same group
+            const tabGroup = this.parentElement;
+            tabGroup.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            // Find all tab content in this section
+            const tabContentSection = tabGroup.parentElement;
+            tabContentSection.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Activate the clicked tab
+            this.classList.add('active');
+            tabContentSection.querySelector('#' + targetId).classList.add('active');
+        });
+    });
+
+    // Modal functionality
+    aboutLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        aboutModal.style.display = 'block';
+    });
+
+    closeModal.addEventListener('click', function() {
+        aboutModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(e) {
+        if (e.target === aboutModal) {
+            aboutModal.style.display = 'none';
+        }
+    });
+
+    // Update protocol section based on active vendor and protocol
+    function updateProtocolSection() {
+        protocolSections.forEach(section => {
+            section.classList.remove('active');
+            if (section.id === `${activeVendor}-${activeProtocol}`) {
+                section.classList.add('active');
+            }
+        });
+    }
+
+    // Filter table based on search input and active filters
     function filterTable() {
-        if (!allTable) return;
         const searchTerm = searchInput.value.toLowerCase();
+        let visibleRows = 0;
         
-        // Collect checked features
-        const checkedFeatures = Array.from(featureCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-        
-        let visibleCount = 0;
-        
-        // Loop through all data rows (skip header)
-        for (let i = 1; i < allRows.length; i++) {
-            const row = allRows[i];
-            if(!row.getAttribute) continue;
+        tableRows.forEach(row => {
+            // Check if row matches vendor filter
+            const vendorMatch = activeVendor === 'all' || row.dataset.vendor === activeVendor;
             
-            const rowVendor = row.getAttribute('data-vendor');
-            const rowProtocol = row.getAttribute('data-protocol');
-            const text = row.textContent.toLowerCase();
+            // Check if row matches protocol filter
+            const protocolMatch = activeProtocol === 'all' || row.dataset.protocol === activeProtocol;
             
-            // Vendor filter: currentVendor or 'all'
-            const vendorMatch = (currentVendor === 'all') || (rowVendor === currentVendor);
-            
-            // Protocol filter: currentProtocol or 'all'
-            const protocolMatch = (currentProtocol === 'all') || (rowProtocol === currentProtocol);
-            
-            // Feature filters: all checked features must be 'yes' in row data
-            let featuresMatch = true;
-            if (checkedFeatures.length > 0) {
-                featuresMatch = checkedFeatures.every(feature => 
-                    row.getAttribute('data-' + feature) === 'yes');
+            // Check if row matches feature filters
+            let featureMatch = true;
+            if (activeFilters.length > 0) {
+                featureMatch = activeFilters.every(filter => row.dataset[filter] === 'yes');
             }
             
-            // Search filter
-            const searchMatch = (searchTerm === '' || text.includes(searchTerm));
+            // Check if row matches search term
+            const rowText = row.textContent.toLowerCase();
+            const searchMatch = searchTerm === '' || rowText.includes(searchTerm);
             
-            if (vendorMatch && protocolMatch && featuresMatch && searchMatch) {
+            // Show or hide row based on all filters
+            if (vendorMatch && protocolMatch && featureMatch && searchMatch) {
                 row.style.display = '';
-                visibleCount++;
+                visibleRows++;
             } else {
                 row.style.display = 'none';
             }
+        });
+        
+        // Show no results message if no rows match
+        if (visibleRows === 0) {
+            noResults.style.display = 'block';
+        } else {
+            noResults.style.display = 'none';
         }
         
         // Update results count
-        if (resultsInfo) {
-            if (searchInput.value === '' && checkedFeatures.length === 0 && currentProtocol === 'all') {
-                resultsInfo.textContent = `Showing all ${visibleCount} attributes`;
-            } else {
-                resultsInfo.textContent = `Showing ${visibleCount} filtered attributes`;
-            }
-        }
-        
-        // Show or hide 'no results'
-        if(noResults) {
-            noResults.style.display = (visibleCount === 0) ? 'block' : 'none';
-        }
+        updateResultsInfo(visibleRows);
     }
-    
-    // Search input event
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            if(currentVendor !== 'all') {
-                // switch to All vendors section for searching
-                document.querySelector('.vendor-button[data-vendor="all"]').click();
-            }
-            filterTable();
-        });
+
+    // Update results count
+    function updateResultsInfo(count) {
+        resultsInfo.textContent = `Showing ${count} ${count === 1 ? 'attribute' : 'attributes'}`;
     }
-    
-    // Feature checkboxes
-    featureCheckboxes.forEach(cb => {
-        cb.addEventListener('change', function() {
-            if(currentVendor !== 'all') {
-                document.querySelector('.vendor-button[data-vendor="all"]').click();
-            }
-            filterTable();
-        });
-    });
-    
-    // Tab navigation
-    document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-target');
-            const tabContainer = this.closest('.tabs');
-            const contentContainer = tabContainer.nextElementSibling.parentElement;
-            
-            // Update active tab
-            tabContainer.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Update active content
-            contentContainer.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(targetId).classList.add('active');
-        });
-    });
-    
-    // Initialize the view to All vendors, All protocols
+
+    // Initialize with all rows visible
     filterTable();
 });
