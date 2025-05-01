@@ -1,0 +1,250 @@
+{
+    "vendor": "paloalto",
+    "protocol": "radius",
+    "attributes": [
+        {
+            "name": "PaloAlto-Admin-Role",
+            "number": "1",
+            "description": "Assigns an administrative role to the user for Palo Alto Networks firewall management access.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Admin-Role = \"superuser\" for full administrative access.",
+            "implementation": [
+                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
+                "Configure the PAN-OS device to use RADIUS authentication",
+                "Set the VSA with the desired admin role",
+                "Valid values include standard roles (superuser, superreader, etc.) or custom roles",
+                "User will automatically be assigned the role upon successful authentication"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+        },
+        {
+            "name": "PaloAlto-Admin-Access-Domain",
+            "number": "2",
+            "description": "Specifies the access domain for firewall administrators. Used in multi-virtual system environments to control which vsys an administrator can manage.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Admin-Access-Domain = \"Domain1\" for specific domain access.",
+            "implementation": [
+                "Configure access domains on the Palo Alto firewall (Device > Access Domains)",
+                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
+                "Configure the PAN-OS device to use RADIUS authentication",
+                "Set the VSA with the desired access domain name",
+                "User will be restricted to the specified access domain upon authentication"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+        },
+        {
+            "name": "PaloAlto-Panorama-Admin-Role",
+            "number": "3",
+            "description": "Assigns an administrative role to the user for Panorama management access. Controls access rights in the Panorama management system.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Panorama-Admin-Role = \"panorama-admin\" for Panorama administration access.",
+            "implementation": [
+                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
+                "Configure Panorama to use RADIUS authentication",
+                "Set the VSA with the desired admin role",
+                "Valid values include standard roles (panorama-admin, etc.) or custom roles",
+                "User will automatically be assigned the role upon successful authentication"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+        },
+        {
+            "name": "PaloAlto-Panorama-Admin-Access-Domain",
+            "number": "4",
+            "description": "Specifies the access domain for Panorama administrators. Controls which device groups and templates an administrator can manage in Panorama.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Panorama-Admin-Access-Domain = \"Domain2\" for specific Panorama domain access.",
+            "implementation": [
+                "Configure access domains on Panorama (Panorama > Access Domains)",
+                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
+                "Configure Panorama to use RADIUS authentication",
+                "Set the VSA with the desired access domain name",
+                "User will be restricted to the specified access domain upon authentication"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+        },
+        {
+            "name": "PaloAlto-User-Group",
+            "number": "5",
+            "description": "Specifies a user group for the authenticated user. Used for policy enforcement and VPN access control.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-User-Group = \"Employees\" for group-based access control.",
+            "implementation": [
+                "Create user groups on the Palo Alto firewall",
+                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
+                "Configure the PAN-OS device to use RADIUS authentication",
+                "Set the VSA with the desired user group name",
+                "User will be assigned to the specified group upon authentication",
+                "Use the group in security policies to control access"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+        },
+        {
+            "name": "PaloAlto-IPv6-User-Group",
+            "number": "12",
+            "description": "Specifies an IPv6 user group for the authenticated user.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-IPv6-User-Group = \"IPv6-Employees\" for IPv6 group-based access control.",
+            "implementation": [
+                "Create IPv6 user groups on the Palo Alto firewall",
+                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
+                "Configure the PAN-OS device to use RADIUS authentication",
+                "Set the VSA with the desired IPv6 user group name",
+                "User will be assigned to the specified IPv6 group upon authentication",
+                "Use the group in security policies to control IPv6 access"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+        },
+        {
+            "name": "PaloAlto-GP-Client-IPv6-Pool",
+            "number": "18",
+            "description": "Specifies the IPv6 address pool for GlobalProtect VPN clients.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-GP-Client-IPv6-Pool = \"IPv6-VPN-Pool\" for IPv6 address assignment in VPN.",
+            "implementation": [
+                "Configure IPv6 address pools on the Palo Alto firewall",
+                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
+                "Configure the PAN-OS device to use RADIUS authentication for VPN users",
+                "Set the VSA with the desired IPv6 pool name",
+                "VPN clients will receive IPv6 addresses from the specified pool",
+                "Must be used in conjunction with IPv6-enabled GlobalProtect configuration"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+        },
+        {
+            "name": "PaloAlto-Multicast-Policy",
+            "number": "20",
+            "description": "Specifies the multicast policy to apply to the user session.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": true
+            },
+            "network": "both",
+            "example": "PaloAlto-Multicast-Policy = \"Employee-Multicast\" for multicast access control.",
+            "implementation": [
+                "Create multicast policies on the Palo Alto firewall",
+                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
+                "Configure the PAN-OS device to use RADIUS authentication",
+                "Set the VSA with the desired multicast policy name",
+                "The policy will be applied to the user upon authentication",
+                "Controls which multicast groups the user can join or send to"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+        }
+    ]
+}

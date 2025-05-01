@@ -1,0 +1,96 @@
+{
+    "vendor": "dell",
+    "protocol": "tacacs",
+    "attributes": [
+        {
+            "name": "Dell-Admin-Role",
+            "number": "1",
+            "description": "Assigns an administrative role to the user.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Dell-Admin-Role = \"admin\" for administrative access.",
+            "implementation": [
+                "Configure the RADIUS server with Dell VSAs (Vendor ID: 6027)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The role must be defined on the Dell device",
+                "Determines the level of administrative access",
+                "Common values include admin, read-only, operator"
+            ],
+            "reference": "https://docs.dell.com/radius"
+        },
+        {
+            "name": "Dell-VLAN-ID",
+            "number": "2",
+            "description": "Assigns a VLAN to the authenticated user.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Dell-VLAN-ID = \"100\" for VLAN assignment.",
+            "implementation": [
+                "Configure the VLAN on the Dell device",
+                "Configure the RADIUS server with Dell VSAs (Vendor ID: 6027)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The VLAN must be defined on the Dell device",
+                "Used for dynamic VLAN assignment based on user authentication"
+            ],
+            "reference": "https://docs.dell.com/radius"
+        },
+        {
+            "name": "Dell-ACL-Name",
+            "number": "3",
+            "description": "Assigns an ACL to the authenticated user.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Dell-ACL-Name = \"Guest-ACL\" for ACL assignment.",
+            "implementation": [
+                "Configure the ACL on the Dell device",
+                "Configure the RADIUS server with Dell VSAs (Vendor ID: 6027)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The ACL must be defined on the Dell device",
+                "Used for dynamic ACL assignment based on user authentication"
+            ],
+            "reference": "https://docs.dell.com/radius"
+        }
+    ]
+}

@@ -1,0 +1,96 @@
+{
+    "vendor": "checkpoint",
+    "protocol": "radius",
+    "attributes": [
+        {
+            "name": "Checkpoint-Admin-Role",
+            "number": "1",
+            "description": "Assigns an administrative role to the user.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Checkpoint-Admin-Role = \"admin\" for administrative access.",
+            "implementation": [
+                "Configure the RADIUS server with Checkpoint VSAs (Vendor ID: 2620)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The role must be defined on the Checkpoint device",
+                "Determines the level of administrative access",
+                "Common values include admin, read-only, operator"
+            ],
+            "reference": "https://docs.checkpoint.com/radius"
+        },
+        {
+            "name": "Checkpoint-VLAN-ID",
+            "number": "2",
+            "description": "Assigns a VLAN to the authenticated user.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Checkpoint-VLAN-ID = \"100\" for VLAN assignment.",
+            "implementation": [
+                "Configure the VLAN on the Checkpoint device",
+                "Configure the RADIUS server with Checkpoint VSAs (Vendor ID: 2620)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The VLAN must be defined on the Checkpoint device",
+                "Used for dynamic VLAN assignment based on user authentication"
+            ],
+            "reference": "https://docs.checkpoint.com/radius"
+        },
+        {
+            "name": "Checkpoint-ACL-Name",
+            "number": "3",
+            "description": "Assigns an ACL to the authenticated user.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Checkpoint-ACL-Name = \"Guest-ACL\" for ACL assignment.",
+            "implementation": [
+                "Configure the ACL on the Checkpoint device",
+                "Configure the RADIUS server with Checkpoint VSAs (Vendor ID: 2620)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The ACL must be defined on the Checkpoint device",
+                "Used for dynamic ACL assignment based on user authentication"
+            ],
+            "reference": "https://docs.checkpoint.com/radius"
+        }
+    ]
+}

@@ -1,0 +1,246 @@
+{
+    "vendor": "standard",
+    "protocol": "radius",
+    "attributes": [
+        {
+            "name": "User-Name",
+            "number": "1",
+            "description": "User identifier for login.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "User-Name = \"jsmith\"",
+            "implementation": [
+                "Required attribute for authentication",
+                "Must match user account in authentication server",
+                "Often used as primary identifier for session",
+                "Can be in various formats (username, email, UPN)",
+                "Case sensitivity depends on authentication server"
+            ],
+            "reference": "https://datatracker.ietf.org/doc/html/rfc2865"
+        },
+        {
+            "name": "User-Password",
+            "number": "2",
+            "description": "Password for user authentication (encrypted in RADIUS protocol).",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "User-Password = \"Password123\"",
+            "implementation": [
+                "Used for PAP authentication",
+                "Password is encrypted in transit using RADIUS shared secret",
+                "Not present in accounting or other non-authentication messages",
+                "Replaced by other attributes for secure authentication methods",
+                "Should be used with secure transport (RADSEC)"
+            ],
+            "reference": "https://datatracker.ietf.org/doc/html/rfc2865"
+        },
+        {
+            "name": "Tunnel-Type",
+            "number": "64",
+            "description": "Indicates the tunneling protocol(s) to be used.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Tunnel-Type = VLAN (value: 13)",
+            "implementation": [
+                "Required for VLAN assignment with value 13 (VLAN)",
+                "Must be used with Tunnel-Medium-Type and Tunnel-Private-Group-ID",
+                "Supported by most 802.1X-capable network devices",
+                "Can have tag field for multiple tunnel scenarios",
+                "Used in conjunction with other tunnel attributes"
+            ],
+            "reference": "https://datatracker.ietf.org/doc/html/rfc2868"
+        },
+        {
+            "name": "Tunnel-Medium-Type",
+            "number": "65",
+            "description": "Indicates the transport medium to use when creating a tunnel.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Tunnel-Medium-Type = IEEE-802 (value: 6)",
+            "implementation": [
+                "Required for VLAN assignment with value 6 (IEEE-802)",
+                "Must be used with Tunnel-Type and Tunnel-Private-Group-ID",
+                "Tag field should match corresponding Tunnel-Type attribute",
+                "Used for both wireless and wired 802.1X authentication",
+                "Widely supported across vendor implementations"
+            ],
+            "reference": "https://datatracker.ietf.org/doc/html/rfc2868"
+        },
+        {
+            "name": "Tunnel-Private-Group-ID",
+            "number": "81",
+            "description": "Indicates the group ID for a particular tunneled session.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Tunnel-Private-Group-ID = 100",
+            "implementation": [
+                "Contains the VLAN ID when used for VLAN assignment",
+                "Must be used with Tunnel-Type and Tunnel-Medium-Type",
+                "Can contain either VLAN ID or VLAN name depending on device",
+                "Tag field should match corresponding tunnel attributes",
+                "Widely supported across most network equipment vendors"
+            ],
+            "reference": "https://datatracker.ietf.org/doc/html/rfc2868"
+        },
+        {
+            "name": "Filter-ID",
+            "number": "11",
+            "description": "Name of the filter list to be applied to the user's session.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Filter-ID = \"ACL-GUEST\"",
+            "implementation": [
+                "Specifies name of ACL to apply to user traffic",
+                "ACL must be pre-configured on the network device",
+                "Format requirements vary by vendor (some require prefixes)",
+                "Can be used for both IPv4 and IPv6 filtering",
+                "Common alternative to vendor-specific downloadable ACLs"
+            ],
+            "reference": "https://datatracker.ietf.org/doc/html/rfc2865"
+        },
+        {
+            "name": "Framed-IP-Address",
+            "number": "8",
+            "description": "IP address to be configured for the user.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Framed-IP-Address = 192.168.1.100",
+            "implementation": [
+                "Assigns a specific IPv4 address to the authenticated user",
+                "Commonly used in VPN scenarios for static IP assignment",
+                "Also useful for tracking specific users by IP address",
+                "Should be used with Framed-IP-Netmask for complete configuration",
+                "Not used for IPv6 addressing (see Framed-IPv6-Address)"
+            ],
+            "reference": "https://datatracker.ietf.org/doc/html/rfc2865"
+        },
+        {
+            "name": "Framed-IPv6-Address",
+            "number": "168",
+            "description": "IPv6 address to be configured for the user.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Framed-IPv6-Address = 2001:db8::1",
+            "implementation": [
+                "Assigns a specific IPv6 address to the authenticated user",
+                "Commonly used in IPv6-enabled VPN scenarios",
+                "Multiple instances can be used to assign multiple addresses",
+                "Often used with Framed-IPv6-Prefix for complete configuration",
+                "IPv6 counterpart to the Framed-IP-Address attribute"
+            ],
+            "reference": "https://datatracker.ietf.org/doc/html/rfc3162"
+        }
+    ]
+}

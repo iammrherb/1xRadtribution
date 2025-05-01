@@ -1,0 +1,186 @@
+{
+    "vendor": "cisco",
+    "protocol": "tacacs",
+    "attributes": [
+        {
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Specifies the privilege level for the user. Used to determine administrative access rights.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "priv-lvl = 15 for full administrative access.",
+            "implementation": [
+                "Configure the TACACS+ server to return this attribute with privilege level",
+                "Configure the Cisco device to use TACACS+ for authentication",
+                "Privilege levels range from 0 (lowest) to 15 (highest)",
+                "Common levels: 0 (user EXEC), 1 (privileged EXEC), 15 (enable)",
+                "The device will automatically assign the specified privilege level"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "cmd",
+            "number": "N/A",
+            "description": "Used for command authorization to control which commands a user can execute.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "cmd = show for permitting all show commands.",
+            "implementation": [
+                "Configure the Cisco device to use TACACS+ for command authorization",
+                "Configure the TACACS+ server with command permissions",
+                "For each command, specify permit or deny",
+                "Can use wildcards (e.g., \"show *\" to permit all show commands)",
+                "Enable command authorization on the device with \"aaa authorization commands\""
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "service",
+            "number": "N/A",
+            "description": "Specifies the service for which authorization is to be performed.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "service = shell for shell login authorization.",
+            "implementation": [
+                "Configure the Cisco device to use TACACS+ for authorization",
+                "Configure the TACACS+ server with services",
+                "Common services: shell (exec), network, admin, ppp",
+                "Each service can have different attributes (e.g., priv-lvl)",
+                "Enable service authorization on the device with \"aaa authorization\""
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "roles",
+            "number": "N/A",
+            "description": "Specifies the role(s) to assign to the user. Used for role-based access control, particularly for NX-OS.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "roles = \"network-admin\" for full administrative access on NX-OS devices.",
+            "implementation": [
+                "Configure the Cisco NX-OS device to use TACACS+ for authentication",
+                "Define roles on the device or use predefined roles",
+                "Configure the TACACS+ server to return this attribute with role names",
+                "Multiple roles can be separated by spaces",
+                "Common NX-OS roles: network-admin, network-operator, vdc-admin"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/7-x/security/configuration/guide/b_Cisco_Nexus_9000_Series_NX-OS_Security_Configuration_Guide_7x/b_Cisco_Nexus_9000_Series_NX-OS_Security_Configuration_Guide_7x_chapter_01001.html"
+        },
+        {
+            "name": "addr",
+            "number": "N/A",
+            "description": "Specifies IP address restrictions for the authenticated user.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "addr = 10.1.1.0/24 to restrict access to this IP range.",
+            "implementation": [
+                "Configure the TACACS+ server to return this attribute",
+                "Can specify individual IP addresses or CIDR notation for ranges",
+                "User will only be able to access from the specified IP addresses",
+                "Useful for restricting administrative access to specific networks",
+                "Supports both IPv4 and IPv6 address restrictions"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "autocmd",
+            "number": "N/A",
+            "description": "Specifies a command that is automatically executed after user login.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "autocmd = \"show version\" to automatically show version info after login.",
+            "implementation": [
+                "Configure the TACACS+ server to return this attribute",
+                "Command is executed automatically after successful authentication",
+                "Useful for displaying messages, collecting information, or setting context",
+                "Can specify any valid command that the user would have permission to run",
+                "Multiple autocmd attributes can be specified for sequential execution"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html"
+        }
+    ]
+}

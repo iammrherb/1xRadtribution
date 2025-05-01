@@ -1,0 +1,126 @@
+{
+    "vendor": "arista",
+    "protocol": "tacacs",
+    "attributes": [
+        {
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Administrative privilege level. Controls access to CLI commands.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "priv-lvl = 15 for full administrative access.",
+            "implementation": [
+                "Configure the TACACS+ server to return this attribute with privilege level",
+                "Configure the Arista switch to use TACACS+ for authentication",
+                "Privilege levels range from 0 (lowest) to 15 (highest)",
+                "Common levels: 1 (basic), 7 (configure-only), 15 (administrator)",
+                "The switch will automatically assign the specified privilege level"
+            ],
+            "reference": "https://www.arista.com/en/support/product-documentation/eos/eos-4-24-0f/tacacs-client"
+        },
+        {
+            "name": "cmd",
+            "number": "N/A",
+            "description": "Command authorization. Controls which commands a user can execute.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "cmd = show for permitting all show commands.",
+            "implementation": [
+                "Configure the Arista switch to use TACACS+ for command authorization",
+                "Configure the TACACS+ server with command permissions",
+                "For each command, specify permit or deny",
+                "Can use wildcards (e.g., \"show *\" to permit all show commands)",
+                "Enable command authorization on the switch with appropriate configuration"
+            ],
+            "reference": "https://www.arista.com/en/support/product-documentation/eos/eos-4-24-0f/tacacs-client"
+        },
+        {
+            "name": "role",
+            "number": "N/A",
+            "description": "EOS role assignment. Controls the user's role in the system.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "role = \"network-admin\" for role-based access control.",
+            "implementation": [
+                "Define roles on the Arista switch with appropriate permissions",
+                "Configure the TACACS+ server to return this attribute with the role name",
+                "Configure the Arista switch to use TACACS+ for authentication",
+                "The role must be predefined on the switch",
+                "Roles provide a more structured approach to access control than privilege levels"
+            ],
+            "reference": "https://www.arista.com/en/support/product-documentation/eos/eos-4-24-0f/tacacs-client"
+        },
+        {
+            "name": "service",
+            "number": "N/A",
+            "description": "TACACS+ service type for authorization.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "service = shell for CLI access authentication.",
+            "implementation": [
+                "Configure the TACACS+ server with the appropriate service",
+                "Typical services include shell, arap, ppp, netlogin",
+                "For Arista administrative access, use service = shell",
+                "Different services can have different attributes",
+                "Critical for proper TACACS+ authorization flow"
+            ],
+            "reference": "https://www.arista.com/en/support/product-documentation/eos/eos-4-24-0f/tacacs-client"
+        }
+    ]
+}

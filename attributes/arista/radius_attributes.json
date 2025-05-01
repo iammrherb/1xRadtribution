@@ -1,0 +1,187 @@
+{
+    "vendor": "arista",
+    "protocol": "radius",
+    "attributes": [
+        {
+            "name": "Arista-ACL-Name",
+            "number": "1",
+            "description": "Specifies the name of an ACL to be applied to the user session. Controls network access permissions.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Arista-ACL-Name = \"Employee-ACL\" for applying employee ACL.",
+            "implementation": [
+                "Define the ACL on the Arista switch with appropriate permit/deny statements",
+                "Configure the RADIUS server with Arista VSAs",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The Arista switch applies the specified ACL to the user upon authentication",
+                "ACLs define traffic filtering rules and can be restrictive or permissive"
+            ],
+            "reference": "https://www.arista.com/en/support/product-documentation/eos/eos-4-24-0f/radius-server"
+        },
+        {
+            "name": "Arista-User-Role",
+            "number": "2",
+            "description": "Specifies the user role for the authenticated session. Controls user privileges and access rights.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Arista-User-Role = \"admin\" for administrative access.",
+            "implementation": [
+                "Define the user role on the Arista switch with appropriate privileges",
+                "Configure the RADIUS server with Arista VSAs",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The Arista switch assigns the specified role to the user upon authentication",
+                "User roles define access privileges and permission levels"
+            ],
+            "reference": "https://www.arista.com/en/support/product-documentation/eos/eos-4-24-0f/radius-server"
+        },
+        {
+            "name": "Arista-VLAN",
+            "number": "3",
+            "description": "Specifies the VLAN ID for dynamic VLAN assignment during authentication.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Arista-VLAN = 100 for VLAN assignment.",
+            "implementation": [
+                "Configure the VLAN on the Arista switch",
+                "Configure the RADIUS server with Arista VSAs",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "Configure the switch port for 802.1X authentication",
+                "The VLAN will be dynamically assigned when the user authenticates"
+            ],
+            "reference": "https://www.arista.com/en/support/product-documentation/eos/eos-4-24-0f/radius-server"
+        },
+        {
+            "name": "Arista-Privilege-Level",
+            "number": "4",
+            "description": "Specifies the privilege level for the user. Controls administrative access rights.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Arista-Privilege-Level = 15 for full administrative access.",
+            "implementation": [
+                "Configure the RADIUS server with Arista VSAs",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "Privilege levels range from 0 (lowest) to 15 (highest)",
+                "Common levels: 1 (basic), 7 (configure-only), 15 (administrator)",
+                "The switch will automatically assign the specified privilege level"
+            ],
+            "reference": "https://www.arista.com/en/support/product-documentation/eos/eos-4-24-0f/radius-server"
+        },
+        {
+            "name": "Arista-IPv6-ACL-Name",
+            "number": "5",
+            "description": "Specifies the name of an IPv6 ACL to be applied to the user session.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Arista-IPv6-ACL-Name = \"Employee-IPv6-ACL\" for applying IPv6 ACL.",
+            "implementation": [
+                "Define the IPv6 ACL on the Arista switch",
+                "Configure the RADIUS server with Arista VSAs",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The Arista switch applies the specified IPv6 ACL to the user upon authentication",
+                "Used specifically for controlling IPv6 traffic"
+            ],
+            "reference": "https://www.arista.com/en/support/product-documentation/eos/eos-4-24-0f/radius-server"
+        },
+        {
+            "name": "Arista-QoS-Group",
+            "number": "6",
+            "description": "Specifies the QoS group for the user's traffic.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Arista-QoS-Group = 3 for assigning QoS group 3.",
+            "implementation": [
+                "Configure QoS groups on the Arista switch",
+                "Configure the RADIUS server with Arista VSAs",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The Arista switch applies the specified QoS group to the user's traffic",
+                "Used for controlling bandwidth and traffic prioritization",
+                "Supports both IPv4 and IPv6 traffic"
+            ],
+            "reference": "https://www.arista.com/en/support/product-documentation/eos/eos-4-24-0f/radius-server"
+        }
+    ]
+}

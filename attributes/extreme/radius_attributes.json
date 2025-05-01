@@ -1,0 +1,188 @@
+{
+    "vendor": "extreme",
+    "protocol": "radius",
+    "attributes": [
+        {
+            "name": "Extreme-Netlogin-Vlan",
+            "number": "203",
+            "description": "Specifies the VLAN to assign to the authenticated user. Used for dynamic VLAN assignment.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Extreme-Netlogin-Vlan = \"100\" to assign the user to VLAN 100.",
+            "implementation": [
+                "Configure the VLAN on the Extreme switch",
+                "Configure the RADIUS server with Extreme VSAs (Vendor ID: 1916)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The VSA can contain a VLAN name or a VLAN ID",
+                "The switch applies the VLAN to the user's port upon successful authentication"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos_all/EXOS/All/pdfs/EXOS_All_16.2_User_Guide_rev3A.pdf"
+        },
+        {
+            "name": "Extreme-CLI-Authorization",
+            "number": "201",
+            "description": "Controls CLI command authorization for the user. Used to restrict administrative access to specific commands.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Extreme-CLI-Authorization = \"1\" to enable command authorization for the user.",
+            "implementation": [
+                "Configure the RADIUS server with Extreme VSAs (Vendor ID: 1916)",
+                "Set up RADIUS authentication for administrative access",
+                "Set this VSA to \"1\" to enable command authorization",
+                "Must be used with other Extreme command authorization attributes",
+                "The switch will enforce command restrictions based on the assigned profile"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos_all/EXOS/All/pdfs/EXOS_All_16.2_User_Guide_rev3A.pdf"
+        },
+        {
+            "name": "Extreme-CLI-Profile",
+            "number": "204",
+            "description": "Specifies the CLI profile to apply to the user. Controls which commands the user can access.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Extreme-CLI-Profile = \"admin\" to apply the admin CLI profile.",
+            "implementation": [
+                "Create CLI profiles on the Extreme switch",
+                "Configure the RADIUS server with Extreme VSAs (Vendor ID: 1916)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The profile name must match one defined on the switch",
+                "The switch applies the command restrictions defined in the profile"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos_all/EXOS/All/pdfs/EXOS_All_16.2_User_Guide_rev3A.pdf"
+        },
+        {
+            "name": "Extreme-Netlogin-URL",
+            "number": "206",
+            "description": "Specifies the URL to redirect the user to after successful authentication.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": true,
+                "captive": true,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Extreme-Netlogin-URL = \"https://welcome.company.com\" for URL redirection after login.",
+            "implementation": [
+                "Configure the RADIUS server with Extreme VSAs (Vendor ID: 1916)",
+                "Set up RADIUS authentication for users",
+                "Configure the switch to allow URL redirection",
+                "The user will be redirected to the specified URL upon successful authentication",
+                "Can be used for welcome pages or further authentication steps"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos_all/EXOS/All/pdfs/EXOS_All_16.2_User_Guide_rev3A.pdf"
+        },
+        {
+            "name": "Extreme-Policy-Name",
+            "number": "207",
+            "description": "Specifies the policy profile to apply to the user.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Extreme-Policy-Name = \"employee-policy\" to apply the employee policy profile.",
+            "implementation": [
+                "Create policy profiles on the Extreme switch",
+                "Configure the RADIUS server with Extreme VSAs (Vendor ID: 1916)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The policy profile name must match one defined on the switch",
+                "Policy profiles can include VLAN, QoS, and ACL settings",
+                "Comprehensive way to apply multiple settings with a single attribute"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos_all/EXOS/All/pdfs/EXOS_All_16.2_User_Guide_rev3A.pdf"
+        },
+        {
+            "name": "Extreme-Rate-Limit",
+            "number": "209",
+            "description": "Specifies the rate limit to apply to the user's traffic.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Extreme-Rate-Limit = \"1000 2000\" for 1 Mbps inbound and 2 Mbps outbound limits.",
+            "implementation": [
+                "Configure the RADIUS server with Extreme VSAs (Vendor ID: 1916)",
+                "Set up RADIUS authentication for users",
+                "Format is typically \"inbound-limit outbound-limit\" in kbps",
+                "The switch applies the rate limits to the user's traffic",
+                "Used for bandwidth management and traffic prioritization",
+                "Supports both IPv4 and IPv6 traffic"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos_all/EXOS/All/pdfs/EXOS_All_16.2_User_Guide_rev3A.pdf"
+        }
+    ]
+}

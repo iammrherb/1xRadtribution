@@ -1,0 +1,218 @@
+{
+    "vendor": "hp",
+    "protocol": "radius",
+    "attributes": [
+        {
+            "name": "HPE-Port-Client-Limit-Dot1x",
+            "number": "10",
+            "description": "Sets a temporary 802.1X client limit for the port. Values range from 0 (disabled) to 32 clients.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wired",
+            "example": "HPE-Port-Client-Limit-Dot1x = 5 to limit to 5 clients.",
+            "implementation": [
+                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
+                "Set up RADIUS authentication on the HP switch",
+                "Configure port-based authentication with 802.1X",
+                "The VSA value can range from 0 to 32 (0 disables the client limit)",
+                "Used when multiple clients need to authenticate through the same physical port"
+            ],
+            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+        },
+        {
+            "name": "HPE-VLAN-ID",
+            "number": "80",
+            "description": "Assigns a VLAN to the authenticated user. Used for dynamic VLAN assignment based on user credentials.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wired",
+            "example": "HPE-VLAN-ID = 100 to dynamically assign VLAN 100.",
+            "implementation": [
+                "Configure the VLAN on the HP switch",
+                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
+                "Set up RADIUS authentication with 802.1X on the switch ports",
+                "When a user authenticates, they are assigned to the specified VLAN",
+                "Alternative to using the standard Tunnel-Private-Group-ID attribute"
+            ],
+            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+        },
+        {
+            "name": "HP-Privilege-Level",
+            "number": "1",
+            "description": "Specifies the privilege level for administrative access to HP devices.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-Privilege-Level = 15 for full administrative access.",
+            "implementation": [
+                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
+                "Set up RADIUS authentication for administrative access",
+                "Privilege levels range from 0 (lowest) to 15 (highest)",
+                "Common levels: 0 (user), 1 (manager), 15 (administrator)",
+                "The switch automatically assigns the specified privilege level after successful authentication"
+            ],
+            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+        },
+        {
+            "name": "HPE-Command-Exception",
+            "number": "22",
+            "description": "Specifies CLI commands that are exceptions to the user's authorization level.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HPE-Command-Exception = \"show running-config; show interfaces\" to allow specific commands.",
+            "implementation": [
+                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
+                "Set up RADIUS authentication for administrative access",
+                "Commands can be allowed or denied as exceptions to the privilege level",
+                "Multiple commands separated by semicolons",
+                "Allows fine-grained control over CLI command authorization"
+            ],
+            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+        },
+        {
+            "name": "HPE-IP-Filter-Raw",
+            "number": "61",
+            "description": "Specifies IP filters to be applied to the user's traffic.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HPE-IP-Filter-Raw = \"permit ip 10.1.1.0/24 any\" for IP filtering.",
+            "implementation": [
+                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
+                "Set up RADIUS authentication for user access",
+                "Define IP filter rules directly in the VSA",
+                "Can include multiple filter rules for comprehensive control",
+                "Applied dynamically when the user authenticates"
+            ],
+            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+        },
+        {
+            "name": "HPE-IPv6-Filter-Raw",
+            "number": "62",
+            "description": "Specifies IPv6 filters to be applied to the user's traffic.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HPE-IPv6-Filter-Raw = \"permit ipv6 2001:db8::/64 any\" for IPv6 filtering.",
+            "implementation": [
+                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
+                "Set up RADIUS authentication for user access",
+                "Define IPv6 filter rules directly in the VSA",
+                "Can include multiple filter rules for comprehensive control",
+                "Applied dynamically when the user authenticates",
+                "Used specifically for IPv6 traffic filtering"
+            ],
+            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+        },
+        {
+            "name": "HPE-Rate-Limit",
+            "number": "100",
+            "description": "Specifies bandwidth rate limits for the user's traffic.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HPE-Rate-Limit = \"1000 2000\" for 1 Mbps ingress and 2 Mbps egress limits.",
+            "implementation": [
+                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
+                "Set up RADIUS authentication for user access",
+                "Specify ingress and egress rate limits in kbps",
+                "Format is typically \"ingress-limit egress-limit\"",
+                "Applied dynamically when the user authenticates",
+                "Used for QoS and bandwidth management"
+            ],
+            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+        }
+    ]
+}

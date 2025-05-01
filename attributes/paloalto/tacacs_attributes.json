@@ -1,0 +1,130 @@
+{
+    "vendor": "paloalto",
+    "protocol": "tacacs",
+    "attributes": [
+        {
+            "name": "PaloAlto-Admin-Role",
+            "number": "N/A",
+            "description": "Assigns an administrative role to the user for Palo Alto Networks firewall management access.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Admin-Role = \"superuser\" for full administrative access.",
+            "implementation": [
+                "Configure the TACACS+ server with the required Palo Alto attributes",
+                "Set the service attribute to \"PaloAlto\"",
+                "Set the protocol attribute to \"firewall\"",
+                "Configure the PAN-OS device to use TACACS+ authentication",
+                "Set the PaloAlto-Admin-Role attribute with the desired role",
+                "Valid values include standard roles (superuser, superreader, etc.) or custom roles"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/tacacs"
+        },
+        {
+            "name": "PaloAlto-Admin-Access-Domain",
+            "number": "N/A",
+            "description": "Specifies the access domain for firewall administrators. Used in multi-virtual system environments to control which vsys an administrator can manage.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Admin-Access-Domain = \"Domain1\" for specific domain access.",
+            "implementation": [
+                "Configure access domains on the Palo Alto firewall (Device > Access Domains)",
+                "Configure the TACACS+ server with the required Palo Alto attributes",
+                "Set the service attribute to \"PaloAlto\"",
+                "Set the protocol attribute to \"firewall\"",
+                "Configure the PAN-OS device to use TACACS+ authentication",
+                "Set the PaloAlto-Admin-Access-Domain attribute with the desired domain name"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/tacacs"
+        },
+        {
+            "name": "PaloAlto-Panorama-Admin-Role",
+            "number": "N/A",
+            "description": "Assigns an administrative role to the user for Panorama management access. Controls access rights in the Panorama management system.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Panorama-Admin-Role = \"panorama-admin\" for Panorama administration access.",
+            "implementation": [
+                "Configure the TACACS+ server with the required Palo Alto attributes",
+                "Set the service attribute to \"PaloAlto\"",
+                "Set the protocol attribute to \"panorama\"",
+                "Configure Panorama to use TACACS+ authentication",
+                "Set the PaloAlto-Panorama-Admin-Role attribute with the desired role",
+                "Valid values include standard roles (panorama-admin, etc.) or custom roles"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/tacacs"
+        },
+        {
+            "name": "PaloAlto-Panorama-Admin-Access-Domain",
+            "number": "N/A",
+            "description": "Specifies the access domain for Panorama administrators. Controls which device groups and templates an administrator can manage in Panorama.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Panorama-Admin-Access-Domain = \"Domain2\" for specific Panorama domain access.",
+            "implementation": [
+                "Configure access domains on Panorama (Panorama > Access Domains)",
+                "Configure the TACACS+ server with the required Palo Alto attributes",
+                "Set the service attribute to \"PaloAlto\"",
+                "Set the protocol attribute to \"panorama\"",
+                "Configure Panorama to use TACACS+ authentication",
+                "Set the PaloAlto-Panorama-Admin-Access-Domain attribute with the desired domain name"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/tacacs"
+        }
+    ]
+}

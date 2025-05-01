@@ -1,0 +1,288 @@
+{
+    "vendor": "cisco",
+    "protocol": "radius",
+    "attributes": [
+        {
+            "name": "Cisco-AVPair",
+            "number": "1",
+            "description": "Multi-purpose attribute used for various functions including shell privilege levels, ACL assignments, VLAN assignments, SGT assignments, QoS policies, and bandwidth control.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": true,
+                "url": true,
+                "captive": true,
+                "sgt": true,
+                "dacl": true,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": true
+            },
+            "network": "both",
+            "example": "Cisco-AVPair = \"shell:priv-lvl=15\" for admin access; Cisco-AVPair = \"ip:inacl#10=permit ip 10.0.0.0 0.255.255.255 any\" for ACL; Cisco-AVPair = \"cts:security-group-tag=3\" for SGT assignment",
+            "implementation": [
+                "Configure the RADIUS server to return this VSA with the appropriate formatting",
+                "For ACLs: Use format \"ip:inacl#<number>=<acl-command>\"",
+                "For admin level: Use format \"shell:priv-lvl=<level>\" (levels 0-15)",
+                "For SGT: Use format \"cts:security-group-tag=<tag-number>\"",
+                "For QoS: Use format \"ip:sub-qos-policy-in=<policy-name>\"",
+                "For VLAN: Use format \"device-traffic-class=<vlan-number>\"",
+                "For VPN: Use format \"vpn:addr-pool=<pool-name>\"",
+                "For IPv6 ACLs: Use format \"ipv6:inacl#<number>=<ipv6-acl-command>\"",
+                "Multiple attributes can be sent for different functions"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_rad/configuration/15-mt/sec-usr-rad-15-mt-book/sec-rad-vsa.html"
+        },
+        {
+            "name": "Web-Auth-Redirect",
+            "number": "2",
+            "description": "Triggers a captive portal (web authentication) redirect for user authentication on networks without 802.1X.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": true,
+                "captive": true,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Web-Auth-Redirect URL = \"https://portal.company.com/login\" to redirect users to a login page.",
+            "implementation": [
+                "Enable captive portal (web-auth) on the network device (WLC or switch)",
+                "Configure the RADIUS server to return this attribute with the redirect URL",
+                "Configure ACLs to permit traffic to the authentication server",
+                "Ensure the device intercepts HTTP/HTTPS and redirects to the provided URL",
+                "The user completes authentication on the web portal before gaining access"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/support/docs/security/identity-services-engine/200555-ISE-Guest-Access-Configuration-Example.html"
+        },
+        {
+            "name": "Cisco-Policy-Up",
+            "number": "3",
+            "description": "Specifies the upstream QoS policy to apply to the user's session. Used for bandwidth management and traffic prioritization.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Cisco-Policy-Up = \"BRONZE-UPSTREAM\" to apply the BRONZE upstream QoS policy.",
+            "implementation": [
+                "Create the QoS policy on the Cisco device",
+                "Configure the RADIUS server to return this VSA with the policy name",
+                "The policy name must match exactly with what's configured on the device",
+                "Used for rate limiting, shaping, and prioritizing traffic",
+                "Can be changed dynamically through CoA for active sessions",
+                "Supports both IPv4 and IPv6 traffic"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/qos_classn/configuration/15-mt/qos-classn-15-mt-book/qos-classn-mrkg-red.html"
+        },
+        {
+            "name": "Cisco-Policy-Down",
+            "number": "4",
+            "description": "Specifies the downstream QoS policy to apply to the user's session. Used for bandwidth management and traffic prioritization.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Cisco-Policy-Down = \"SILVER-DOWNSTREAM\" to apply the SILVER downstream QoS policy.",
+            "implementation": [
+                "Create the QoS policy on the Cisco device",
+                "Configure the RADIUS server to return this VSA with the policy name",
+                "The policy name must match exactly with what's configured on the device",
+                "Used for rate limiting, shaping, and prioritizing traffic",
+                "Can be changed dynamically through CoA for active sessions",
+                "Supports both IPv4 and IPv6 traffic"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/qos_classn/configuration/15-mt/qos-classn-15-mt-book/qos-classn-mrkg-red.html"
+        },
+        {
+            "name": "Cisco-Security-Group-Tag",
+            "number": "16",
+            "description": "Assigns a Security Group Tag (SGT) to the user's session. Used for Cisco TrustSec to enforce role-based access control.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": true,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Cisco-Security-Group-Tag = 10 to assign SGT value 10 to the user session.",
+            "implementation": [
+                "Enable Cisco TrustSec features on the network device",
+                "Configure the RADIUS server to return this VSA with the SGT value",
+                "Define SGT policy matrices on the ISE or security controller",
+                "SGTs are used to classify traffic and enforce policies",
+                "Can be dynamically changed through CoA for active sessions",
+                "Alternative to using Cisco-AVPair with cts:security-group-tag format",
+                "Works with both IPv4 and IPv6 environments"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/switches/lan/trustsec/configuration/guide/trustsec/sgacl_config.html"
+        },
+        {
+            "name": "Cisco-VPN-Group-Policy",
+            "number": "25",
+            "description": "Specifies the group policy to apply to a VPN session. Used for VPN client configuration and access control.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Cisco-VPN-Group-Policy = \"SALES_VPN_POLICY\" to apply this policy to the VPN session.",
+            "implementation": [
+                "Create the group policy on the ASA or Cisco VPN device",
+                "Configure the RADIUS server to return this VSA with the policy name",
+                "The policy name must match exactly with what's configured on the device",
+                "Group policies define VPN settings like split tunneling, DNS, timeouts, etc.",
+                "Used in AnyConnect and other Cisco VPN deployments",
+                "Supports both IPv4 and IPv6 VPN connections"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/support/docs/security/asa-5500-x-series-next-generation-firewalls/98628-asa-vpn-radius.html"
+        },
+        {
+            "name": "Cisco-IPv6-ACL-In",
+            "number": "50",
+            "description": "Specifies the name of an IPv6 ACL to be applied to inbound traffic for this session.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Cisco-IPv6-ACL-In = \"IPV6-GUEST-ACL\" to apply the IPv6 ACL to inbound traffic.",
+            "implementation": [
+                "Create the IPv6 ACL on the Cisco device",
+                "Configure the RADIUS server to return this VSA with the ACL name",
+                "The ACL name must match exactly with what's configured on the device",
+                "Used specifically for IPv6 traffic filtering",
+                "Alternative to using ipv6:inacl format in Cisco-AVPair",
+                "Can be used with Cisco-IPv6-ACL-Out for bidirectional control"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_rad/configuration/15-mt/sec-usr-rad-15-mt-book/sec-rad-vsa.html"
+        },
+        {
+            "name": "Cisco-IPv6-ACL-Out",
+            "number": "51",
+            "description": "Specifies the name of an IPv6 ACL to be applied to outbound traffic for this session.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Cisco-IPv6-ACL-Out = \"IPV6-RESTRICT-OUTBOUND\" to apply the IPv6 ACL to outbound traffic.",
+            "implementation": [
+                "Create the IPv6 ACL on the Cisco device",
+                "Configure the RADIUS server to return this VSA with the ACL name",
+                "The ACL name must match exactly with what's configured on the device",
+                "Used specifically for IPv6 traffic filtering",
+                "Alternative to using ipv6:outacl format in Cisco-AVPair",
+                "Can be used with Cisco-IPv6-ACL-In for bidirectional control"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_rad/configuration/15-mt/sec-usr-rad-15-mt-book/sec-rad-vsa.html"
+        },
+        {
+            "name": "Cisco-Multicast-Group-Policy",
+            "number": "73",
+            "description": "Specifies the multicast group policy to apply to the user session.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": true
+            },
+            "network": "both",
+            "example": "Cisco-Multicast-Group-Policy = \"MULTICAST-POLICY-A\" to control multicast access.",
+            "implementation": [
+                "Create the multicast policy on the Cisco device",
+                "Configure the RADIUS server to return this VSA with the policy name",
+                "The policy name must match exactly with what's configured on the device",
+                "Used to control which multicast groups a user can join or send to",
+                "Important for controlling multicast traffic in enterprise networks",
+                "Helps prevent multicast storms and unauthorized multicast usage"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/ipmulti/configuration/15-mt/imc-15-mt-book/imc-basic-cfg.html"
+        }
+    ]
+}

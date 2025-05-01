@@ -1,0 +1,278 @@
+{
+    "vendor": "fortinet",
+    "protocol": "radius",
+    "attributes": [
+        {
+            "name": "Fortinet-Group-Name",
+            "number": "1",
+            "description": "Specifies the group name of the user. Used to assign users to specific user groups for policy enforcement.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Group-Name = \"Admins\" for administrative group assignment; Fortinet-Group-Name = \"VPN_Users\" for remote access policy enforcement",
+            "implementation": [
+                "Define the user group on the FortiGate (typically under User & Authentication > User Groups)",
+                "Configure your RADIUS server to return this VSA with the name of the group",
+                "The RADIUS server must support Fortinet VSAs (Vendor ID 12356)",
+                "The group name is case-sensitive and must match exactly with what is configured on the FortiGate",
+                "User groups can be used in firewall policies, VPN configurations, and web filtering policies"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas"
+        },
+        {
+            "name": "Fortinet-Client-IP-Address",
+            "number": "2",
+            "description": "Specifies the IP address to assign to the client. Commonly used in VPN scenarios to assign a specific IP address to the connecting user.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Client-IP-Address = \"192.168.1.100\" for fixed IP assignment in VPN configurations",
+            "implementation": [
+                "Configure the RADIUS server to return this VSA with the specific IP address",
+                "Ensure IP addresses provided don't conflict with other address assignments",
+                "Commonly used with SSL VPN and IPsec VPN setups",
+                "Can be used to track usage by specific users through consistent IP assignments",
+                "Alternative to using IP pools on the FortiGate for address assignment"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas"
+        },
+        {
+            "name": "Fortinet-Vdom-Name",
+            "number": "3",
+            "description": "Specifies the virtual domain (VDOM) name to which the user is tied. Used in multi-tenant environments to restrict users to specific VDOMs.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Vdom-Name = \"customer_A\" to restrict user access to the customer_A VDOM only",
+            "implementation": [
+                "Enable multi-VDOM mode on the FortiGate",
+                "Create the VDOMs that will be used",
+                "Configure the RADIUS server to return this VSA with the VDOM name",
+                "The VDOM name is case-sensitive and must match exactly with the VDOM configured on the FortiGate",
+                "This is useful for managed service providers with multi-tenant environments"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas"
+        },
+        {
+            "name": "Fortinet-Client-IPv6-Address",
+            "number": "4",
+            "description": "Specifies the IPv6 address to assign to the client. Used in IPv6-enabled environments for address assignment to connecting clients.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Client-IPv6-Address = \"2001:db8::1\" for IPv6 address assignment",
+            "implementation": [
+                "Enable IPv6 support on the FortiGate",
+                "Configure the RADIUS server to return this VSA with the IPv6 address",
+                "Ensure IPv6 connectivity is properly configured in your environment",
+                "Often used in SSL VPN and IPsec VPN dual-stack (IPv4/IPv6) deployments",
+                "The attribute value format is in Octets to support full IPv6 address representation"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas"
+        },
+        {
+            "name": "Fortinet-Interface-Name",
+            "number": "5",
+            "description": "Specifies the name of the FortiGate interface to be used by the client. Can control which network interface a user's traffic is directed through.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Interface-Name = \"port1\" to specify the client should use the port1 interface",
+            "implementation": [
+                "Ensure the specified interface exists on the FortiGate",
+                "Configure the RADIUS server to return this VSA with the interface name",
+                "The interface name is case-sensitive and must match exactly with the interface configured on the FortiGate",
+                "This attribute can be used for traffic engineering and routing specific users through specific interfaces",
+                "Helpful in complex network environments with multiple egress paths"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas"
+        },
+        {
+            "name": "Fortinet-Access-Profile",
+            "number": "6",
+            "description": "Specifies the access profile to assign to the user. Critical for remote administration, determining what level of administrative access a user has.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Access-Profile = \"super_admin\" for full administrative privileges; Fortinet-Access-Profile = \"read_only\" for monitoring-only access",
+            "implementation": [
+                "Create access profiles on the FortiGate under System > Admin Profiles",
+                "Define the permissions for each profile (read/write access to specific functions)",
+                "Configure the RADIUS server to return this VSA with the profile name",
+                "The profile name is case-sensitive and must match exactly with the profile on the FortiGate",
+                "Use with Fortinet-Vdom-Name for VDOM-specific administrative restrictions"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas"
+        },
+        {
+            "name": "Fortinet-SSID",
+            "number": "7",
+            "description": "Specifies the SSID to which the user is connected. Used for tracking and policy enforcement in WiFi deployments.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wireless",
+            "example": "Fortinet-SSID = \"Guest_WiFi\" to track connections to the guest wireless network",
+            "implementation": [
+                "Configure wireless SSIDs on the FortiGate",
+                "Setup RADIUS authentication for the wireless network",
+                "The FortiGate can send this attribute to the RADIUS server for accounting",
+                "Used primarily for monitoring and reporting wireless network usage",
+                "Often used in conjunction with Fortinet-AP-Name for complete wireless visibility"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas"
+        },
+        {
+            "name": "Fortinet-Webfilter-Category-Allow",
+            "number": "16",
+            "description": "Specifies web filter categories that should be allowed for this user, overriding the default web filter profile settings.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": true,
+                "captive": true,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Webfilter-Category-Allow = \"News\" to allow access to news sites for specific users",
+            "implementation": [
+                "Configure web filtering on the FortiGate",
+                "Set up RADIUS authentication for users",
+                "Configure the RADIUS server to return this VSA with category names to allow",
+                "Category names must match FortiGuard web filter categories",
+                "This allows for user-specific web filtering overrides",
+                "Useful for providing different web access levels based on user roles or departments"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas"
+        },
+        {
+            "name": "Fortinet-Captive-Portal-URL",
+            "number": "27",
+            "description": "Specifies the captive portal URL for guest WiFi access. Used to direct users to a specific captive portal page.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": true,
+                "captive": true,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wireless",
+            "example": "Fortinet-Captive-Portal-URL = \"https://guest.example.com\" to redirect users to a custom portal",
+            "implementation": [
+                "Configure captive portal settings on the FortiGate",
+                "Setup RADIUS authentication for guest WiFi",
+                "Configure the RADIUS server to return this VSA with the portal URL",
+                "Allows customization of the captive portal experience per user or group",
+                "Can be used for branded guest access or different portals by location",
+                "Valuable for multi-tenant environments or managed service providers"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.6.2/administration-guide/952303/radius-avps-and-vsas"
+        }
+    ]
+}

@@ -1,0 +1,156 @@
+{
+    "vendor": "juniper",
+    "protocol": "tacacs",
+    "attributes": [
+        {
+            "name": "local-user-name",
+            "number": "N/A",
+            "description": "Specifies a locally defined user template to be applied to the authenticated user. Similar to the RADIUS Juniper-Local-User-Name attribute.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "local-user-name = netadmin-template for administrator access.",
+            "implementation": [
+                "Define local user templates with specific privilege levels on the Juniper device",
+                "Configure your TACACS+ server to return this attribute with the template name",
+                "Configure the Juniper device to accept TACACS+ authentication",
+                "The template name must match exactly with one defined on your Juniper device",
+                "This attribute maps an authenticated user to a locally defined template user"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/task/configuration/authentication-tacacs-authentication-configuring.html"
+        },
+        {
+            "name": "login-class",
+            "number": "N/A",
+            "description": "Assigns a login class to the user, which determines the user's access privileges in the CLI. Similar to the RADIUS Juniper-Login-Class attribute.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "login-class = super-user for full administrative access.",
+            "implementation": [
+                "Define login classes on the Juniper device with the desired permissions",
+                "Configure the TACACS+ server to return this attribute with the login class name",
+                "Configure the Juniper device to accept TACACS+ authentication",
+                "The class must be predefined on the Juniper device",
+                "Login classes define CLI command permissions, timeouts, and idle behavior"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/task/configuration/authentication-tacacs-authentication-configuring.html"
+        },
+        {
+            "name": "allow-commands",
+            "number": "N/A",
+            "description": "Lists commands that the user is allowed to execute. Similar to the RADIUS Juniper-Allow-Commands attribute.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "allow-commands = \"show interfaces;show system\" to allow only these commands.",
+            "implementation": [
+                "Configure the TACACS+ server to return this attribute with allowed commands",
+                "Configure the Juniper device to accept TACACS+ authentication",
+                "Use semicolons to separate multiple commands",
+                "Commands can include wildcards for flexibility (e.g., \"show *\")",
+                "This attribute overrides any permission restrictions in the user's login class"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/task/configuration/authentication-tacacs-authentication-configuring.html"
+        },
+        {
+            "name": "deny-commands",
+            "number": "N/A",
+            "description": "Lists commands that the user is not allowed to execute. Similar to the RADIUS Juniper-Deny-Commands attribute.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "deny-commands = \"configure;restart\" to prevent configuration and restart.",
+            "implementation": [
+                "Configure the TACACS+ server to return this attribute with denied commands",
+                "Configure the Juniper device to accept TACACS+ authentication",
+                "Use semicolons to separate multiple commands",
+                "Commands can include wildcards for flexibility (e.g., \"configure *\")",
+                "Takes precedence over allow-commands for matching commands"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/task/configuration/authentication-tacacs-authentication-configuring.html"
+        },
+        {
+            "name": "user-permissions",
+            "number": "N/A",
+            "description": "Specifies the user's permissions within the login class. Similar to the RADIUS Juniper-User-Permission attribute.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "user-permissions = \"all\" for full permissions.",
+            "implementation": [
+                "Configure the TACACS+ server to return this attribute with permission strings",
+                "Configure the Juniper device to accept TACACS+ authentication",
+                "Permissions include: all, clear, configure, control, field, maintenance, etc.",
+                "Multiple permissions can be specified with comma separation",
+                "These permissions override those defined in the assigned login class"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/task/configuration/authentication-tacacs-authentication-configuring.html"
+        }
+    ]
+}

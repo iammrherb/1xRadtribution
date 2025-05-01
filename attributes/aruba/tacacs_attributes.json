@@ -1,0 +1,126 @@
+{
+    "vendor": "aruba",
+    "protocol": "tacacs",
+    "attributes": [
+        {
+            "name": "role",
+            "number": "N/A",
+            "description": "Assigns an administrative role on Aruba controllers. Controls the level of access to controller management features.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "role = \"root\" for full administrative access.",
+            "implementation": [
+                "Configure the TACACS+ server with Aruba attributes",
+                "Set up TACACS+ authentication for admin access on the Aruba device",
+                "Configure the server to return this attribute with the desired admin role",
+                "Common admin roles: root, read-only, guest-provisioning, location-api-mgmt, network-operations",
+                "Custom admin roles can also be created and assigned"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/tac-plus.htm"
+        },
+        {
+            "name": "command-authorization",
+            "number": "N/A",
+            "description": "Controls access to specific CLI commands on Aruba devices. Used to restrict administrator access to certain commands.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "command-authorization = permit-all for full command access; command-authorization = permit-show for view-only access.",
+            "implementation": [
+                "Configure the TACACS+ server with Aruba attributes",
+                "Set up TACACS+ command authorization on the Aruba device",
+                "Configure the server to return this attribute with the desired permissions",
+                "Command permissions can be granular (specific commands) or broad (permit-all)",
+                "Commonly used values: permit-all, permit-config, permit-show, deny-all"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/tac-plus.htm"
+        },
+        {
+            "name": "service",
+            "number": "N/A",
+            "description": "Specifies the service type for TACACS+ authorization.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "service = aruba for Aruba-specific service configuration.",
+            "implementation": [
+                "Configure the TACACS+ server with Aruba attributes",
+                "Set the service type to 'aruba' for Aruba-specific attributes",
+                "Use with other Aruba-specific attributes",
+                "Required for proper handling of Aruba-specific attributes",
+                "Different from standard TACACS+ services like 'shell'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/tac-plus.htm"
+        },
+        {
+            "name": "admin-role",
+            "number": "N/A",
+            "description": "Alternative format for assigning an administrative role on Aruba controllers.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "admin-role = \"root\" for full administrative access.",
+            "implementation": [
+                "Configure the TACACS+ server with Aruba attributes",
+                "Set up TACACS+ authentication for admin access on the Aruba device",
+                "Configure the server to return this attribute with the desired admin role",
+                "Alternative format to the 'role' attribute",
+                "Used for backward compatibility with some TACACS+ server implementations"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/tac-plus.htm"
+        }
+    ]
+}

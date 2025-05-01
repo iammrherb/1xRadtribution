@@ -1,0 +1,311 @@
+{
+    "vendor": "juniper",
+    "protocol": "radius",
+    "attributes": [
+        {
+            "name": "Juniper-Local-User-Name",
+            "number": "1",
+            "description": "Specifies a local user template to be applied, corresponding to a configured user template on the device.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Local-User-Name = netadmin-template for network administrators.",
+            "implementation": [
+                "Define local user templates with specific privilege levels on the Juniper device",
+                "Configure your RADIUS server to return this VSA with the template name",
+                "The template name must match exactly with one defined on your Juniper device",
+                "This attribute maps an authenticated user to a locally defined template user",
+                "Particularly useful for assigning administrative roles with consistent permissions"
+            ],
+            "reference": "https://supportportal.juniper.net/s/article/Junos-How-to-assign-a-login-class-to-RADIUS-authenticated-users"
+        },
+        {
+            "name": "Juniper-Allow-Commands",
+            "number": "2",
+            "description": "Lists commands that the user is allowed to execute. Used for granular CLI command control.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Allow-Commands = \"show interfaces;show system\" to allow only these commands.",
+            "implementation": [
+                "Configure the RADIUS server to return this VSA with allowed commands",
+                "Use semicolons to separate multiple commands",
+                "Commands can include wildcards for flexibility (e.g., \"show *\")",
+                "This VSA overrides any permission restrictions in the user's login class",
+                "Useful for creating role-specific command permissions beyond login classes"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+        },
+        {
+            "name": "Juniper-Deny-Commands",
+            "number": "3",
+            "description": "Lists commands that the user is not allowed to execute. Used for granular CLI command restrictions.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Deny-Commands = \"configure;restart\" to prevent configuration and restart.",
+            "implementation": [
+                "Configure the RADIUS server to return this VSA with denied commands",
+                "Use semicolons to separate multiple commands",
+                "Commands can include wildcards for flexibility (e.g., \"configure *\")",
+                "Takes precedence over Juniper-Allow-Commands for matching commands",
+                "Useful for creating role-specific command restrictions"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+        },
+        {
+            "name": "Juniper-Filter",
+            "number": "4",
+            "description": "Specifies a pre-defined filter to be applied to the user's session. Similar to an ACL, can control traffic flow.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Filter = \"guest-access-filter\" to apply guest network restrictions.",
+            "implementation": [
+                "Create a firewall filter (ACL) on the Juniper device",
+                "Configure the RADIUS server to return this VSA with the filter name",
+                "Filter must be predefined on the Juniper device",
+                "The filter is applied to the user's traffic during the session",
+                "Multiple filter instances can be sent for different directions/protocols"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+        },
+        {
+            "name": "Juniper-Login-Class",
+            "number": "5",
+            "description": "Assigns a login class to the user, which determines the user's access privileges in the CLI.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Login-Class = \"super-user\" for full administrative access.",
+            "implementation": [
+                "Define login classes on the Juniper device with the desired permissions",
+                "Configure the RADIUS server to return this VSA with the login class name",
+                "The class must be predefined on the Juniper device",
+                "Login classes define CLI command permissions, timeouts, and idle behavior",
+                "Common classes include: super-user, operator, read-only"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+        },
+        {
+            "name": "Ingress-Policy-Name",
+            "number": "10",
+            "description": "Specifies a QoS policy to apply to inbound traffic. Used for traffic shaping and bandwidth management.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Ingress-Policy-Name = \"gold-service-in\" to apply the gold service QoS policy to incoming traffic.",
+            "implementation": [
+                "Create the QoS policy on the Juniper device",
+                "Configure the RADIUS server to return this VSA with the policy name",
+                "The policy name must match exactly with what's configured on the Juniper device",
+                "Used for user-specific or service-specific QoS treatment",
+                "Can be dynamically changed via CoA for active sessions",
+                "Supports both IPv4 and IPv6 traffic"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+        },
+        {
+            "name": "Egress-Policy-Name",
+            "number": "11",
+            "description": "Specifies a QoS policy to apply to outbound traffic. Used for traffic shaping and bandwidth management.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Egress-Policy-Name = \"silver-service-out\" to apply the silver service QoS policy to outgoing traffic.",
+            "implementation": [
+                "Create the QoS policy on the Juniper device",
+                "Configure the RADIUS server to return this VSA with the policy name",
+                "The policy name must match exactly with what's configured on the Juniper device",
+                "Used for user-specific or service-specific QoS treatment",
+                "Can be dynamically changed via CoA for active sessions",
+                "Supports both IPv4 and IPv6 traffic"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+        },
+        {
+            "name": "Juniper-IPv6-Filter-In",
+            "number": "42",
+            "description": "Specifies an IPv6 filter to apply to inbound traffic.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-IPv6-Filter-In = \"IPv6-GUEST-FILTER-IN\" for IPv6 access control.",
+            "implementation": [
+                "Create an IPv6 filter on the Juniper device",
+                "Configure the RADIUS server to return this VSA with the filter name",
+                "The filter must be predefined on the Juniper device",
+                "Specifically for controlling IPv6 traffic",
+                "Complements IPv4 filters for complete traffic control",
+                "Can be used in conjunction with Juniper-IPv6-Filter-Out"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+        },
+        {
+            "name": "Juniper-IPv6-Filter-Out",
+            "number": "43",
+            "description": "Specifies an IPv6 filter to apply to outbound traffic.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-IPv6-Filter-Out = \"IPv6-GUEST-FILTER-OUT\" for IPv6 access control.",
+            "implementation": [
+                "Create an IPv6 filter on the Juniper device",
+                "Configure the RADIUS server to return this VSA with the filter name",
+                "The filter must be predefined on the Juniper device",
+                "Specifically for controlling IPv6 traffic",
+                "Complements IPv4 filters for complete traffic control",
+                "Can be used in conjunction with Juniper-IPv6-Filter-In"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+        },
+        {
+            "name": "Juniper-Multicast-Group-Policy",
+            "number": "65",
+            "description": "Specifies the multicast group policy to apply to the user session.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": true
+            },
+            "network": "both",
+            "example": "Juniper-Multicast-Group-Policy = \"MULTICAST-POLICY-1\" for multicast control.",
+            "implementation": [
+                "Define multicast policies on the Juniper device",
+                "Configure the RADIUS server to return this VSA with the policy name",
+                "The policy must be predefined on the Juniper device",
+                "Controls which multicast groups a user can join or send to",
+                "Important for controlling multicast traffic in enterprise networks",
+                "Can be applied to both IPv4 and IPv6 multicast traffic"
+            ],
+            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+        }
+    ]
+}

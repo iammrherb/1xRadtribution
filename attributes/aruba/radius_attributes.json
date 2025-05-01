@@ -1,0 +1,248 @@
+{
+    "vendor": "aruba",
+    "protocol": "radius",
+    "attributes": [
+        {
+            "name": "Aruba-User-Role",
+            "number": "1",
+            "description": "Assigns a user role to the authenticated user. User roles on Aruba devices define access control policies, QoS settings, and other parameters.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-User-Role = \"employee\" to assign the employee role defined on the Aruba device.",
+            "implementation": [
+                "Define user roles on the Aruba controller (Configuration > Security > Roles)",
+                "Configure access control rules, VLAN assignments, and other parameters for each role",
+                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The Aruba device applies the assigned role upon successful authentication"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+        },
+        {
+            "name": "Aruba-VLAN",
+            "number": "2",
+            "description": "Assigns a VLAN to an authenticated user. Can be used for dynamic VLAN assignment based on user or device.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-VLAN = \"100\" to place the user in VLAN 100.",
+            "implementation": [
+                "Configure the VLANs on the Aruba device",
+                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The VSA can contain a VLAN name or a VLAN ID",
+                "Can be used with Aruba-User-Role for more comprehensive access control"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+        },
+        {
+            "name": "Aruba-Admin-Role",
+            "number": "3",
+            "description": "Assigns a specific admin role to the user. Used for administrative access control to Aruba device management.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-Admin-Role = \"root\" for full administrative access; Aruba-Admin-Role = \"read-only\" for monitoring-only access.",
+            "implementation": [
+                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
+                "Set up RADIUS authentication for admin access on the Aruba device",
+                "Configure the server to return this VSA with the desired admin role",
+                "Common admin roles: root, read-only, guest-provisioning, location-api-mgmt, network-operations",
+                "Custom admin roles can also be created and assigned"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+        },
+        {
+            "name": "Aruba-Url-Redirect",
+            "number": "5",
+            "description": "Specifies a URL to which the user should be redirected. Used for captive portal redirections and custom welcome pages.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": true,
+                "captive": true,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-Url-Redirect = \"https://login.example.com\" for URL redirection.",
+            "implementation": [
+                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "Configure the Aruba device to allow URL redirection in the role settings",
+                "The user will be redirected to the specified URL upon authentication",
+                "Can be used for welcome pages, terms of service acceptance, or additional authentication"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+        },
+        {
+            "name": "Aruba-ACL-Name",
+            "number": "10",
+            "description": "Specifies the name of an ACL to be applied to the user session. Controls network access permissions.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-ACL-Name = \"Guest-ACL\" for applying guest ACL.",
+            "implementation": [
+                "Define the ACL on the Aruba device (Configuration > Security > Access Control)",
+                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The Aruba device applies the specified ACL to the user upon authentication",
+                "ACLs define traffic filtering rules and can be restrictive or permissive",
+                "Supports both IPv4 and IPv6 ACLs"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+        },
+        {
+            "name": "Aruba-Bandwidth-Contract",
+            "number": "7",
+            "description": "Specifies bandwidth limits for the user session. Used to control downstream and upstream bandwidth.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": true,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-Bandwidth-Contract = \"100000/50000\" for 100 kbps upstream and 50 kbps downstream.",
+            "implementation": [
+                "Configure bandwidth contracts on the Aruba device",
+                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "Format is \"upstream-rate/downstream-rate\" in kbps",
+                "The Aruba device enforces the bandwidth limitations upon authentication",
+                "Supports both IPv4 and IPv6 traffic"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+        },
+        {
+            "name": "Aruba-CoA-URL",
+            "number": "22",
+            "description": "Specifies the URL for Change of Authorization (CoA) requests. Used for dynamic policy changes.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-CoA-URL = \"https://radius.example.com/coa\" for CoA requests.",
+            "implementation": [
+                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "Configure the Aruba device to accept CoA requests",
+                "Ensure the CoA server is available at the specified URL",
+                "Used for dynamic policy enforcement and session termination"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+        },
+        {
+            "name": "Aruba-IPv6-User-Role",
+            "number": "30",
+            "description": "Assigns an IPv6-specific user role to the authenticated user.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-IPv6-User-Role = \"employee-ipv6\" to assign the IPv6-specific employee role.",
+            "implementation": [
+                "Define IPv6-specific user roles on the Aruba controller",
+                "Configure access control rules for IPv6 traffic",
+                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
+                "Set up RADIUS authentication and configure the server to return this VSA",
+                "The Aruba device applies the assigned IPv6 role upon successful authentication"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+        }
+    ]
+}

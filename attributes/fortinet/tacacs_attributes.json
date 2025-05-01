@@ -1,0 +1,129 @@
+{
+    "vendor": "fortinet",
+    "protocol": "tacacs",
+    "attributes": [
+        {
+            "name": "Fortinet-Access-Profile",
+            "number": "N/A",
+            "description": "Assigns an access profile to the administrator session. Critical for remote administration, determining what level of administrative access a user has to FortiGate features.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Access-Profile = \"super_admin\" for full administrative privileges; Fortinet-Access-Profile = \"read_only\" for monitoring-only access",
+            "implementation": [
+                "Create access profiles on the FortiGate under System > Admin Profiles",
+                "Define the permissions for each profile (read/write access to specific functions)",
+                "Configure the TACACS+ server to return this attribute with the profile name",
+                "The profile name is case-sensitive and must match exactly with the profile on the FortiGate",
+                "Enable the admin_prof attribute override in the FortiGate system admin configuration",
+                "Use with Fortinet-Vdom-Name for VDOM-specific administrative restrictions"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.0.0/administration-guide/651398/tacacs-servers"
+        },
+        {
+            "name": "Fortinet-Vdom-Name",
+            "number": "N/A",
+            "description": "Specifies the virtual domain (VDOM) name to which the administrator is restricted. Used in multi-tenant environments to control administrative access to specific VDOMs.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Vdom-Name = \"customer_A\" to restrict administrator access to the customer_A VDOM only",
+            "implementation": [
+                "Enable multi-VDOM mode on the FortiGate",
+                "Create the VDOMs that will be used",
+                "Configure the TACACS+ server to return this attribute with the VDOM name",
+                "The VDOM name is case-sensitive and must match exactly with the VDOM configured on the FortiGate",
+                "Enable the vdom_override attribute in the FortiGate system admin configuration",
+                "This is particularly useful for service providers with multi-tenant environments"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.0.0/administration-guide/651398/tacacs-servers"
+        },
+        {
+            "name": "cmd",
+            "number": "N/A",
+            "description": "Controls command authorization for the user. Used to restrict administrator access to specific commands.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "cmd = show for permitting all show commands; cmd = \"system interface\" to allow interface configuration",
+            "implementation": [
+                "Configure command authorization on the FortiGate",
+                "Configure the TACACS+ server with command permissions",
+                "For each command, specify permit (default) or deny",
+                "Can use wildcards (e.g., \"diagnose *\" to permit all diagnostic commands)",
+                "Enable command authorization on the FortiGate with \"set authorization enable\"",
+                "Very granular control is possible by specifying complete command paths"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.0.0/administration-guide/651398/tacacs-servers"
+        },
+        {
+            "name": "Fortinet-Group-Name",
+            "number": "N/A",
+            "description": "Specifies the user group for administrative access and policy application.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Group-Name = \"network_admins\" for grouping administrators",
+            "implementation": [
+                "Create user groups on the FortiGate",
+                "Configure the TACACS+ server to return this attribute with the group name",
+                "The group name must match a group defined on the FortiGate",
+                "Used to apply group-based policies and permissions",
+                "Helps organize administrators by function or department"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.0.0/administration-guide/651398/tacacs-servers"
+        }
+    ]
+}
