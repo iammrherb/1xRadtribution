@@ -1,820 +1,637 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VSA Viewer - 1Xer Radtribution</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            /* Portnox-inspired color palette */
-            --portnox-blue: #0066FF;
-            --portnox-purple: #6B46C1;
-            --portnox-cyan: #06B6D4;
-            --portnox-green: #10B981;
-            --portnox-pink: #EC4899;
-            --portnox-orange: #F97316;
-            
-            /* Gradients */
-            --gradient-1: linear-gradient(135deg, #0066FF 0%, #6B46C1 100%);
-            --gradient-2: linear-gradient(135deg, #06B6D4 0%, #0066FF 100%);
-            
-            /* UI Colors */
-            --bg-dark: #0A0F1E;
-            --bg-medium: #12192D;
-            --bg-light: #1A2238;
-            --card-bg: #1E293B;
-            --card-hover: #263248;
-            --text-primary: #F8FAFC;
-            --text-secondary: #CBD5E1;
-            --text-muted: #94A3B8;
-            --border-color: #2D3748;
-            --border-light: #475569;
-            
-            /* Light theme */
-            --light-bg: #FFFFFF;
-            --light-bg-secondary: #F8FAFC;
-            --light-card: #FFFFFF;
-            --light-text: #0F172A;
-            --light-text-secondary: #475569;
-            --light-border: #E2E8F0;
-        }
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>VSA Viewer - 1Xer Radtribution</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+   <style>
+       :root {
+           --primary-color: #2563eb;
+           --secondary-color: #dc2626;
+           --accent-color: #0891b2;
+           --success-color: #16a34a;
+           --warning-color: #d97706;
+           --bg-dark: #0f172a;
+           --bg-light: #1e293b;
+           --text-light: #e2e8f0;
+           --text-dark: #f8fafc;
+           --card-bg: #1e293b;
+           --border-color: #334155;
+       }
 
-        [data-theme="light"] {
-            --bg-dark: var(--light-bg);
-            --bg-medium: var(--light-bg-secondary);
-            --bg-light: var(--light-bg-secondary);
-            --card-bg: var(--light-card);
-            --card-hover: #F1F5F9;
-            --text-primary: var(--light-text);
-            --text-secondary: var(--light-text-secondary);
-            --text-muted: #64748B;
-            --border-color: var(--light-border);
-            --border-light: #CBD5E1;
-        }
+       [data-theme="light"] {
+           --bg-dark: #ffffff;
+           --bg-light: #f8fafc;
+           --text-light: #1e293b;
+           --text-dark: #0f172a;
+           --card-bg: #ffffff;
+           --border-color: #e2e8f0;
+       }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            line-height: 1.6;
-            transition: all 0.3s ease;
-        }
+       body {
+           font-family: 'Inter', sans-serif;
+           background-color: var(--bg-dark);
+           color: var(--text-light);
+           line-height: 1.6;
+       }
 
-        /* Navigation Bar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
-        }
+       .container {
+           max-width: 1400px;
+           margin: 0 auto;
+           padding: 20px;
+       }
 
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--text-primary);
-            text-decoration: none;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+       .header {
+           text-align: center;
+           padding: 30px 20px;
+           background: var(--bg-light);
+           border-radius: 12px;
+           margin-bottom: 30px;
+           border: 1px solid var(--border-color);
+       }
 
-        .nav-brand i {
-            font-size: 1.5rem;
-            -webkit-text-fill-color: var(--portnox-blue);
-        }
+       .main-title {
+           font-size: 2.2rem;
+           font-weight: 700;
+           color: var(--primary-color);
+           margin-bottom: 10px;
+       }
 
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            margin-left: auto;
-            align-items: center;
-        }
+       .breadcrumb {
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 10px;
+           margin-top: 15px;
+           color: var(--text-light);
+       }
 
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 8px 16px;
-            border-radius: 8px;
-        }
+       .breadcrumb a {
+           color: var(--primary-color);
+           text-decoration: none;
+           font-weight: 500;
+           transition: all 0.3s ease;
+       }
 
-        .nav-link:hover {
-            color: var(--text-primary);
-            background: var(--card-hover);
-        }
+       .breadcrumb a:hover {
+           text-decoration: underline;
+       }
 
-        .theme-toggle {
-            background: var(--card-hover);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-        }
+       .breadcrumb .separator {
+           color: var(--text-light);
+       }
 
-        .theme-toggle:hover {
-            background: var(--portnox-blue);
-            color: white;
-            border-color: var(--portnox-blue);
-        }
+       .controls {
+           display: flex;
+           gap: 20px;
+           margin-bottom: 30px;
+           flex-wrap: wrap;
+           align-items: center;
+       }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 90px 20px 40px;
-        }
+       .search-box {
+           flex: 1;
+           min-width: 300px;
+           padding: 12px 16px;
+           font-size: 1rem;
+           background: var(--card-bg);
+           border: 1px solid var(--border-color);
+           border-radius: 8px;
+           color: var(--text-light);
+       }
 
-        .header {
-            text-align: center;
-            padding: 40px 20px;
-            margin-bottom: 40px;
-        }
+       .search-box:focus {
+           outline: none;
+           border-color: var(--primary-color);
+           box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+       }
 
-        .main-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+       .feature-filters {
+           display: flex;
+           gap: 10px;
+           flex-wrap: wrap;
+       }
 
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
+       .feature-btn {
+           padding: 8px 16px;
+           background: var(--card-bg);
+           border: 1px solid var(--border-color);
+           border-radius: 6px;
+           cursor: pointer;
+           font-size: 0.9rem;
+           font-weight: 500;
+           transition: all 0.3s ease;
+           color: var(--text-light);
+       }
 
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-            color: var(--text-secondary);
-        }
+       .feature-btn.active {
+           background: var(--primary-color);
+           color: white;
+           border-color: var(--primary-color);
+       }
 
-        .breadcrumb a {
-            color: var(--portnox-blue);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
+       .feature-btn:hover:not(.active) {
+           border-color: var(--primary-color);
+           background: var(--bg-light);
+       }
 
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
+       .btn {
+           padding: 10px 20px;
+           background: var(--primary-color);
+           color: white;
+           border: none;
+           border-radius: 6px;
+           cursor: pointer;
+           font-weight: 500;
+           text-decoration: none;
+           transition: all 0.3s ease;
+           display: inline-flex;
+           align-items: center;
+           gap: 8px;
+       }
 
-        .controls {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
+       .btn:hover {
+           background: #1d4ed8;
+           transform: translateY(-1px);
+       }
 
-        .search-box {
-            flex: 1;
-            min-width: 300px;
-            padding: 12px 20px;
-            font-size: 1rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
+       .btn-secondary {
+           background: var(--card-bg);
+           color: var(--text-light);
+           border: 1px solid var(--border-color);
+       }
 
-        .search-box:focus {
-            outline: none;
-            border-color: var(--portnox-blue);
-            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
-        }
+       .btn-secondary:hover {
+           background: var(--bg-light);
+           border-color: var(--primary-color);
+       }
 
-        .feature-filters {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+       .attributes-table {
+           background: var(--card-bg);
+           border-radius: 12px;
+           overflow: hidden;
+           border: 1px solid var(--border-color);
+           margin-bottom: 30px;
+       }
 
-        .feature-btn {
-            padding: 8px 16px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            color: var(--text-secondary);
-        }
+       table {
+           width: 100%;
+           border-collapse: collapse;
+       }
 
-        .feature-btn.active {
-            background: var(--portnox-blue);
-            color: white;
-            border-color: var(--portnox-blue);
-        }
+       th, td {
+           padding: 12px 16px;
+           text-align: left;
+           border-bottom: 1px solid var(--border-color);
+       }
 
-        .feature-btn:hover:not(.active) {
-            border-color: var(--portnox-blue);
-            background: var(--card-hover);
-        }
+       th {
+           background: var(--bg-light);
+           font-weight: 600;
+           color: var(--text-dark);
+           position: sticky;
+           top: 0;
+           z-index: 10;
+       }
 
-        .btn {
-            padding: 10px 20px;
-            background: var(--portnox-blue);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+       tr:hover {
+           background: var(--bg-light);
+       }
 
-        .btn:hover {
-            background: #0052CC;
-            transform: translateY(-1px);
-        }
+       .attribute-name {
+           font-weight: 600;
+           color: var(--primary-color);
+           font-family: 'Source Code Pro', monospace;
+       }
 
-        .btn-secondary {
-            background: var(--card-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
+       .attribute-number {
+           font-family: 'Source Code Pro', monospace;
+           color: var(--accent-color);
+       }
 
-        .btn-secondary:hover {
-            background: var(--card-hover);
-            border-color: var(--portnox-blue);
-        }
+       .feature-badges {
+           display: flex;
+           gap: 6px;
+           flex-wrap: wrap;
+       }
 
-        .info-section {
-            background: var(--card-bg);
-            padding: 24px;
-            border-radius: 16px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border-color);
-        }
+       .feature-badge {
+           padding: 4px 8px;
+           border-radius: 4px;
+           font-size: 0.75rem;
+           font-weight: 500;
+           text-transform: uppercase;
+       }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
+       .feature-badge.yes {
+           background: #dcfce7;
+           color: #166534;
+       }
 
-        .info-item {
-            padding: 16px;
-            background: var(--bg-medium);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-        }
+       [data-theme="dark"] .feature-badge.yes {
+           background: #166534;
+           color: #dcfce7;
+       }
 
-        .info-item h4 {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 4px;
-        }
+       .expandable-row {
+           cursor: pointer;
+       }
 
-        .info-item p {
-            color: var(--text-primary);
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
+       .expandable-row:hover {
+           background: var(--bg-light);
+       }
 
-        .attributes-table {
-            background: var(--card-bg);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            margin-bottom: 30px;
-        }
+       .expand-icon {
+           transition: transform 0.3s ease;
+           margin-right: 8px;
+       }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+       .expand-icon.expanded {
+           transform: rotate(90deg);
+       }
 
-        th, td {
-            padding: 14px 20px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
+       .expanded-content {
+           display: none;
+           background: var(--bg-dark);
+           padding: 20px;
+           border-top: 1px solid var(--border-color);
+       }
 
-        th {
-            background: var(--bg-medium);
-            font-weight: 600;
-            color: var(--text-primary);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+       .expanded-content.show {
+           display: block;
+       }
 
-        tr:hover {
-            background: var(--card-hover);
-        }
+       .code-block {
+           background: var(--bg-dark);
+           border: 1px solid var(--border-color);
+           border-radius: 6px;
+           padding: 16px;
+           overflow-x: auto;
+           font-family: 'Source Code Pro', monospace;
+           font-size: 0.9rem;
+           margin: 10px 0;
+       }
 
-        .attribute-name {
-            font-weight: 600;
-            color: var(--portnox-blue);
-            font-family: 'Source Code Pro', monospace;
-        }
+       [data-theme="light"] .code-block {
+           background: #f3f4f6;
+       }
 
-        .attribute-number {
-            font-family: 'Source Code Pro', monospace;
-            color: var(--portnox-cyan);
-        }
+       .theme-toggle {
+           position: fixed;
+           top: 20px;
+           right: 20px;
+           background: var(--card-bg);
+           border: 1px solid var(--border-color);
+           border-radius: 8px;
+           width: 44px;
+           height: 44px;
+           cursor: pointer;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 1.2rem;
+           color: var(--primary-color);
+           transition: all 0.3s ease;
+           z-index: 1000;
+       }
 
-        .feature-badges {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
+       .theme-toggle:hover {
+           background: var(--primary-color);
+           color: white;
+       }
 
-        .feature-badge {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
+       .info-section {
+           background: var(--card-bg);
+           padding: 20px;
+           border-radius: 12px;
+           margin-bottom: 30px;
+           border: 1px solid var(--border-color);
+       }
 
-        .feature-badge.yes {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--portnox-green);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
+       .info-section h3 {
+           margin-bottom: 10px;
+           color: var(--primary-color);
+       }
 
-        .expandable-row {
-            cursor: pointer;
-        }
-
-        .expand-icon {
-            transition: transform 0.3s ease;
-            margin-right: 8px;
-            color: var(--text-secondary);
-        }
-
-        .expand-icon.expanded {
-            transform: rotate(90deg);
-            color: var(--portnox-blue);
-        }
-
-        .expanded-content {
-            display: none;
-            background: var(--bg-medium);
-            padding: 24px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .expanded-content.show {
-            display: block;
-        }
-
-        .expanded-content h4 {
-            color: var(--portnox-blue);
-            margin-bottom: 12px;
-            font-size: 1rem;
-        }
-
-        .expanded-content ul {
-            list-style: none;
-            margin: 0;
-            padding-left: 0;
-        }
-
-        .expanded-content li {
-            margin-bottom: 8px;
-            padding-left: 20px;
-            position: relative;
-        }
-
-        .expanded-content li:before {
-            content: "•";
-            color: var(--portnox-blue);
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-        }
-
-        .code-block {
-            background: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            overflow-x: auto;
-            font-family: 'Source Code Pro', monospace;
-            font-size: 0.9rem;
-            margin: 10px 0;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 80px 15px 30px;
-            }
-            
-            .controls {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .search-box {
-                width: 100%;
-                min-width: unset;
-            }
-            
-            .feature-filters {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .table-container {
-                overflow-x: auto;
-            }
-            
-            table {
-                min-width: 800px;
-            }
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--portnox-blue);
-        }
-    </style>
+       @media (max-width: 768px) {
+           .controls {
+               flex-direction: column;
+               gap: 15px;
+           }
+           
+           .search-box {
+               width: 100%;
+               min-width: unset;
+           }
+           
+           .feature-filters {
+               width: 100%;
+               justify-content: center;
+           }
+           
+           .table-container {
+               overflow-x: auto;
+           }
+           
+           table {
+               min-width: 800px;
+           }
+       }
+   </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <a href="index.html" class="nav-brand">
-            <i class="fas fa-fingerprint"></i>
-            1Xer Radtribution
-        </a>
-        <div class="nav-links">
-            <a href="index.html" class="nav-link">
-                <i class="fas fa-arrow-left"></i> Back
-            </a>
-            <button class="theme-toggle" onclick="toggleTheme()">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
-    </nav>
+   <button class="theme-toggle" onclick="toggleTheme()">
+       <i class="fas fa-moon"></i>
+   </button>
 
-    <div class="container">
-        <div class="header">
-            <h1 class="main-title">VSA Attribute Viewer</h1>
-            <p class="subtitle">Detailed vendor-specific attribute reference</p>
-            <div class="breadcrumb">
-                <a href="index.html">Home</a>
-                <span>→</span>
-                <span id="vendorName">Loading...</span>
-                <span>→</span>
-                <span id="protocolName">Loading...</span>
-            </div>
-        </div>
+   <div class="container">
+       <div class="header">
+           <h1 class="main-title">VSA Attribute Viewer</h1>
+           <p>Detailed vendor-specific attribute reference</p>
+           <div class="breadcrumb">
+               <a href="index.html">Home</a>
+               <span class="separator">→</span>
+               <span id="vendorName">Loading...</span>
+               <span class="separator">→</span>
+               <span id="protocolName">Loading...</span>
+           </div>
+       </div>
 
-        <div class="controls">
-            <input type="text" class="search-box" placeholder="Search attributes..." id="searchBox">
-            <div class="feature-filters" id="featureFilters">
-                <!-- Feature filters will be populated here -->
-            </div>
-            <button class="btn btn-secondary" onclick="downloadCSV()">
-                <i class="fas fa-download"></i> Export CSV
-            </button>
-        </div>
+       <div class="controls">
+           <input type="text" class="search-box" placeholder="Search attributes..." id="searchBox">
+           <div class="feature-filters" id="featureFilters">
+               <!-- Feature filters will be populated here -->
+           </div>
+           <a href="#" class="btn btn-secondary" onclick="downloadCSV()">
+               <i class="fas fa-download"></i> Export CSV
+           </a>
+       </div>
 
-        <div class="info-section">
-            <h3>Vendor Information</h3>
-            <div class="info-grid">
-                <div class="info-item">
-                    <h4>Vendor</h4>
-                    <p id="vendorInfo">Loading...</p>
-                </div>
-                <div class="info-item">
-                    <h4>Protocol</h4>
-                    <p id="protocolInfo">Loading...</p>
-                </div>
-                <div class="info-item">
-                    <h4>Total Attributes</h4>
-                    <p id="attributeCount">0</p>
-                </div>
-                <div class="info-item">
-                    <h4>Vendor ID</h4>
-                    <p id="vendorId">N/A</p>
-                </div>
-            </div>
-        </div>
+       <div class="info-section">
+           <h3>Vendor Information</h3>
+           <p><strong>Vendor:</strong> <span id="vendorInfo">Loading...</span></p>
+           <p><strong>Protocol:</strong> <span id="protocolInfo">Loading...</span></p>
+           <p><strong>Total Attributes:</strong> <span id="attributeCount">0</span></p>
+       </div>
 
-        <div class="attributes-table">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 50px;"></th>
-                            <th>Attribute Name</th>
-                            <th>Number</th>
-                            <th>Description</th>
-                            <th>Features</th>
-                            <th>Example</th>
-                        </tr>
-                    </thead>
-                    <tbody id="attributesBody">
-                        <!-- Attributes will be populated here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+       <div class="attributes-table">
+           <div class="table-container">
+               <table>
+                   <thead>
+                       <tr>
+                           <th style="width: 50px;"></th>
+                           <th>Attribute Name</th>
+                           <th>Number</th>
+                           <th>Description</th>
+                           <th>Features</th>
+                           <th>Example</th>
+                       </tr>
+                   </thead>
+                   <tbody id="attributesBody">
+                       <!-- Attributes will be populated here -->
+                   </tbody>
+               </table>
+           </div>
+       </div>
+   </div>
 
-    <script>
-        // Theme toggle
-        function toggleTheme() {
-            const body = document.body;
-            const themeToggle = document.querySelector('.theme-toggle i');
-            
-            if (body.getAttribute('data-theme') === 'light') {
-                body.removeAttribute('data-theme');
-                themeToggle.className = 'fas fa-moon';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                body.setAttribute('data-theme', 'light');
-                themeToggle.className = 'fas fa-sun';
-                localStorage.setItem('theme', 'light');
-            }
-        }
+   <script>
+       // Theme toggle
+       function toggleTheme() {
+           const body = document.body;
+           const themeToggle = document.querySelector('.theme-toggle i');
+           
+           if (body.getAttribute('data-theme') === 'light') {
+               body.removeAttribute('data-theme');
+               themeToggle.className = 'fas fa-moon';
+               localStorage.setItem('theme', 'dark');
+           } else {
+               body.setAttribute('data-theme', 'light');
+               themeToggle.className = 'fas fa-sun';
+               localStorage.setItem('theme', 'light');
+           }
+       }
 
-        // Check for saved theme
-        if (localStorage.getItem('theme') === 'light') {
-            document.body.setAttribute('data-theme', 'light');
-            document.querySelector('.theme-toggle i').className = 'fas fa-sun';
-        }
+       // Check for saved theme
+       if (localStorage.getItem('theme') === 'light') {
+           document.body.setAttribute('data-theme', 'light');
+           document.querySelector('.theme-toggle i').className = 'fas fa-sun';
+       }
 
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const vendor = urlParams.get('vendor');
-        const protocol = urlParams.get('protocol');
+       // Get URL parameters
+       const urlParams = new URLSearchParams(window.location.search);
+       const vendor = urlParams.get('vendor');
+       const protocol = urlParams.get('protocol');
 
-        // Available features for filtering
-        const features = [
-            'acl', 'role', 'vlan', 'url', 'captive', 'sgt', 
-            'dacl', 'qos', 'bandwidth', 'coa', 'vpn', 'ipv6', 'multicast'
-        ];
+       // Available features for filtering
+       const features = [
+           'acl', 'role', 'vlan', 'url', 'captive', 'sgt', 
+           'dacl', 'qos', 'bandwidth', 'coa', 'vpn', 'ipv6', 'multicast'
+       ];
 
-        // Vendor IDs mapping
-        const vendorIds = {
-            'cisco': '9',
-            'juniper': '2636',
-            'aruba': '14823',
-            'fortinet': '12356',
-            'paloalto': '25461',
-            'hp': '11',
-            'extreme': '1916',
-            'dell': '674',
-            'checkpoint': '2620',
-            'brocade': '1588'
-        };
+       let attributesData = [];
+       let activeFilters = new Set();
 
-        let attributesData = [];
-        let activeFilters = new Set();
+       // Load attribute data
+       function loadAttributes() {
+           const filename = `attributes/${vendor}/${protocol}_attributes.json`;
+           
+           fetch(filename)
+               .then(response => {
+                   if (!response.ok) {
+                       throw new Error('File not found');
+                   }
+                   return response.json();
+               })
+               .then(data => {
+                   attributesData = data.attributes;
+                   updateUI(data);
+                   renderAttributes(data.attributes);
+                   setupFeatureFilters();
+               })
+               .catch(error => {
+                   console.error('Error loading attributes:', error);
+                   document.getElementById('attributesBody').innerHTML = 
+                       '<tr><td colspan="6" style="text-align: center; padding: 40px;">Error loading attribute data. Please check the URL parameters.</td></tr>';
+               });
+       }
 
-        // Load attribute data
-        function loadAttributes() {
-            const filename = `attributes/${vendor}/${protocol}_attributes.json`;
-            
-            fetch(filename)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('File not found');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    attributesData = data.attributes;
-                    updateUI(data);
-                    renderAttributes(data.attributes);
-                    setupFeatureFilters();
-                })
-                .catch(error => {
-                    console.error('Error loading attributes:', error);
-                    document.getElementById('attributesBody').innerHTML = 
-                        '<tr><td colspan="6" style="text-align: center; padding: 40px;">Error loading attribute data. Please check the URL parameters.</td></tr>';
-                });
-        }
+       // Update UI elements
+       function updateUI(data) {
+           document.getElementById('vendorName').textContent = data.vendor.toUpperCase();
+           document.getElementById('protocolName').textContent = data.protocol.toUpperCase();
+           document.getElementById('vendorInfo').textContent = data.vendor.toUpperCase();
+           document.getElementById('protocolInfo').textContent = data.protocol.toUpperCase();
+           document.getElementById('attributeCount').textContent = data.attributes.length;
+       }
 
-        // Update UI elements
-        function updateUI(data) {
-            document.getElementById('vendorName').textContent = data.vendor.toUpperCase();
-            document.getElementById('protocolName').textContent = data.protocol.toUpperCase();
-            document.getElementById('vendorInfo').textContent = data.vendor.toUpperCase();
-            document.getElementById('protocolInfo').textContent = data.protocol.toUpperCase();
-            document.getElementById('attributeCount').textContent = data.attributes.length;
-            document.getElementById('vendorId').textContent = vendorIds[vendor] || 'N/A';
-        }
+       // Setup feature filters
+       function setupFeatureFilters() {
+           const container = document.getElementById('featureFilters');
+           container.innerHTML = '';
+           
+           features.forEach(feature => {
+               const btn = document.createElement('button');
+               btn.className = 'feature-btn';
+               btn.textContent = feature.toUpperCase();
+               btn.onclick = () => toggleFeatureFilter(feature, btn);
+               container.appendChild(btn);
+           });
+       }
 
-        // Setup feature filters
-        function setupFeatureFilters() {
-            const container = document.getElementById('featureFilters');
-            container.innerHTML = '';
-            
-            features.forEach(feature => {
-                const btn = document.createElement('button');
-                btn.className = 'feature-btn';
-                btn.textContent = feature.toUpperCase();
-                btn.onclick = () => toggleFeatureFilter(feature, btn);
-                container.appendChild(btn);
-            });
-        }
+       // Toggle feature filter
+       function toggleFeatureFilter(feature, btn) {
+           if (activeFilters.has(feature)) {
+               activeFilters.delete(feature);
+               btn.classList.remove('active');
+           } else {
+               activeFilters.add(feature);
+               btn.classList.add('active');
+           }
+           filterAttributes();
+       }
 
-        // Toggle feature filter
-        function toggleFeatureFilter(feature, btn) {
-            if (activeFilters.has(feature)) {
-                activeFilters.delete(feature);
-                btn.classList.remove('active');
-            } else {
-                activeFilters.add(feature);
-                btn.classList.add('active');
-            }
-            filterAttributes();
-        }
+       // Filter attributes
+       function filterAttributes() {
+           const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+           
+           let filtered = attributesData.filter(attr => {
+               // Search filter
+               const matchesSearch = !searchTerm || 
+                   attr.name.toLowerCase().includes(searchTerm) ||
+                   attr.description.toLowerCase().includes(searchTerm) ||
+                   (attr.example && attr.example.toLowerCase().includes(searchTerm));
+               
+               // Feature filter
+               const matchesFeatures = activeFilters.size === 0 ||
+                   Array.from(activeFilters).some(feature => attr.features[feature]);
+               
+               return matchesSearch && matchesFeatures;
+           });
+           
+           renderAttributes(filtered);
+       }
 
-        // Filter attributes
-        function filterAttributes() {
-            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
-            
-            let filtered = attributesData.filter(attr => {
-                // Search filter
-                const matchesSearch = !searchTerm || 
-                    attr.name.toLowerCase().includes(searchTerm) ||
-                    attr.description.toLowerCase().includes(searchTerm) ||
-                    (attr.example && attr.example.toLowerCase().includes(searchTerm));
-                
-                // Feature filter
-                const matchesFeatures = activeFilters.size === 0 ||
-                    Array.from(activeFilters).some(feature => attr.features[feature]);
-                
-                return matchesSearch && matchesFeatures;
-            });
-            
-            renderAttributes(filtered);
-        }
+       // Render attributes table
+       function renderAttributes(attributes) {
+           const tbody = document.getElementById('attributesBody');
+           tbody.innerHTML = '';
+           
+           attributes.forEach((attr, index) => {
+               const row = document.createElement('tr');
+               row.className = 'expandable-row';
+               
+               row.innerHTML = `
+                   <td><i class="fas fa-chevron-right expand-icon"></i></td>
+                   <td><span class="attribute-name">${attr.name}</span></td>
+                   <td><span class="attribute-number">${attr.number}</span></td>
+                   <td>${attr.description}</td>
+                   <td>${renderFeatureBadges(attr.features)}</td>
+                   <td>${attr.example ? `<code>${attr.example}</code>` : 'N/A'}</td>
+               `;
+               
+               const expandedRow = document.createElement('tr');
+               expandedRow.innerHTML = `
+                   <td colspan="6">
+                       <div class="expanded-content" id="expand-${index}">
+                           ${renderExpandedContent(attr)}
+                       </div>
+                   </td>
+               `;
+               
+               row.onclick = () => toggleExpanded(index, row);
+               
+               tbody.appendChild(row);
+               tbody.appendChild(expandedRow);
+           });
+       }
 
-        // Render attributes table
-        function renderAttributes(attributes) {
-            const tbody = document.getElementById('attributesBody');
-            tbody.innerHTML = '';
-            
-            attributes.forEach((attr, index) => {
-                const row = document.createElement('tr');
-                row.className = 'expandable-row';
-                
-                row.innerHTML = `
-                    <td><i class="fas fa-chevron-right expand-icon"></i></td>
-                    <td><span class="attribute-name">${attr.name}</span></td>
-                    <td><span class="attribute-number">${attr.number}</span></td>
-                    <td>${attr.description}</td>
-                    <td>${renderFeatureBadges(attr.features)}</td>
-                    <td>${attr.example ? `<code>${attr.example}</code>` : 'N/A'}</td>
-                `;
-                
-                const expandedRow = document.createElement('tr');
-                expandedRow.innerHTML = `
-                    <td colspan="6">
-                        <div class="expanded-content" id="expand-${index}">
-                            ${renderExpandedContent(attr)}
-                        </div>
-                    </td>
-                `;
-                
-                row.onclick = () => toggleExpanded(index, row);
-                
-                tbody.appendChild(row);
-                tbody.appendChild(expandedRow);
-            });
-        }
+       // Render feature badges
+       function renderFeatureBadges(features) {
+           return Object.entries(features)
+               .filter(([_, value]) => value)
+               .map(([feature, _]) => `<span class="feature-badge yes">${feature}</span>`)
+               .join('');
+       }
 
-        // Render feature badges
-        function renderFeatureBadges(features) {
-            return Object.entries(features)
-                .filter(([_, value]) => value)
-                .map(([feature, _]) => `<span class="feature-badge yes">${feature}</span>`)
-                .join('');
-        }
+       // Render expanded content
+       function renderExpandedContent(attr) {
+           let content = '<div class="expanded-details">';
+           
+           if (attr.use_cases) {
+               content += '<h4>Use Cases:</h4><ul>';
+               attr.use_cases.forEach(useCase => {
+                   content += `<li>${useCase}</li>`;
+               });
+               content += '</ul>';
+           }
+           
+           if (attr.implementation) {
+               content += '<h4>Implementation:</h4><ul>';
+               attr.implementation.forEach(impl => {
+                   content += `<li>${impl}</li>`;
+               });
+               content += '</ul>';
+           }
+           
+           if (attr.reference) {
+               content += `<h4>Reference:</h4><p><a href="${attr.reference}" target="_blank">${attr.reference}</a></p>`;
+           }
+           
+           content += '</div>';
+           return content;
+       }
 
-        // Render expanded content
-        function renderExpandedContent(attr) {
-            let content = '<div class="expanded-details">';
-            
-            if (attr.use_cases) {
-                content += '<h4>Use Cases:</h4><ul>';
-                attr.use_cases.forEach(useCase => {
-                    content += `<li>${useCase}</li>`;
-                });
-                content += '</ul>';
-            }
-            
-            if (attr.implementation) {
-                content += '<h4>Implementation:</h4><ul>';
-                attr.implementation.forEach(impl => {
-                    content += `<li>${impl}</li>`;
-                });
-                content += '</ul>';
-            }
-            
-            if (attr.reference) {
-                content += `<h4>Reference:</h4><p><a href="${attr.reference}" target="_blank" style="color: var(--portnox-blue);">${attr.reference}</a></p>`;
-            }
-            
-            content += '</div>';
-            return content;
-        }
+       // Toggle expanded content
+       function toggleExpanded(index, row) {
+           const expandedContent = document.getElementById(`expand-${index}`);
+           const icon = row.querySelector('.expand-icon');
+           
+           if (expandedContent.classList.contains('show')) {
+               expandedContent.classList.remove('show');
+               icon.classList.remove('expanded');
+           } else {
+               expandedContent.classList.add('show');
+               icon.classList.add('expanded');
+           }
+       }
 
-        // Toggle expanded content
-        function toggleExpanded(index, row) {
-            const expandedContent = document.getElementById(`expand-${index}`);
-            const icon = row.querySelector('.expand-icon');
-            
-            if (expandedContent.classList.contains('show')) {
-                expandedContent.classList.remove('show');
-                icon.classList.remove('expanded');
-            } else {
-                expandedContent.classList.add('show');
-                icon.classList.add('expanded');
-            }
-        }
+       // Download CSV
+       function downloadCSV() {
+           const headers = ['Name', 'Number', 'Description', 'Features', 'Example'];
+           const csvContent = [
+               headers.join(','),
+               ...attributesData.map(attr => [
+                   `"${attr.name}"`,
+                   `"${attr.number}"`,
+                   `"${attr.description.replace(/"/g, '""')}"`,
+                   `"${Object.keys(attr.features).filter(f => attr.features[f]).join(', ')}"`,
+                   `"${attr.example ? attr.example.replace(/"/g, '""') : 'N/A'}"`
+               ].join(','))
+           ].join('\n');
+           
+           const blob = new Blob([csvContent], { type: 'text/csv' });
+           const url = window.URL.createObjectURL(blob);
+           const a = document.createElement('a');
+           a.href = url;
+           a.download = `${vendor}_${protocol}_attributes.csv`;
+           a.click();
+           window.URL.revokeObjectURL(url);
+       }
 
-        // Download CSV
-        function downloadCSV() {
-            const headers = ['Name', 'Number', 'Description', 'Features', 'Example'];
-            const csvContent = [
-                headers.join(','),
-                ...attributesData.map(attr => [
-                    `"${attr.name}"`,
-                    `"${attr.number}"`,
-                    `"${attr.description.replace(/"/g, '""')}"`,
-                    `"${Object.keys(attr.features).filter(f => attr.features[f]).join(', ')}"`,
-                    `"${attr.example ? attr.example.replace(/"/g, '""') : 'N/A'}"`
-                ].join(','))
-            ].join('\n');
-            
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${vendor}_${protocol}_attributes.csv`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }
+       // Event listeners
+       document.getElementById('searchBox').addEventListener('input', filterAttributes);
 
-        // Event listeners
-        document.getElementById('searchBox').addEventListener('input', filterAttributes);
-
-        // Initialize
-        loadAttributes();
-    </script>
+       // Initialize
+       loadAttributes();
+   </script>
 </body>
 </html>
