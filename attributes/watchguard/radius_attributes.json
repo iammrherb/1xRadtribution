@@ -3,9 +3,46 @@
     "protocol": "radius",
     "attributes": [
         {
-            "name": "Watchguard-Admin-Role",
-            "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "name": "WatchGuard-User-Group",
+            "number": "3",
+            "description": "Assigns user to a WatchGuard firewall group for policy application.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "WatchGuard-User-Group = 'VPN-Users' for VPN access",
+            "use_cases": [
+                "Implement group-based policies",
+                "Control VPN access",
+                "Apply firewall rules by group",
+                "Support user authentication",
+                "Enable policy-based security"
+            ],
+            "implementation": [
+                "Configure RADIUS server with WatchGuard VSAs (Vendor ID: 3097)",
+                "Group must exist in Firebox",
+                "Used in firewall policies",
+                "Case-sensitive group names",
+                "Monitor with Policy Manager"
+            ],
+            "reference": "https://www.watchguard.com/help/docs/help-center/en-US/Content/en-US/Fireware/authentication/authentication_radius_about_c.html"
+        },
+        {
+            "name": "WatchGuard-User-Privilege",
+            "number": "4",
+            "description": "Sets administrative privilege level for WatchGuard management.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +59,68 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Watchguard-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Watchguard VSAs (Vendor ID: 2356)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Watchguard device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "WatchGuard-User-Privilege = 'Admin' for full access",
+            "use_cases": [
+                "Control management access",
+                "Implement admin roles",
+                "Support compliance",
+                "Enable delegated admin",
+                "Create custom privileges"
             ],
-            "reference": "https://docs.watchguard.com/radius"
+            "implementation": [
+                "Standard values: Admin, Read-Only",
+                "Configure on RADIUS server",
+                "Enable admin authentication",
+                "Maps to Firebox privileges",
+                "Audit admin access"
+            ],
+            "reference": "https://www.watchguard.com/help/docs/help-center/en-US/Content/en-US/Fireware/authentication/authentication_radius_about_c.html"
         },
         {
-            "name": "Watchguard-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "WatchGuard-Authgroup-Name",
+            "number": "1",
+            "description": "Specifies the authentication group for the user session.",
             "features": {
                 "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "WatchGuard-Authgroup-Name = 'Remote-Access' for remote users",
+            "use_cases": [
+                "Define authentication groups",
+                "Apply group-specific settings",
+                "Support different user types",
+                "Enable policy mapping",
+                "Control access methods"
+            ],
+            "implementation": [
+                "Group must exist in Firebox",
+                "Applied during authentication",
+                "Used for policy decisions",
+                "Alternative to User-Group",
+                "Configure in Policy Manager"
+            ],
+            "reference": "https://www.watchguard.com/help/docs/help-center/en-US/Content/en-US/Fireware/authentication/authentication_radius_about_c.html"
+        },
+        {
+            "name": "WatchGuard-User-Restrictions",
+            "number": "5",
+            "description": "Specifies user access restrictions and limitations.",
+            "features": {
+                "acl": true,
                 "role": false,
-                "vlan": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,45 +133,22 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Watchguard-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Watchguard device",
-                "Configure the RADIUS server with Watchguard VSAs (Vendor ID: 2356)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Watchguard device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "WatchGuard-User-Restrictions = 'no-web-access' for web blocking",
+            "use_cases": [
+                "Apply access restrictions",
+                "Control user capabilities",
+                "Implement security policies",
+                "Limit resource access",
+                "Enable custom restrictions"
             ],
-            "reference": "https://docs.watchguard.com/radius"
-        },
-        {
-            "name": "Watchguard-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
-            "features": {
-                "acl": true,
-                "role": false,
-                "vlan": false,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": true,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
-                "vpn": false,
-                "ipv6": false,
-                "multicast": false
-            },
-            "network": "both",
-            "example": "Watchguard-ACL-Name = \"Guest-ACL\" for ACL assignment.",
             "implementation": [
-                "Configure the ACL on the Watchguard device",
-                "Configure the RADIUS server with Watchguard VSAs (Vendor ID: 2356)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Watchguard device",
-                "Used for dynamic ACL assignment based on user authentication"
+                "String-based restrictions",
+                "Multiple values supported",
+                "Applied to user session",
+                "Custom restriction definitions",
+                "Monitor with traffic logs"
             ],
-            "reference": "https://docs.watchguard.com/radius"
+            "reference": "https://www.watchguard.com/help/docs/help-center/en-US/Content/en-US/Fireware/authentication/authentication_radius_about_c.html"
         }
     ]
 }

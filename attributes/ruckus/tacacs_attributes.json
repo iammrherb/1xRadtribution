@@ -3,9 +3,9 @@
     "protocol": "tacacs",
     "attributes": [
         {
-            "name": "Ruckus-Admin-Role",
-            "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Standard TACACS+ privilege level for Ruckus administrative access.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Ruckus-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Ruckus VSAs (Vendor ID: 25053)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Ruckus device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "priv-lvl=15 for super-user access",
+            "use_cases": [
+                "Control administrative access levels",
+                "Implement role-based management",
+                "Support standard TACACS+",
+                "Enable graduated privileges",
+                "Maintain compatibility"
             ],
-            "reference": "https://docs.ruckus.com/radius"
+            "implementation": [
+                "Configure TACACS+ server",
+                "Enable TACACS+ on Ruckus device",
+                "Level 15: Super-user (full access)",
+                "Level 0: Read-only access",
+                "Monitor with 'show aaa'"
+            ],
+            "reference": "https://docs.commscope.com/bundle/fastiron-08095-securityguide/page/GUID-F6434C9B-D9CF-4997-A3B5-A5C3C45D5997.html"
         },
         {
-            "name": "Ruckus-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "Ruckus-User-Role",
+            "number": "N/A",
+            "description": "Assigns specific administrative role for Ruckus management.",
             "features": {
                 "acl": false,
-                "role": false,
-                "vlan": true,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Ruckus-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Ruckus device",
-                "Configure the RADIUS server with Ruckus VSAs (Vendor ID: 25053)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Ruckus device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "Ruckus-User-Role=super-user for full administrative rights",
+            "use_cases": [
+                "Define specific access rights",
+                "Override privilege levels",
+                "Support Ruckus-specific roles",
+                "Enable custom administration",
+                "Implement least privilege"
             ],
-            "reference": "https://docs.ruckus.com/radius"
+            "implementation": [
+                "Roles: super-user, port-config, read-only",
+                "Configure in TACACS+ server",
+                "Takes precedence over priv-lvl",
+                "Case-sensitive role names",
+                "Verify with 'show users'"
+            ],
+            "reference": "https://docs.commscope.com/bundle/fastiron-08095-securityguide/page/GUID-F6434C9B-D9CF-4997-A3B5-A5C3C45D5997.html"
         },
         {
-            "name": "Ruckus-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "name": "cmd",
+            "number": "N/A",
+            "description": "Command authorization for Ruckus CLI access.",
             "features": {
                 "acl": true,
-                "role": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,22 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Ruckus-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Ruckus device",
-                "Configure the RADIUS server with Ruckus VSAs (Vendor ID: 25053)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Ruckus device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "cmd=show for show commands; cmd=configure for config mode",
+            "use_cases": [
+                "Control command execution",
+                "Implement command authorization",
+                "Create custom command sets",
+                "Support audit requirements",
+                "Enable granular control"
             ],
-            "reference": "https://docs.ruckus.com/radius"
+            "implementation": [
+                "Enable command authorization",
+                "Configure on TACACS+ server",
+                "Use with cmd-arg for full commands",
+                "Supports permit/deny",
+                "Regular expressions allowed"
+            ],
+            "reference": "https://docs.commscope.com/bundle/fastiron-08095-securityguide/page/GUID-F6434C9B-D9CF-4997-A3B5-A5C3C45D5997.html"
         }
     ]
 }

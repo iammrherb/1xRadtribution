@@ -3,9 +3,9 @@
     "protocol": "tacacs",
     "attributes": [
         {
-            "name": "Extreme-Admin-Role",
-            "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Standard TACACS+ privilege level for administrative access to Extreme devices.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Extreme-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Extreme VSAs (Vendor ID: 1916)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Extreme device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "priv-lvl=15 for administrator access; priv-lvl=1 for read-only",
+            "use_cases": [
+                "Control administrative access levels",
+                "Implement role-based CLI access",
+                "Support standard TACACS+ deployments",
+                "Enable graduated access control",
+                "Maintain cross-vendor compatibility"
             ],
-            "reference": "https://docs.extreme.com/radius"
+            "implementation": [
+                "Configure TACACS+ server to return privilege level",
+                "Enable TACACS+ on Extreme device",
+                "Level 15: Full administrative access",
+                "Level 1: Read-only access",
+                "Custom levels can be configured"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos/EXOS_User_Guide/EXOS_UserGuide_32.1/security/tacacs.shtml"
         },
         {
-            "name": "Extreme-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "Extreme-CLI-Authorization",
+            "number": "N/A",
+            "description": "Controls CLI command authorization levels. Extreme-specific attribute for management access.",
             "features": {
-                "acl": false,
-                "role": false,
-                "vlan": true,
+                "acl": true,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Extreme-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Extreme device",
-                "Configure the RADIUS server with Extreme VSAs (Vendor ID: 1916)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Extreme device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "Extreme-CLI-Authorization=ReadWrite for full access",
+            "use_cases": [
+                "Define specific access rights",
+                "Override privilege levels",
+                "Create custom authorization profiles",
+                "Support Extreme-specific features",
+                "Enable granular access control"
             ],
-            "reference": "https://docs.extreme.com/radius"
+            "implementation": [
+                "Values: None, ReadOnly, ReadWrite",
+                "Configure in TACACS+ server",
+                "Takes precedence over priv-lvl",
+                "Works with command authorization",
+                "Monitor with 'show session detail'"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos/EXOS_User_Guide/EXOS_UserGuide_32.1/security/tacacs.shtml"
         },
         {
-            "name": "Extreme-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "name": "cmd",
+            "number": "N/A",
+            "description": "Standard TACACS+ command authorization attribute. Controls which commands can be executed.",
             "features": {
                 "acl": true,
-                "role": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,244 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Extreme-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Extreme device",
-                "Configure the RADIUS server with Extreme VSAs (Vendor ID: 1916)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Extreme device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "cmd=show for show commands; cmd=configure for configuration mode",
+            "use_cases": [
+                "Implement command-level authorization",
+                "Create command allow/deny lists",
+                "Support audit requirements",
+                "Enable granular command control",
+                "Restrict dangerous operations"
             ],
-            "reference": "https://docs.extreme.com/radius"
+            "implementation": [
+                "Enable command authorization on switch",
+                "Configure command lists on TACACS+ server",
+                "Use with cmd-arg for complete commands",
+                "Supports permit/deny actions",
+                "Regular expressions supported"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos/EXOS_User_Guide/EXOS_UserGuide_32.1/security/command_authorization.shtml"
+        },
+        {
+            "name": "cmd-arg",
+            "number": "N/A",
+            "description": "Command arguments for TACACS+ authorization. Used with cmd attribute.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "cmd=configure cmd-arg='vlan Corporate' for specific VLAN config",
+            "use_cases": [
+                "Authorize complete commands",
+                "Control access to specific resources",
+                "Enable parameter-level authorization",
+                "Support complex command syntax",
+                "Create detailed audit trails"
+            ],
+            "implementation": [
+                "Contains command parameters",
+                "Used together with cmd attribute",
+                "TACACS+ server evaluates full command",
+                "Pattern matching available",
+                "Part of authorization flow"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos/EXOS_User_Guide/EXOS_UserGuide_32.1/security/command_authorization.shtml"
+        },
+        {
+            "name": "service",
+            "number": "N/A",
+            "description": "TACACS+ service type. Specifies the service context for authorization.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "service=shell for CLI access",
+            "use_cases": [
+                "Specify authorization context",
+                "Support multiple services",
+                "Enable service-specific policies",
+                "Maintain protocol compliance",
+                "Control service authorization"
+            ],
+            "implementation": [
+                "Standard TACACS+ attribute",
+                "Usually set to 'shell' for CLI",
+                "Required for authorization",
+                "Configure in server policy",
+                "Part of TACACS+ protocol"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos/EXOS_User_Guide/EXOS_UserGuide_32.1/security/tacacs.shtml"
+        },
+        {
+            "name": "protocol",
+            "number": "N/A",
+            "description": "TACACS+ protocol type. Used with service attribute.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "protocol=ip for standard access",
+            "use_cases": [
+                "Specify protocol context",
+                "Support service types",
+                "Enable proper authorization",
+                "Maintain compatibility",
+                "Complete authorization flow"
+            ],
+            "implementation": [
+                "Standard TACACS+ attribute",
+                "Often set to 'ip'",
+                "Used with service attribute",
+                "Configure in server policy",
+                "Part of authorization request"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos/EXOS_User_Guide/EXOS_UserGuide_32.1/security/tacacs.shtml"
+        },
+        {
+            "name": "Extreme-Shell-Command",
+            "number": "N/A",
+            "description": "Extreme-specific command authorization. Alternative to standard cmd attribute.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Extreme-Shell-Command='show *' for all show commands",
+            "use_cases": [
+                "Extreme-specific command control",
+                "Override standard authorization",
+                "Create vendor-specific policies",
+                "Support advanced features",
+                "Enable custom implementations"
+            ],
+            "implementation": [
+                "Extreme VSA format",
+                "Can use wildcards",
+                "Multiple instances allowed",
+                "Works with standard TACACS+",
+                "Check compatibility"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos/EXOS_User_Guide/EXOS_UserGuide_32.1/security/tacacs.shtml"
+        },
+        {
+            "name": "timeout",
+            "number": "N/A",
+            "description": "Session timeout value for administrative sessions.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "timeout=30 for 30-minute timeout",
+            "use_cases": [
+                "Control session duration",
+                "Implement security policies",
+                "Manage resource usage",
+                "Support compliance requirements",
+                "Force re-authentication"
+            ],
+            "implementation": [
+                "Value in minutes",
+                "Applied to CLI sessions",
+                "Overrides global timeout",
+                "0 may disable timeout",
+                "Monitor active sessions"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos/EXOS_User_Guide/EXOS_UserGuide_32.1/security/tacacs.shtml"
+        },
+        {
+            "name": "idletime",
+            "number": "N/A",
+            "description": "Idle timeout for administrative sessions. Disconnects inactive sessions.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "idletime=10 for 10-minute idle timeout",
+            "use_cases": [
+                "Free unused sessions",
+                "Improve security posture",
+                "Manage concurrent connections",
+                "Support resource policies",
+                "Enforce activity requirements"
+            ],
+            "implementation": [
+                "Value in minutes",
+                "Monitors session activity",
+                "Disconnects after idle period",
+                "Works with session timeout",
+                "Can be disabled with 0"
+            ],
+            "reference": "https://documentation.extremenetworks.com/exos/EXOS_User_Guide/EXOS_UserGuide_32.1/security/tacacs.shtml"
         }
     ]
 }

@@ -3,9 +3,46 @@
     "protocol": "radius",
     "attributes": [
         {
-            "name": "Huawei-Admin-Role",
-            "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "name": "Huawei-User-Priority",
+            "number": "8",
+            "description": "Sets the user priority level for QoS and service differentiation.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Huawei-User-Priority = '6' for high priority users",
+            "use_cases": [
+                "Implement QoS per user",
+                "Prioritize VIP customers",
+                "Support service tiers",
+                "Control resource allocation",
+                "Enable differentiated services"
+            ],
+            "implementation": [
+                "Values 0-7 (higher is better)",
+                "Configure RADIUS server with Huawei VSAs (Vendor ID: 2011)",
+                "Applied to user sessions",
+                "Affects queue scheduling",
+                "Monitor with 'display qos'"
+            ],
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
+        },
+        {
+            "name": "Huawei-User-Privilege",
+            "number": "29",
+            "description": "Sets administrative privilege level for Huawei device management.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +59,216 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Huawei-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Huawei VSAs (Vendor ID: 2011)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Huawei device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "Huawei-User-Privilege = '15' for level-15 administrator",
+            "use_cases": [
+                "Control administrative access",
+                "Implement privilege levels",
+                "Support role-based management",
+                "Enable graduated access rights",
+                "Maintain security compliance"
             ],
-            "reference": "https://docs.huawei.com/radius"
+            "implementation": [
+                "Values 0-15 (15 highest)",
+                "Enable RADIUS authentication",
+                "Maps to command levels",
+                "Configure on AAA server",
+                "Verify with 'display local-user'"
+            ],
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
         },
         {
-            "name": "Huawei-VLAN-ID",
+            "name": "Huawei-Input-Peak-Rate",
             "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "description": "Sets the peak ingress bandwidth for the user in Kbps.",
             "features": {
                 "acl": false,
                 "role": false,
-                "vlan": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Huawei-Input-Peak-Rate = '102400' for 100 Mbps peak ingress",
+            "use_cases": [
+                "Control inbound bandwidth",
+                "Implement burst rates",
+                "Support tiered services",
+                "Manage network congestion",
+                "Enable fair usage policies"
+            ],
+            "implementation": [
+                "Value in Kilobits per second",
+                "Applied to user traffic",
+                "Works with average rate",
+                "Can be updated via CoA",
+                "Monitor with traffic statistics"
+            ],
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
+        },
+        {
+            "name": "Huawei-Output-Peak-Rate",
+            "number": "3",
+            "description": "Sets the peak egress bandwidth for the user in Kbps.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Huawei-Output-Peak-Rate = '51200' for 50 Mbps peak egress",
+            "use_cases": [
+                "Control outbound bandwidth",
+                "Implement upload limits",
+                "Support asymmetric rates",
+                "Manage server traffic",
+                "Enable QoS policies"
+            ],
+            "implementation": [
+                "Value in Kilobits per second",
+                "Independent from ingress",
+                "Applied per user session",
+                "Dynamic updates supported",
+                "Works with QoS profiles"
+            ],
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
+        },
+        {
+            "name": "Huawei-VPN-Instance",
+            "number": "41",
+            "description": "Specifies the VPN instance for the user session. Used for VRF assignment.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Huawei-VPN-Instance = 'Customer_A' for VRF assignment",
+            "use_cases": [
+                "Support multi-tenant networks",
+                "Implement VRF isolation",
+                "Enable L3VPN services",
+                "Control routing domains",
+                "Support overlapping IPs"
+            ],
+            "implementation": [
+                "VPN instance must exist",
+                "Applied to user session",
+                "Affects routing table",
+                "Case-sensitive name",
+                "Monitor with 'display ip vpn-instance'"
+            ],
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
+        },
+        {
+            "name": "Huawei-User-Group",
+            "number": "82",
+            "description": "Assigns user to a specific group for policy application.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Huawei-User-Group = 'VPN_Users' for VPN group assignment",
+            "use_cases": [
+                "Implement group-based policies",
+                "Control access rights",
+                "Apply firewall rules",
+                "Support user categorization",
+                "Enable policy-based routing"
+            ],
+            "implementation": [
+                "Group must exist on device",
+                "Configure in user management",
+                "Applied during authentication",
+                "Used in policy matching",
+                "Monitor with 'display aaa'"
+            ],
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
+        },
+        {
+            "name": "Huawei-Acct-IPv6-Input-Octets",
+            "number": "105",
+            "description": "Reports IPv6 input octets for accounting purposes.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Huawei-Acct-IPv6-Input-Octets = '1024000' for 1MB received",
+            "use_cases": [
+                "IPv6 traffic accounting",
+                "Support billing systems",
+                "Monitor IPv6 usage",
+                "Generate usage reports",
+                "Enable quota management"
+            ],
+            "implementation": [
+                "Automatically sent in accounting",
+                "64-bit counter value",
+                "Cumulative byte count",
+                "IPv6-specific accounting",
+                "Parse in billing systems"
+            ],
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
+        },
+        {
+            "name": "Huawei-Domain-Name",
+            "number": "138",
+            "description": "Specifies the authentication domain for the user.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,45 +281,22 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Huawei-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Huawei device",
-                "Configure the RADIUS server with Huawei VSAs (Vendor ID: 2011)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Huawei device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "Huawei-Domain-Name = 'corporate' for corporate domain",
+            "use_cases": [
+                "Support multiple auth domains",
+                "Implement domain-based policies",
+                "Enable multi-tenant authentication",
+                "Control access by domain",
+                "Support ISP services"
             ],
-            "reference": "https://docs.huawei.com/radius"
-        },
-        {
-            "name": "Huawei-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
-            "features": {
-                "acl": true,
-                "role": false,
-                "vlan": false,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": true,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
-                "vpn": false,
-                "ipv6": false,
-                "multicast": false
-            },
-            "network": "both",
-            "example": "Huawei-ACL-Name = \"Guest-ACL\" for ACL assignment.",
             "implementation": [
-                "Configure the ACL on the Huawei device",
-                "Configure the RADIUS server with Huawei VSAs (Vendor ID: 2011)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Huawei device",
-                "Used for dynamic ACL assignment based on user authentication"
+                "Domain must exist on device",
+                "Applied during authentication",
+                "Affects policy application",
+                "Case-sensitive domain name",
+                "Configure in AAA settings"
             ],
-            "reference": "https://docs.huawei.com/radius"
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
         }
     ]
 }

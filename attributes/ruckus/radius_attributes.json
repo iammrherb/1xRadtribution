@@ -3,12 +3,49 @@
     "protocol": "radius",
     "attributes": [
         {
-            "name": "Ruckus-Admin-Role",
+            "name": "Ruckus-User-Role",
             "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "description": "Assigns a user role for Ruckus wireless controllers and APs. Controls user access and permissions.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Ruckus-User-Role = 'Employee' for corporate user access",
+            "use_cases": [
+                "Implement role-based access control",
+                "Apply different policies per user type",
+                "Control wireless network access",
+                "Support BYOD initiatives",
+                "Enable guest access management"
+            ],
+            "implementation": [
+                "Configure RADIUS server with Ruckus VSAs (Vendor ID: 25053)",
+                "Define roles on controller/vSZ",
+                "Roles include ACLs, QoS, VLAN settings",
+                "Case-sensitive role names",
+                "Monitor with 'show wlan all' and client details"
+            ],
+            "reference": "https://docs.commscope.com/bundle/vscg-61-aaa-configuration-reference-guide/page/GUID-B9C8C474-FC5C-4EA5-9B5C-C4C3D7612F62.html"
+        },
+        {
+            "name": "Ruckus-WLAN-Profile-ID",
+            "number": "2",
+            "description": "Specifies the WLAN profile to apply to the user session. Overrides default SSID settings.",
             "features": {
                 "acl": false,
-                "role": true,
+                "role": false,
                 "vlan": false,
                 "url": false,
                 "captive": false,
@@ -16,26 +53,33 @@
                 "dacl": false,
                 "qos": false,
                 "bandwidth": false,
-                "coa": false,
+                "coa": true,
                 "vpn": false,
                 "ipv6": false,
                 "multicast": false
             },
-            "network": "both",
-            "example": "Ruckus-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Ruckus VSAs (Vendor ID: 25053)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Ruckus device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "network": "wireless",
+            "example": "Ruckus-WLAN-Profile-ID = '5' for specific WLAN profile",
+            "use_cases": [
+                "Apply custom WLAN settings per user",
+                "Override default SSID configuration",
+                "Support dynamic service selection",
+                "Enable per-user encryption settings",
+                "Implement service differentiation"
             ],
-            "reference": "https://docs.ruckus.com/radius"
+            "implementation": [
+                "Profile ID must exist on controller",
+                "Numeric ID (typically 1-32)",
+                "Applied during authentication",
+                "Can change user experience dynamically",
+                "Verify with 'show wlan all'"
+            ],
+            "reference": "https://docs.commscope.com/bundle/vscg-61-aaa-configuration-reference-guide/page/GUID-B9C8C474-FC5C-4EA5-9B5C-C4C3D7612F62.html"
         },
         {
-            "name": "Ruckus-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "Ruckus-Dynamic-VLAN-ID",
+            "number": "3",
+            "description": "Assigns dynamic VLAN to authenticated users. Alternative to standard Tunnel attributes.",
             "features": {
                 "acl": false,
                 "role": false,
@@ -46,34 +90,152 @@
                 "dacl": false,
                 "qos": false,
                 "bandwidth": false,
-                "coa": false,
+                "coa": true,
                 "vpn": false,
                 "ipv6": false,
                 "multicast": false
             },
             "network": "both",
-            "example": "Ruckus-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Ruckus device",
-                "Configure the RADIUS server with Ruckus VSAs (Vendor ID: 25053)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Ruckus device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "Ruckus-Dynamic-VLAN-ID = '100' for VLAN 100 assignment",
+            "use_cases": [
+                "Dynamic VLAN assignment",
+                "Network segmentation",
+                "Support 802.1X authentication",
+                "User/device isolation",
+                "Implement security policies"
             ],
-            "reference": "https://docs.ruckus.com/radius"
+            "implementation": [
+                "VLAN must exist on switch",
+                "Alternative to standard VLAN attributes",
+                "Numeric VLAN ID",
+                "Applied per user session",
+                "Monitor with client details"
+            ],
+            "reference": "https://docs.commscope.com/bundle/vscg-61-aaa-configuration-reference-guide/page/GUID-B9C8C474-FC5C-4EA5-9B5C-C4C3D7612F62.html"
         },
         {
-            "name": "Ruckus-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "name": "Ruckus-Data-Rate-Limit-Down",
+            "number": "4",
+            "description": "Sets the downstream bandwidth limit for the user in Kbps.",
             "features": {
-                "acl": true,
+                "acl": false,
                 "role": false,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Ruckus-Data-Rate-Limit-Down = '10240' for 10 Mbps downstream",
+            "use_cases": [
+                "Control per-user bandwidth",
+                "Implement fair usage policies",
+                "Support tiered services",
+                "Manage network congestion",
+                "Enable bandwidth-based plans"
+            ],
+            "implementation": [
+                "Value in Kilobits per second",
+                "Applied to user traffic",
+                "0 means unlimited",
+                "Can be updated via CoA",
+                "Monitor with traffic statistics"
+            ],
+            "reference": "https://docs.commscope.com/bundle/vscg-61-aaa-configuration-reference-guide/page/GUID-B9C8C474-FC5C-4EA5-9B5C-C4C3D7612F62.html"
+        },
+        {
+            "name": "Ruckus-Data-Rate-Limit-Up",
+            "number": "5",
+            "description": "Sets the upstream bandwidth limit for the user in Kbps.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Ruckus-Data-Rate-Limit-Up = '5120' for 5 Mbps upstream",
+            "use_cases": [
+                "Control upload bandwidth",
+                "Implement asymmetric limits",
+                "Prevent upload congestion",
+                "Support video conferencing limits",
+                "Enable tiered upload speeds"
+            ],
+            "implementation": [
+                "Value in Kilobits per second",
+                "Independent from downstream",
+                "Applied per user session",
+                "Dynamic updates supported",
+                "Works with QoS policies"
+            ],
+            "reference": "https://docs.commscope.com/bundle/vscg-61-aaa-configuration-reference-guide/page/GUID-B9C8C474-FC5C-4EA5-9B5C-C4C3D7612F62.html"
+        },
+        {
+            "name": "Ruckus-TCP-MSS-Threshold",
+            "number": "6",
+            "description": "Sets the TCP Maximum Segment Size threshold for the user's traffic.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Ruckus-TCP-MSS-Threshold = '1350' for MTU optimization",
+            "use_cases": [
+                "Optimize TCP performance",
+                "Prevent fragmentation",
+                "Support VPN traffic",
+                "Handle MTU issues",
+                "Improve application performance"
+            ],
+            "implementation": [
+                "Value in bytes",
+                "Adjusts TCP MSS dynamically",
+                "Helps with tunnel overhead",
+                "Applied to TCP sessions",
+                "Monitor packet captures"
+            ],
+            "reference": "https://docs.commscope.com/bundle/vscg-61-aaa-configuration-reference-guide/page/GUID-B9C8C474-FC5C-4EA5-9B5C-C4C3D7612F62.html"
+        },
+        {
+            "name": "Ruckus-Smart-Mesh-Enable",
+            "number": "7",
+            "description": "Enables or disables mesh networking features for the client.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -81,16 +243,60 @@
                 "ipv6": false,
                 "multicast": false
             },
-            "network": "both",
-            "example": "Ruckus-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Ruckus device",
-                "Configure the RADIUS server with Ruckus VSAs (Vendor ID: 25053)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Ruckus device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "network": "wireless",
+            "example": "Ruckus-Smart-Mesh-Enable = '1' to enable mesh participation",
+            "use_cases": [
+                "Control mesh network participation",
+                "Enable dynamic mesh formation",
+                "Support extended coverage",
+                "Implement mesh policies",
+                "Control network topology"
             ],
-            "reference": "https://docs.ruckus.com/radius"
+            "implementation": [
+                "1 = Enable, 0 = Disable",
+                "Applied to capable clients",
+                "Affects mesh behavior",
+                "Used in SmartMesh deployments",
+                "Check device capabilities"
+            ],
+            "reference": "https://docs.commscope.com/bundle/vscg-61-aaa-configuration-reference-guide/page/GUID-B9C8C474-FC5C-4EA5-9B5C-C4C3D7612F62.html"
+        },
+        {
+            "name": "Ruckus-UE-Inactivity-Timeout",
+            "number": "8",
+            "description": "Sets the client inactivity timeout in seconds.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wireless",
+            "example": "Ruckus-UE-Inactivity-Timeout = '600' for 10-minute timeout",
+            "use_cases": [
+                "Free up resources from idle clients",
+                "Improve security posture",
+                "Manage client sessions",
+                "Optimize wireless capacity",
+                "Support guest time limits"
+            ],
+            "implementation": [
+                "Value in seconds",
+                "Monitors client activity",
+                "Disconnects after timeout",
+                "Requires re-authentication",
+                "Per-user setting"
+            ],
+            "reference": "https://docs.commscope.com/bundle/vscg-61-aaa-configuration-reference-guide/page/GUID-B9C8C474-FC5C-4EA5-9B5C-C4C3D7612F62.html"
         }
     ]
 }

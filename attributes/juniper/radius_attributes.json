@@ -5,7 +5,7 @@
         {
             "name": "Juniper-Local-User-Name",
             "number": "1",
-            "description": "Specifies a local user template to be applied, corresponding to a configured user template on the device.",
+            "description": "Specifies a local user template to be applied, corresponding to a configured user template on the device. This attribute maps an authenticated user to a locally defined template user for permission inheritance.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,20 +22,25 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Juniper-Local-User-Name = netadmin-template for network administrators.",
+            "example": "Juniper-Local-User-Name = 'netadmin-template' for network administrators",
+            "use_cases": [
+                "Map RADIUS users to locally defined permission templates",
+                "Centralize user management while maintaining local permission control",
+                "Create role-based access control without defining individual users locally"
+            ],
             "implementation": [
                 "Define local user templates with specific privilege levels on the Juniper device",
                 "Configure your RADIUS server to return this VSA with the template name",
                 "The template name must match exactly with one defined on your Juniper device",
-                "This attribute maps an authenticated user to a locally defined template user",
-                "Particularly useful for assigning administrative roles with consistent permissions"
+                "Template users can have custom login classes, allow/deny commands, and other permissions",
+                "Use 'show system login user' to verify template users on the device"
             ],
-            "reference": "https://supportportal.juniper.net/s/article/Junos-How-to-assign-a-login-class-to-RADIUS-authenticated-users"
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
         },
         {
             "name": "Juniper-Allow-Commands",
             "number": "2",
-            "description": "Lists commands that the user is allowed to execute. Used for granular CLI command control.",
+            "description": "Lists commands that the user is allowed to execute. Used for granular CLI command control. Supports regular expressions for flexible command matching.",
             "features": {
                 "acl": true,
                 "role": true,
@@ -52,20 +57,26 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Juniper-Allow-Commands = \"show interfaces;show system\" to allow only these commands.",
+            "example": "Juniper-Allow-Commands = 'show interfaces|show system.*|show configuration' to allow specific show commands",
+            "use_cases": [
+                "Create custom administrative roles with specific command access",
+                "Allow network operators to view configurations without modification rights",
+                "Provide debug access to specific users during troubleshooting",
+                "Implement least-privilege access for different support tiers"
+            ],
             "implementation": [
                 "Configure the RADIUS server to return this VSA with allowed commands",
-                "Use semicolons to separate multiple commands",
-                "Commands can include wildcards for flexibility (e.g., \"show *\")",
-                "This VSA overrides any permission restrictions in the user's login class",
-                "Useful for creating role-specific command permissions beyond login classes"
+                "Use regular expressions for pattern matching (e.g., 'show.*' for all show commands)",
+                "Commands are evaluated in order with Juniper-Deny-Commands",
+                "Use '|' to separate multiple commands or command patterns",
+                "Verify command authorization with 'show system login user <username> permissions'"
             ],
-            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
         },
         {
             "name": "Juniper-Deny-Commands",
             "number": "3",
-            "description": "Lists commands that the user is not allowed to execute. Used for granular CLI command restrictions.",
+            "description": "Lists commands that the user is not allowed to execute. Takes precedence over Juniper-Allow-Commands for matching commands. Supports regular expressions.",
             "features": {
                 "acl": true,
                 "role": true,
@@ -82,111 +93,285 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Juniper-Deny-Commands = \"configure;restart\" to prevent configuration and restart.",
+            "example": "Juniper-Deny-Commands = 'delete.*|request system.*' to prevent deletion and system operations",
+            "use_cases": [
+                "Prevent configuration changes by read-only administrators",
+                "Block dangerous system operations for junior staff",
+                "Create security boundaries for outsourced support teams",
+                "Implement compliance requirements for change control"
+            ],
             "implementation": [
                 "Configure the RADIUS server to return this VSA with denied commands",
-                "Use semicolons to separate multiple commands",
-                "Commands can include wildcards for flexibility (e.g., \"configure *\")",
-                "Takes precedence over Juniper-Allow-Commands for matching commands",
-                "Useful for creating role-specific command restrictions"
+                "Use regular expressions for pattern matching",
+                "Takes precedence over Allow-Commands for matching patterns",
+                "Commands are evaluated as regular expressions",
+                "Test command authorization before deployment with 'show system login user'"
             ],
-            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
         },
         {
-            "name": "Juniper-Filter",
-            "number": "4",
-            "description": "Specifies a pre-defined filter to be applied to the user's session. Similar to an ACL, can control traffic flow.",
+            "name": "Juniper-Dynamic-Profile-Name",
+            "number": "7",
+            "description": "Specifies the name of a dynamic profile to be applied to the subscriber session. Used extensively in broadband access scenarios for applying service parameters.",
             "features": {
-                "acl": true,
+                "acl": false,
                 "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
                 "dacl": false,
-                "qos": false,
-                "bandwidth": false,
+                "qos": true,
+                "bandwidth": true,
                 "coa": true,
                 "vpn": false,
-                "ipv6": false,
+                "ipv6": true,
                 "multicast": false
             },
             "network": "both",
-            "example": "Juniper-Filter = \"guest-access-filter\" to apply guest network restrictions.",
-            "implementation": [
-                "Create a firewall filter (ACL) on the Juniper device",
-                "Configure the RADIUS server to return this VSA with the filter name",
-                "Filter must be predefined on the Juniper device",
-                "The filter is applied to the user's traffic during the session",
-                "Multiple filter instances can be sent for different directions/protocols"
+            "example": "Juniper-Dynamic-Profile-Name = 'GOLD-SUBSCRIBER' for premium service subscribers",
+            "use_cases": [
+                "Apply different service tiers to broadband subscribers",
+                "Implement dynamic QoS policies based on user authentication",
+                "Configure interface parameters dynamically per subscriber",
+                "Support multi-play services with different profiles",
+                "Enable time-based service changes using CoA"
             ],
-            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+            "implementation": [
+                "Define dynamic profiles on the Juniper BNG/MX router",
+                "Configure the RADIUS server to return this VSA with the profile name",
+                "Profile can include CoS, firewall, routing, and interface parameters",
+                "Multiple profiles can be stacked using additional VSAs",
+                "Use 'show subscribers summary' to verify active profiles"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
         },
         {
-            "name": "Juniper-Login-Class",
-            "number": "5",
-            "description": "Assigns a login class to the user, which determines the user's access privileges in the CLI.",
+            "name": "Juniper-Service-Activation",
+            "number": "56",
+            "description": "Activates or deactivates services for a subscriber. Used with RADIUS CoA to dynamically change subscriber services.",
             "features": {
-                "acl": true,
-                "role": true,
+                "acl": false,
+                "role": false,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
                 "dacl": false,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
                 "vpn": false,
-                "ipv6": false,
-                "multicast": false
+                "ipv6": true,
+                "multicast": true
             },
             "network": "both",
-            "example": "Juniper-Login-Class = \"super-user\" for full administrative access.",
-            "implementation": [
-                "Define login classes on the Juniper device with the desired permissions",
-                "Configure the RADIUS server to return this VSA with the login class name",
-                "The class must be predefined on the Juniper device",
-                "Login classes define CLI command permissions, timeouts, and idle behavior",
-                "Common classes include: super-user, operator, read-only"
+            "example": "Juniper-Service-Activation = 'video-service(activate)' to enable video streaming service",
+            "use_cases": [
+                "Enable on-demand services for subscribers",
+                "Implement usage-based service control",
+                "Support promotional service activation",
+                "Enable parent control features dynamically",
+                "Manage multicast services per subscriber"
             ],
-            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+            "implementation": [
+                "Define services in dynamic profiles on the router",
+                "Use format 'service-name(activate)' or 'service-name(deactivate)'",
+                "Can be sent during initial authentication or via CoA",
+                "Multiple services can be activated in one attribute",
+                "Monitor service status with 'show subscribers extensive'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
         },
         {
-            "name": "Ingress-Policy-Name",
+            "name": "Juniper-IPv4-Input-Filter",
             "number": "10",
-            "description": "Specifies a QoS policy to apply to inbound traffic. Used for traffic shaping and bandwidth management.",
+            "description": "Specifies an IPv4 firewall filter to apply to inbound traffic from the subscriber. Used for security and traffic control.",
             "features": {
-                "acl": false,
+                "acl": true,
                 "role": false,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": false,
-                "qos": true,
-                "bandwidth": true,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
                 "coa": true,
                 "vpn": false,
-                "ipv6": true,
+                "ipv6": false,
                 "multicast": false
             },
             "network": "both",
-            "example": "Ingress-Policy-Name = \"gold-service-in\" to apply the gold service QoS policy to incoming traffic.",
-            "implementation": [
-                "Create the QoS policy on the Juniper device",
-                "Configure the RADIUS server to return this VSA with the policy name",
-                "The policy name must match exactly with what's configured on the Juniper device",
-                "Used for user-specific or service-specific QoS treatment",
-                "Can be dynamically changed via CoA for active sessions",
-                "Supports both IPv4 and IPv6 traffic"
+            "example": "Juniper-IPv4-Input-Filter = 'SUBSCRIBER-INPUT-FILTER' for applying security policies",
+            "use_cases": [
+                "Implement subscriber-specific security policies",
+                "Block malicious traffic from infected subscribers",
+                "Apply parental control filters",
+                "Enforce compliance with acceptable use policies",
+                "Implement walled garden access for non-paying subscribers"
             ],
-            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+            "implementation": [
+                "Define firewall filters on the Juniper device",
+                "Configure the RADIUS server to return this VSA with the filter name",
+                "Filter must be predefined on the device",
+                "Can be changed dynamically using CoA",
+                "Verify filter application with 'show subscribers extensive'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
         },
         {
-            "name": "Egress-Policy-Name",
+            "name": "Juniper-IPv6-Input-Filter",
             "number": "11",
-            "description": "Specifies a QoS policy to apply to outbound traffic. Used for traffic shaping and bandwidth management.",
+            "description": "Specifies an IPv6 firewall filter to apply to inbound traffic from the subscriber. Essential for IPv6 security management.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-IPv6-Input-Filter = 'IPv6-SUBSCRIBER-FILTER' for IPv6 traffic control",
+            "use_cases": [
+                "Apply IPv6-specific security policies",
+                "Control IPv6 traffic in dual-stack environments",
+                "Implement IPv6 transition mechanism controls",
+                "Block specific IPv6 protocols or ports",
+                "Enable IPv6 service gradually per subscriber"
+            ],
+            "implementation": [
+                "Define IPv6 firewall filters on the device",
+                "Configure RADIUS to return this VSA",
+                "Can be used alongside IPv4 filters for dual-stack",
+                "Supports same features as IPv4 filters but for IPv6",
+                "Monitor with 'show subscribers extensive'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Primary-DNS",
+            "number": "31",
+            "description": "Specifies the primary DNS server IP address to be assigned to the subscriber. Critical for subscriber internet access.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Primary-DNS = '8.8.8.8' for Google DNS assignment",
+            "use_cases": [
+                "Provide DNS services to broadband subscribers",
+                "Implement DNS-based content filtering",
+                "Direct subscribers to specific DNS servers by service tier",
+                "Support split-DNS configurations for business customers",
+                "Enable DNS-based security services"
+            ],
+            "implementation": [
+                "Configure RADIUS to return this VSA with DNS IP",
+                "Often used with Juniper-Secondary-DNS",
+                "Can be changed via CoA for service changes",
+                "Supports both IPv4 addresses",
+                "Verify with 'show subscribers extensive'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Primary-DNS-IPv6",
+            "number": "100",
+            "description": "Specifies the primary IPv6 DNS server address for the subscriber. Essential for IPv6-only or dual-stack deployments.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Primary-DNS-IPv6 = '2001:4860:4860::8888' for Google IPv6 DNS",
+            "use_cases": [
+                "Provide DNS services for IPv6-only subscribers",
+                "Support dual-stack DNS configurations",
+                "Enable IPv6 DNS64/NAT64 services",
+                "Implement IPv6 DNS-based filtering",
+                "Support IPv6 transition mechanisms"
+            ],
+            "implementation": [
+                "Configure RADIUS to return this VSA with IPv6 DNS address",
+                "Used in conjunction with IPv6 address assignment",
+                "Can be updated via CoA",
+                "Often paired with Juniper-Secondary-DNS-IPv6",
+                "Monitor with 'show subscribers extensive'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Interface-Id",
+            "number": "96",
+            "description": "Identifies the logical interface where the subscriber is connected. Used for subscriber session identification and management.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Interface-Id = 'xe-1/0/0.100:1234' for VLAN sub-interface identification",
+            "use_cases": [
+                "Track subscriber location for troubleshooting",
+                "Apply interface-specific policies",
+                "Support subscriber mobility between interfaces",
+                "Enable per-interface service provisioning",
+                "Facilitate network capacity planning"
+            ],
+            "implementation": [
+                "Automatically sent by router during authentication",
+                "Format varies by interface type (physical, logical, VLAN)",
+                "Used as session identifier for CoA operations",
+                "Can be used in dynamic profile variable substitution",
+                "Visible in 'show subscribers detail'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-CoS-Traffic-Control-Profile",
+            "number": "55",
+            "description": "Specifies a Class of Service (CoS) traffic control profile for the subscriber. Used for implementing quality of service and bandwidth management.",
             "features": {
                 "acl": false,
                 "role": false,
@@ -203,83 +388,27 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Egress-Policy-Name = \"silver-service-out\" to apply the silver service QoS policy to outgoing traffic.",
-            "implementation": [
-                "Create the QoS policy on the Juniper device",
-                "Configure the RADIUS server to return this VSA with the policy name",
-                "The policy name must match exactly with what's configured on the Juniper device",
-                "Used for user-specific or service-specific QoS treatment",
-                "Can be dynamically changed via CoA for active sessions",
-                "Supports both IPv4 and IPv6 traffic"
+            "example": "Juniper-CoS-Traffic-Control-Profile = 'PREMIUM-1GBPS' for gigabit service tier",
+            "use_cases": [
+                "Implement tiered service offerings",
+                "Control bandwidth per subscriber",
+                "Apply traffic shaping and policing",
+                "Prioritize specific application traffic",
+                "Support fair usage policies"
             ],
-            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+            "implementation": [
+                "Define CoS traffic control profiles on the router",
+                "Configure RADIUS to return this VSA with profile name",
+                "Profile includes scheduler, shaping, and queuing parameters",
+                "Can be changed dynamically via CoA",
+                "Monitor with 'show class-of-service interface'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
         },
         {
-            "name": "Juniper-IPv6-Filter-In",
-            "number": "42",
-            "description": "Specifies an IPv6 filter to apply to inbound traffic.",
-            "features": {
-                "acl": true,
-                "role": false,
-                "vlan": false,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": true,
-                "qos": false,
-                "bandwidth": false,
-                "coa": true,
-                "vpn": false,
-                "ipv6": true,
-                "multicast": false
-            },
-            "network": "both",
-            "example": "Juniper-IPv6-Filter-In = \"IPv6-GUEST-FILTER-IN\" for IPv6 access control.",
-            "implementation": [
-                "Create an IPv6 filter on the Juniper device",
-                "Configure the RADIUS server to return this VSA with the filter name",
-                "The filter must be predefined on the Juniper device",
-                "Specifically for controlling IPv6 traffic",
-                "Complements IPv4 filters for complete traffic control",
-                "Can be used in conjunction with Juniper-IPv6-Filter-Out"
-            ],
-            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
-        },
-        {
-            "name": "Juniper-IPv6-Filter-Out",
-            "number": "43",
-            "description": "Specifies an IPv6 filter to apply to outbound traffic.",
-            "features": {
-                "acl": true,
-                "role": false,
-                "vlan": false,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": true,
-                "qos": false,
-                "bandwidth": false,
-                "coa": true,
-                "vpn": false,
-                "ipv6": true,
-                "multicast": false
-            },
-            "network": "both",
-            "example": "Juniper-IPv6-Filter-Out = \"IPv6-GUEST-FILTER-OUT\" for IPv6 access control.",
-            "implementation": [
-                "Create an IPv6 filter on the Juniper device",
-                "Configure the RADIUS server to return this VSA with the filter name",
-                "The filter must be predefined on the Juniper device",
-                "Specifically for controlling IPv6 traffic",
-                "Complements IPv4 filters for complete traffic control",
-                "Can be used in conjunction with Juniper-IPv6-Filter-In"
-            ],
-            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
-        },
-        {
-            "name": "Juniper-Multicast-Group-Policy",
-            "number": "65",
-            "description": "Specifies the multicast group policy to apply to the user session.",
+            "name": "Juniper-Framed-Pool-Name",
+            "number": "97",
+            "description": "Specifies the name of the address pool from which to allocate an IP address for the subscriber. Critical for IP address management in large deployments.",
             "features": {
                 "acl": false,
                 "role": false,
@@ -291,21 +420,471 @@
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Framed-Pool-Name = 'RESIDENTIAL-POOL-1' for residential subscribers",
+            "use_cases": [
+                "Segregate IP pools by subscriber type",
+                "Implement geographic IP allocation",
+                "Support multiple service provider networks",
+                "Enable IP pool exhaustion management",
+                "Facilitate IP address planning and reporting"
+            ],
+            "implementation": [
+                "Define address pools on the router",
+                "Configure RADIUS to return pool name",
+                "Pool must exist on the authenticating router",
+                "Can be used for both IPv4 and IPv6 with separate attributes",
+                "Monitor pool usage with 'show subscribers address-assignment pool'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Framed-IPv6-Pool-Name",
+            "number": "98",
+            "description": "Specifies the name of the IPv6 address pool for subscriber address allocation. Essential for IPv6 deployment.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Framed-IPv6-Pool-Name = 'IPv6-RESIDENTIAL' for IPv6 address allocation",
+            "use_cases": [
+                "Allocate IPv6 prefixes to subscribers",
+                "Support different IPv6 prefix lengths by service",
+                "Enable regional IPv6 addressing schemes",
+                "Implement IPv6 transition strategies",
+                "Support both SLAAC and DHCPv6 scenarios"
+            ],
+            "implementation": [
+                "Define IPv6 address pools on the router",
+                "Configure RADIUS to return IPv6 pool name",
+                "Supports prefix delegation for home routers",
+                "Can allocate /128 addresses or larger prefixes",
+                "Monitor with 'show subscribers address-assignment pool'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Virtual-Router",
+            "number": "1",
+            "description": "Specifies the virtual router (routing instance) to be used for the subscriber session. Critical for multi-tenant and VPN services.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Virtual-Router = 'CUSTOMER-A-VRF' for enterprise VPN services",
+            "use_cases": [
+                "Provide L3VPN services to enterprise customers",
+                "Implement network segmentation for security",
+                "Support multi-tenant service provider networks",
+                "Enable overlapping IP address spaces",
+                "Facilitate managed services offerings"
+            ],
+            "implementation": [
+                "Define routing instances on the router",
+                "Configure RADIUS to return routing instance name",
+                "Instance must exist on the authenticating device",
+                "Can be changed via CoA for service migration",
+                "Verify with 'show route instance'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Service-Bundle-Name",
+            "number": "73",
+            "description": "Specifies a bundle of services to be activated for the subscriber. Simplifies service provisioning by grouping related services.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": true
+            },
+            "network": "both",
+            "example": "Juniper-Service-Bundle-Name = 'TRIPLE-PLAY-PREMIUM' for voice, video, and data services",
+            "use_cases": [
+                "Deploy multi-play service packages",
+                "Simplify service activation for CSRs",
+                "Enable promotional service bundles",
+                "Support complex service dependencies",
+                "Facilitate service upgrade/downgrade paths"
+            ],
+            "implementation": [
+                "Define service bundles in dynamic profiles",
+                "Configure RADIUS to return bundle name",
+                "Bundle can include multiple services and parameters",
+                "Supports activation/deactivation via CoA",
+                "Monitor with 'show subscribers extensive'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Acct-Terminate-Cause",
+            "number": "52",
+            "description": "Provides detailed termination cause codes specific to Juniper equipment. Enhanced version of standard RADIUS Acct-Terminate-Cause.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Acct-Terminate-Cause = 'subscriber-mgmt-link-down' for physical link failure",
+            "use_cases": [
+                "Troubleshoot subscriber disconnection issues",
+                "Generate detailed service availability reports",
+                "Identify patterns in service disruptions",
+                "Support SLA monitoring and reporting",
+                "Enable proactive network maintenance"
+            ],
+            "implementation": [
+                "Automatically included in RADIUS accounting stop messages",
+                "Provides more granular causes than standard attribute",
+                "Values are specific to Juniper subscriber management",
+                "Used for troubleshooting and reporting",
+                "Can be parsed by billing and OSS systems"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Delegated-Pool-Name",
+            "number": "100",
+            "description": "Specifies the pool for IPv6 prefix delegation. Critical for providing IPv6 connectivity to customer routers.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Delegated-Pool-Name = 'PD-RESIDENTIAL-/56' for home router prefix delegation",
+            "use_cases": [
+                "Provide IPv6 prefixes to customer routers",
+                "Support different prefix sizes by service tier",
+                "Enable IPv6 deployment for residential customers",
+                "Facilitate IPv6 address planning",
+                "Support business customer IPv6 requirements"
+            ],
+            "implementation": [
+                "Define delegated prefix pools on the router",
+                "Configure RADIUS to return pool name",
+                "Typically used with DHCPv6 prefix delegation",
+                "Common prefix sizes: /56 for residential, /48 for business",
+                "Monitor with 'show subscribers address-assignment pool'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-APN-Name",
+            "number": "150",
+            "description": "Specifies the Access Point Name for mobile subscribers. Used in mobile packet core deployments.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-APN-Name = 'internet.provider.com' for mobile internet access",
+            "use_cases": [
+                "Differentiate mobile services by APN",
+                "Support enterprise mobile VPN services",
+                "Enable mobile IoT connectivity",
+                "Implement zero-rating services",
+                "Support MVNO deployments"
+            ],
+            "implementation": [
+                "Used in mobile packet core (GGSN/PGW) deployments",
+                "Configure RADIUS to return APN name",
+                "APN configuration must exist on packet core",
+                "Determines service parameters and routing",
+                "Monitor with mobile-specific show commands"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Cos-Shaping-Rate",
+            "number": "88",
+            "description": "Specifies the traffic shaping rate for the subscriber. Can be used to dynamically adjust bandwidth limits.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Cos-Shaping-Rate = '100m' for 100 Mbps service",
+            "use_cases": [
+                "Implement dynamic bandwidth allocation",
+                "Support bandwidth-on-demand services",
+                "Apply fair usage policies",
+                "Enable time-of-day bandwidth changes",
+                "Support promotional bandwidth upgrades"
+            ],
+            "implementation": [
+                "Specify rate in bits per second (supports k/m/g suffixes)",
+                "Can be applied via initial auth or CoA",
+                "Overrides rates in CoS traffic control profiles",
+                "Applies to aggregate subscriber traffic",
+                "Monitor with 'show class-of-service interface'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-IGMP-Enable",
+            "number": "102",
+            "description": "Enables or disables IGMP processing for the subscriber. Critical for multicast service delivery.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
                 "vpn": false,
                 "ipv6": false,
                 "multicast": true
             },
             "network": "both",
-            "example": "Juniper-Multicast-Group-Policy = \"MULTICAST-POLICY-1\" for multicast control.",
-            "implementation": [
-                "Define multicast policies on the Juniper device",
-                "Configure the RADIUS server to return this VSA with the policy name",
-                "The policy must be predefined on the Juniper device",
-                "Controls which multicast groups a user can join or send to",
-                "Important for controlling multicast traffic in enterprise networks",
-                "Can be applied to both IPv4 and IPv6 multicast traffic"
+            "example": "Juniper-IGMP-Enable = '1' to enable IGMP for IPTV services",
+            "use_cases": [
+                "Enable IPTV services for subscribers",
+                "Control multicast access by service tier",
+                "Implement parental controls for multicast content",
+                "Support enterprise multicast applications",
+                "Enable multicast-based software distribution"
             ],
-            "reference": "https://www.juniper.net/documentation/en_US/junos/topics/reference/general/aaa-subscriber-access-radius-vsa.html"
+            "implementation": [
+                "Send value '1' to enable, '0' to disable",
+                "Works with IGMP snooping on access layer",
+                "Can be changed via CoA for service changes",
+                "Often used with multicast filter lists",
+                "Monitor with 'show igmp interface'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-MLD-Enable",
+            "number": "103",
+            "description": "Enables or disables MLD (Multicast Listener Discovery) for IPv6 multicast. Essential for IPv6 multicast services.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": true
+            },
+            "network": "both",
+            "example": "Juniper-MLD-Enable = '1' to enable IPv6 multicast",
+            "use_cases": [
+                "Enable IPv6 multicast services",
+                "Support dual-stack multicast deployments",
+                "Control IPv6 multicast access",
+                "Enable next-generation IPTV services",
+                "Support IPv6 enterprise applications"
+            ],
+            "implementation": [
+                "Send value '1' to enable, '0' to disable",
+                "IPv6 equivalent of IGMP for IPv4",
+                "Works with MLD snooping",
+                "Can be changed via CoA",
+                "Monitor with 'show mld interface'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Redirect-URL",
+            "number": "125",
+            "description": "Specifies a URL for HTTP redirect. Used for captive portal and notification services.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": true,
+                "captive": true,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Redirect-URL = 'http://portal.provider.com/suspended' for service suspension",
+            "use_cases": [
+                "Implement captive portal authentication",
+                "Notify users of service issues or maintenance",
+                "Direct users to payment portals",
+                "Implement acceptable use policy acknowledgment",
+                "Support walled garden services"
+            ],
+            "implementation": [
+                "Requires HTTP redirect service on router",
+                "URL must be accessible to subscribers",
+                "Can be applied/removed via CoA",
+                "Works with both IPv4 and IPv6",
+                "Often used with specific firewall filters"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Acct-Input-Gigapackets",
+            "number": "85",
+            "description": "Reports input packet count in billions. Extends standard packet counters for high-speed interfaces.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Juniper-Acct-Input-Gigapackets = '5' representing 5 billion packets",
+            "use_cases": [
+                "Accurate accounting for high-speed subscribers",
+                "Support billing systems requiring packet counts",
+                "Network capacity planning and trending",
+                "DDoS detection and mitigation",
+                "Service quality monitoring"
+            ],
+            "implementation": [
+                "Automatically included in accounting messages",
+                "Supplements standard 32-bit packet counters",
+                "Used when packet count exceeds 4.29 billion",
+                "Important for 10G+ subscriber interfaces",
+                "Parse in billing/OSS systems"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
+        },
+        {
+            "name": "Juniper-Policy-Name",
+            "number": "130",
+            "description": "Specifies a policy framework policy to apply to the subscriber. Provides a flexible way to apply complex service configurations.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": true
+            },
+            "network": "both",
+            "example": "Juniper-Policy-Name = 'PARENTAL-CONTROL-BASIC' for content filtering",
+            "use_cases": [
+                "Apply complex service policies",
+                "Implement dynamic security controls",
+                "Enable application-aware networking",
+                "Support value-added services",
+                "Facilitate policy-based routing"
+            ],
+            "implementation": [
+                "Define policies in the policy framework",
+                "Policies can include filters, CoS, and services",
+                "Can be stacked for complex scenarios",
+                "Changeable via CoA",
+                "Monitor with 'show subscribers policy'"
+            ],
+            "reference": "https://www.juniper.net/documentation/us/en/software/junos/subscriber-mgmt-sessions/topics/topic-map/radius-std-attributes-vsas-support.html"
         }
     ]
 }

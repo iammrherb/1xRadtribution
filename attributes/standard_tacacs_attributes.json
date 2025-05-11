@@ -1,0 +1,336 @@
+{
+    "vendor": "standard",
+    "protocol": "tacacs",
+    "attributes": [
+        {
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Sets the privilege level for the user session",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "priv-lvl=15",
+            "implementation": [
+                "Values range from 0-15",
+                "Level 15 typically provides full administrative access",
+                "Level 1 usually provides basic user access",
+                "Levels 2-14 can be customized per device",
+                "Most commonly used authorization attribute"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        },
+        {
+            "name": "service",
+            "number": "N/A",
+            "description": "Specifies the service type for authorization",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "service=shell",
+            "implementation": [
+                "Common values: shell, ppp, slip, arap, exec",
+                "Shell service most common for device administration",
+                "Must match the service requested by NAS",
+                "Used to determine applicable authorization attributes",
+                "Different services may have different attribute sets"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        },
+        {
+            "name": "protocol",
+            "number": "N/A",
+            "description": "Specifies the protocol for the service",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "protocol=ip",
+            "implementation": [
+                "Common values: ip, ipx, atalk, vines, lat",
+                "IP protocol most common in modern networks",
+                "Required for services like PPP",
+                "May be omitted for shell service",
+                "Determines protocol-specific attributes"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        },
+        {
+            "name": "cmd",
+            "number": "N/A",
+            "description": "Command to be authorized for execution",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "cmd=show",
+            "implementation": [
+                "Used with cmd-arg for full command",
+                "Enables command authorization",
+                "Can be permitted or denied",
+                "Supports regular expressions on some systems",
+                "Critical for granular access control"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        },
+        {
+            "name": "cmd-arg",
+            "number": "N/A",
+            "description": "Arguments for the command being authorized",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "cmd-arg=running-config",
+            "implementation": [
+                "Used together with cmd attribute",
+                "Contains command parameters and arguments",
+                "Can include the full command line after the command",
+                "May use wildcards or regular expressions",
+                "Essential for detailed command control"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        },
+        {
+            "name": "acl",
+            "number": "N/A",
+            "description": "Access control list to apply to the user session",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "acl=101",
+            "implementation": [
+                "References pre-configured ACL on device",
+                "Can be numeric or named ACL",
+                "Applied to user's session or interface",
+                "Common in VPN scenarios",
+                "Must exist on the NAS device"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        },
+        {
+            "name": "inacl",
+            "number": "N/A",
+            "description": "Inbound access control list definition",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "inacl#1=permit tcp any any eq 80",
+            "implementation": [
+                "Downloadable ACL for inbound traffic",
+                "Uses extended ACL syntax",
+                "Multiple entries with #1, #2, etc.",
+                "Applied dynamically to session",
+                "No pre-configuration required"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        },
+        {
+            "name": "outacl",
+            "number": "N/A",
+            "description": "Outbound access control list definition",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "outacl#1=permit tcp any any eq 443",
+            "implementation": [
+                "Downloadable ACL for outbound traffic",
+                "Uses extended ACL syntax",
+                "Multiple entries with #1, #2, etc.",
+                "Applied dynamically to session",
+                "Complements inacl for full control"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        },
+        {
+            "name": "addr",
+            "number": "N/A",
+            "description": "IP address to assign to the user",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "addr=10.0.0.100",
+            "implementation": [
+                "Static IP address assignment",
+                "Common in PPP and VPN scenarios",
+                "Overrides dynamic assignment",
+                "Must be from valid pool",
+                "Single IPv4 address"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        },
+        {
+            "name": "timeout",
+            "number": "N/A",
+            "description": "Session timeout value in minutes",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "timeout=60",
+            "implementation": [
+                "Value in minutes",
+                "Forces session termination",
+                "Common for administrative sessions",
+                "0 may mean no timeout",
+                "Absolute session limit"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        },
+        {
+            "name": "idletime",
+            "number": "N/A",
+            "description": "Idle timeout value in minutes",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "idletime=10",
+            "implementation": [
+                "Value in minutes",
+                "Terminates inactive sessions",
+                "Helps free resources",
+                "Definition of idle varies by vendor",
+                "Common for VTY sessions"
+            ],
+            "reference": "https://tools.ietf.org/html/draft-grant-tacacs-02"
+        }
+    ]
+}

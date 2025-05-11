@@ -3,9 +3,9 @@
     "protocol": "radius",
     "attributes": [
         {
-            "name": "Meraki-Admin-Role",
+            "name": "Meraki:organizationID",
             "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "description": "Specifies the Meraki organization ID for dashboard access. Required for multi-org deployments.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Meraki-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Meraki VSAs (Vendor ID: 9)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Meraki device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "Meraki:organizationID = '123456' for specific organization access",
+            "use_cases": [
+                "Control dashboard access by organization",
+                "Support MSP multi-tenant environments",
+                "Enable organization-specific policies",
+                "Restrict administrative scope",
+                "Support centralized authentication"
             ],
-            "reference": "https://docs.meraki.com/radius"
+            "implementation": [
+                "Configure RADIUS server to return this VSA",
+                "Organization ID found in Dashboard",
+                "Required for multi-org setups",
+                "Case-sensitive ID",
+                "Configure in Dashboard > Organization > Configure > Settings"
+            ],
+            "reference": "https://documentation.meraki.com/General_Administration/Managing_Dashboard_Access/Configuring_RADIUS_Authentication"
         },
         {
-            "name": "Meraki-VLAN-ID",
+            "name": "Meraki:organizationName",
             "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "description": "Alternative to organizationID using organization name for dashboard access.",
             "features": {
                 "acl": false,
-                "role": false,
-                "vlan": true,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Meraki-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Meraki device",
-                "Configure the RADIUS server with Meraki VSAs (Vendor ID: 9)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Meraki device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "Meraki:organizationName = 'Corporate HQ' for named organization access",
+            "use_cases": [
+                "Use friendly names instead of IDs",
+                "Simplify RADIUS configuration",
+                "Support human-readable assignments",
+                "Enable easier troubleshooting",
+                "Alternative to numeric IDs"
             ],
-            "reference": "https://docs.meraki.com/radius"
+            "implementation": [
+                "Organization name must match exactly",
+                "Case-sensitive matching",
+                "Spaces and special characters allowed",
+                "Alternative to organizationID",
+                "Configure in RADIUS server"
+            ],
+            "reference": "https://documentation.meraki.com/General_Administration/Managing_Dashboard_Access/Configuring_RADIUS_Authentication"
         },
         {
-            "name": "Meraki-ACL-Name",
+            "name": "Meraki:role",
             "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "description": "Assigns dashboard administrative role. Controls permissions within Meraki dashboard.",
             "features": {
-                "acl": true,
-                "role": false,
+                "acl": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,318 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Meraki-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Meraki device",
-                "Configure the RADIUS server with Meraki VSAs (Vendor ID: 9)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Meraki device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "Meraki:role = 'full' for organization administrator",
+            "use_cases": [
+                "Control dashboard permissions",
+                "Implement role-based access",
+                "Support compliance requirements",
+                "Enable delegated administration",
+                "Create custom access levels"
             ],
-            "reference": "https://docs.meraki.com/radius"
+            "implementation": [
+                "Standard roles: full, read-only, none",
+                "Custom roles supported",
+                "Role must exist in organization",
+                "Case-sensitive role names",
+                "Configure in Organization > Administrators"
+            ],
+            "reference": "https://documentation.meraki.com/General_Administration/Managing_Dashboard_Access/Configuring_RADIUS_Authentication"
+        },
+        {
+            "name": "Meraki:tag",
+            "number": "4",
+            "description": "Assigns network tags for scoped administrative access. Limits visibility to tagged networks.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Meraki:tag = 'branch-offices' for branch network access only",
+            "use_cases": [
+                "Limit access to specific networks",
+                "Implement location-based administration",
+                "Support distributed management",
+                "Enable network segmentation",
+                "Create administrative boundaries"
+            ],
+            "implementation": [
+                "Tags must exist in organization",
+                "Multiple tags supported (comma-separated)",
+                "Applied to networks in dashboard",
+                "Case-sensitive tag names",
+                "Configure in Network-wide > General"
+            ],
+            "reference": "https://documentation.meraki.com/General_Administration/Managing_Dashboard_Access/Configuring_RADIUS_Authentication"
+        },
+        {
+            "name": "Meraki:network",
+            "number": "5",
+            "description": "Specifies individual networks for administrative access. More granular than tags.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Meraki:network = 'L_123456789012345678' for specific network",
+            "use_cases": [
+                "Grant access to specific networks",
+                "Support fine-grained permissions",
+                "Enable per-network administration",
+                "Implement least privilege access",
+                "Support complex org structures"
+            ],
+            "implementation": [
+                "Use network ID from dashboard",
+                "Multiple networks comma-separated",
+                "Network must exist in organization",
+                "More specific than tags",
+                "Find ID in Network-wide > General"
+            ],
+            "reference": "https://documentation.meraki.com/General_Administration/Managing_Dashboard_Access/Configuring_RADIUS_Authentication"
+        },
+        {
+            "name": "Meraki:accessType",
+            "number": "6",
+            "description": "Defines the type of access granted (dashboard, API, etc.). Controls access methods.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Meraki:accessType = 'api-only' for API access without dashboard",
+            "use_cases": [
+                "Control access methods",
+                "Enable API-only accounts",
+                "Support automation tools",
+                "Implement security policies",
+                "Separate human and machine access"
+            ],
+            "implementation": [
+                "Values: dashboard, api-only, both",
+                "Default is dashboard access",
+                "API-only prevents dashboard login",
+                "Useful for service accounts",
+                "Configure based on use case"
+            ],
+            "reference": "https://documentation.meraki.com/General_Administration/Managing_Dashboard_Access/Configuring_RADIUS_Authentication"
+        },
+        {
+            "name": "Filter-Id",
+            "number": "11",
+            "description": "Standard RADIUS attribute used by Meraki for group policy assignment.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Filter-Id = 'GroupPolicy:Employees' for employee policy",
+            "use_cases": [
+                "Apply group policies to wireless clients",
+                "Control bandwidth and firewall rules",
+                "Implement device-type policies",
+                "Support BYOD initiatives",
+                "Enable dynamic policy assignment"
+            ],
+            "implementation": [
+                "Format: 'GroupPolicy:PolicyName'",
+                "Policy must exist in dashboard",
+                "Applied to wireless clients",
+                "Configure in Wireless > Group policies",
+                "Monitor in Clients page"
+            ],
+            "reference": "https://documentation.meraki.com/MR/Encryption_and_Authentication/Configuring_RADIUS_Authentication"
+        },
+        {
+            "name": "Tunnel-Type",
+            "number": "64",
+            "description": "Standard RADIUS attribute for VLAN assignment. Set to VLAN (13) for Meraki.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Tunnel-Type = VLAN for dynamic VLAN assignment",
+            "use_cases": [
+                "Dynamic VLAN assignment",
+                "Network segmentation",
+                "Support 802.1X authentication",
+                "Implement security zones",
+                "Enable user-based networking"
+            ],
+            "implementation": [
+                "Must be set to value 13 (VLAN)",
+                "Used with Tunnel-Private-Group-ID",
+                "Part of standard VLAN assignment",
+                "Required for dynamic VLANs",
+                "Works with wired and wireless"
+            ],
+            "reference": "https://documentation.meraki.com/MS/Access_Control/Dynamic_VLAN_Assignment"
+        },
+        {
+            "name": "Tunnel-Medium-Type",
+            "number": "65",
+            "description": "Standard RADIUS attribute for VLAN assignment. Set to 802 (6) for Meraki.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Tunnel-Medium-Type = 802 for Ethernet VLANs",
+            "use_cases": [
+                "Complete VLAN assignment",
+                "Support standard RADIUS",
+                "Enable dynamic networking",
+                "Work with 802.1X",
+                "Maintain compatibility"
+            ],
+            "implementation": [
+                "Must be set to value 6 (802)",
+                "Used with Tunnel-Type",
+                "Part of VLAN assignment trio",
+                "Standard RADIUS requirement",
+                "Supported on all Meraki devices"
+            ],
+            "reference": "https://documentation.meraki.com/MS/Access_Control/Dynamic_VLAN_Assignment"
+        },
+        {
+            "name": "Tunnel-Private-Group-ID",
+            "number": "81",
+            "description": "Specifies the VLAN ID for dynamic assignment. The actual VLAN identifier.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Tunnel-Private-Group-ID = 100 for VLAN 100",
+            "use_cases": [
+                "Assign specific VLANs",
+                "Support dynamic networking",
+                "Enable user segmentation",
+                "Implement security policies",
+                "Support IoT networks"
+            ],
+            "implementation": [
+                "Can be VLAN ID or name",
+                "VLAN must exist on switch",
+                "Works with Tunnel-Type/Medium-Type",
+                "Supports tagged VLANs",
+                "Monitor in switch port details"
+            ],
+            "reference": "https://documentation.meraki.com/MS/Access_Control/Dynamic_VLAN_Assignment"
+        },
+        {
+            "name": "Airespace-Interface-Name",
+            "number": "5",
+            "description": "Used by Meraki for SSID steering in specific scenarios. Legacy Cisco attribute.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wireless",
+            "example": "Airespace-Interface-Name = 'corporate' for SSID selection",
+            "use_cases": [
+                "SSID steering for clients",
+                "Support legacy integrations",
+                "Enable SSID-based policies",
+                "Maintain compatibility",
+                "Advanced wireless configurations"
+            ],
+            "implementation": [
+                "Limited use in Meraki",
+                "Mainly for compatibility",
+                "Prefer native Meraki attributes",
+                "Check specific use cases",
+                "Test thoroughly"
+            ],
+            "reference": "https://documentation.meraki.com/MR/Encryption_and_Authentication/RADIUS_Vendor-specific_Attributes"
         }
     ]
 }

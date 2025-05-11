@@ -3,9 +3,46 @@
     "protocol": "radius",
     "attributes": [
         {
-            "name": "Checkpoint-Admin-Role",
+            "name": "CP-Group",
             "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "description": "Assigns a user group for Check Point firewall access. Used for Identity Awareness and access control.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "CP-Group = 'VPN_Users' for VPN access; CP-Group = 'IT_Admins' for administrative access",
+            "use_cases": [
+                "Implement Identity Awareness policies",
+                "Control VPN access based on groups",
+                "Apply firewall rules by user group",
+                "Support role-based access control",
+                "Enable centralized group management"
+            ],
+            "implementation": [
+                "Configure RADIUS server with Check Point VSAs (Vendor ID: 2620)",
+                "Group must exist in Check Point user database or AD",
+                "Used with Identity Awareness blade",
+                "Can assign multiple groups with semicolon separator",
+                "Monitor with 'pdp monitor user all'"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_IdentityAwareness_AdminGuide/Topics-IDAG/RADIUS-Attributes.htm"
+        },
+        {
+            "name": "CP-Gaia-User-Role",
+            "number": "2",
+            "description": "Assigns administrative role for Gaia management access. Controls what administrators can configure.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,23 +59,252 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Checkpoint-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Checkpoint VSAs (Vendor ID: 2620)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Checkpoint device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "CP-Gaia-User-Role = 'adminRole' for full administrative access",
+            "use_cases": [
+                "Control Gaia OS administrative access",
+                "Implement role-based administration",
+                "Delegate specific management tasks",
+                "Support compliance requirements",
+                "Enable multi-level administration"
             ],
-            "reference": "https://docs.checkpoint.com/radius"
+            "implementation": [
+                "Configure roles in Gaia (Users and Roles)",
+                "Standard roles: adminRole, monitorRole",
+                "Custom roles can be created",
+                "Case-sensitive role names",
+                "Verify with 'show users' in Gaia"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_Gaia_AdminGuide/Topics-GAG/Working-with-Users.htm"
         },
         {
-            "name": "Checkpoint-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "CP-Gaia-SuperUser-Access",
+            "number": "3",
+            "description": "Grants expert mode (bash shell) access in Gaia OS. Required for advanced troubleshooting.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "CP-Gaia-SuperUser-Access = 1 to enable expert mode",
+            "use_cases": [
+                "Enable expert mode access",
+                "Support advanced troubleshooting",
+                "Allow system-level configuration",
+                "Provide shell access when needed",
+                "Control privileged access"
+            ],
+            "implementation": [
+                "Set to 1 to enable, 0 to disable",
+                "User also needs appropriate role",
+                "Requires 'expert' password configuration",
+                "Audit expert mode usage",
+                "Monitor with system logs"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_Gaia_AdminGuide/Topics-GAG/Expert-Mode.htm"
+        },
+        {
+            "name": "CP-Role",
+            "number": "4",
+            "description": "Generic role assignment for Check Point products. Used across different Check Point components.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "CP-Role = 'Security_Admin' for security management access",
+            "use_cases": [
+                "Assign roles in SmartConsole",
+                "Control management server access",
+                "Support multi-domain environments",
+                "Enable role-based permissions",
+                "Centralize role management"
+            ],
+            "implementation": [
+                "Role must be defined in SmartConsole",
+                "Works with Permission Profiles",
+                "Used in Multi-Domain Security Management",
+                "Case-sensitive role names",
+                "Monitor with SmartLog"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_SecurityManagement_AdminGuide/Topics-SECMG/Administrators.htm"
+        },
+        {
+            "name": "CP-VPN-Group",
+            "number": "5",
+            "description": "Assigns VPN group membership. Controls VPN access and applies group-specific policies.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "CP-VPN-Group = 'Office_VPN' for office worker VPN access",
+            "use_cases": [
+                "Control VPN access by group",
+                "Apply group-specific VPN policies",
+                "Implement split tunneling rules",
+                "Set group-based encryption domains",
+                "Support Mobile Access blade"
+            ],
+            "implementation": [
+                "Define VPN groups in SmartConsole",
+                "Configure group properties",
+                "Set office mode IP pools per group",
+                "Apply security policies by group",
+                "Monitor with 'cpview' utility"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_RemoteAccess_AdminGuide/Topics-RA/Remote-Access-VPN-Configurations.htm"
+        },
+        {
+            "name": "CP-Max-Aggregated-Session-Time",
+            "number": "6",
+            "description": "Sets maximum total session time for VPN connections. Enforces time-based access policies.",
             "features": {
                 "acl": false,
                 "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "CP-Max-Aggregated-Session-Time = 28800 for 8-hour maximum",
+            "use_cases": [
+                "Enforce daily VPN time limits",
+                "Support contractor access policies",
+                "Implement compliance requirements",
+                "Control resource usage",
+                "Manage concurrent sessions"
+            ],
+            "implementation": [
+                "Value in seconds",
+                "Tracks cumulative session time",
+                "Enforced across multiple sessions",
+                "Resets based on policy",
+                "Monitor with VPN logs"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_RemoteAccess_AdminGuide/Topics-RA/Configuring-Session-Timeout.htm"
+        },
+        {
+            "name": "CP-IP-Pool",
+            "number": "7",
+            "description": "Specifies IP address pool for VPN client addressing. Enables group-based IP allocation.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "CP-IP-Pool = 'VPN_Pool_Sales' for sales department VPN IPs",
+            "use_cases": [
+                "Segregate VPN clients by department",
+                "Apply IP-based firewall rules",
+                "Support overlapping IP scenarios",
+                "Enable detailed tracking",
+                "Manage IP address allocation"
+            ],
+            "implementation": [
+                "Define IP pools in gateway object",
+                "Configure Office Mode settings",
+                "Pool must exist on security gateway",
+                "Supports multiple pools per gateway",
+                "Monitor with 'vpn tu'"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_RemoteAccess_AdminGuide/Topics-RA/Office-Mode.htm"
+        },
+        {
+            "name": "CP-Expiration-Date",
+            "number": "8",
+            "description": "Sets account expiration date for temporary access. Used for contractors and temporary users.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "CP-Expiration-Date = '2024-12-31' for year-end expiration",
+            "use_cases": [
+                "Manage temporary user access",
+                "Support contractor accounts",
+                "Implement access reviews",
+                "Ensure timely access removal",
+                "Support compliance requirements"
+            ],
+            "implementation": [
+                "Format: YYYY-MM-DD",
+                "Checked during authentication",
+                "Access denied after expiration",
+                "Can be updated via RADIUS",
+                "Audit with user reports"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_IdentityAwareness_AdminGuide/Topics-IDAG/User-Management.htm"
+        },
+        {
+            "name": "CP-VDOM",
+            "number": "9",
+            "description": "Assigns user to a Virtual System (VS) or Domain. Used in VSX and Multi-Domain environments.",
+            "features": {
+                "acl": false,
+                "role": true,
                 "vlan": true,
                 "url": false,
                 "captive": false,
@@ -52,45 +318,133 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Checkpoint-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Checkpoint device",
-                "Configure the RADIUS server with Checkpoint VSAs (Vendor ID: 2620)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Checkpoint device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "CP-VDOM = 'VS2' for Virtual System 2 assignment",
+            "use_cases": [
+                "Support multi-tenant environments",
+                "Assign users to virtual systems",
+                "Implement domain segregation",
+                "Control access in VSX deployments",
+                "Enable virtual firewall management"
             ],
-            "reference": "https://docs.checkpoint.com/radius"
+            "implementation": [
+                "VS/Domain must exist on device",
+                "Used with VSX gateways",
+                "Supports Provider-1/Multi-Domain",
+                "Case-sensitive names",
+                "Monitor with 'vsx stat'"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_VSX_AdminGuide/Topics-VSXG/Introduction-to-VSX.htm"
         },
         {
-            "name": "Checkpoint-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "name": "CP-User-Encrypt-Alg",
+            "number": "10",
+            "description": "Specifies encryption algorithms allowed for user VPN connections.",
             "features": {
-                "acl": true,
+                "acl": false,
                 "role": false,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
-                "vpn": false,
+                "vpn": true,
                 "ipv6": false,
                 "multicast": false
             },
             "network": "both",
-            "example": "Checkpoint-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Checkpoint device",
-                "Configure the RADIUS server with Checkpoint VSAs (Vendor ID: 2620)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Checkpoint device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "CP-User-Encrypt-Alg = 'AES-256,AES-128' for strong encryption",
+            "use_cases": [
+                "Enforce encryption standards",
+                "Support compliance requirements",
+                "Control VPN security levels",
+                "Enable algorithm negotiation",
+                "Implement security policies"
             ],
-            "reference": "https://docs.checkpoint.com/radius"
+            "implementation": [
+                "Comma-separated algorithm list",
+                "Common values: AES-256, AES-128, 3DES",
+                "Must match gateway capabilities",
+                "Applied during IKE negotiation",
+                "Monitor with VPN debug"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_VPN_AdminGuide/Topics-VPNG/Configuring-Encryption.htm"
+        },
+        {
+            "name": "CP-User-Auth-Method",
+            "number": "11",
+            "description": "Specifies authentication methods allowed for the user. Controls authentication requirements.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "CP-User-Auth-Method = 'Certificate,Password' for multi-factor auth",
+            "use_cases": [
+                "Enforce multi-factor authentication",
+                "Control authentication methods",
+                "Support different security levels",
+                "Enable certificate authentication",
+                "Implement authentication policies"
+            ],
+            "implementation": [
+                "Comma-separated method list",
+                "Options: Password, Certificate, SecurID, etc.",
+                "Must be configured on gateway",
+                "Applied during authentication",
+                "Audit with authentication logs"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_IdentityAwareness_AdminGuide/Topics-IDAG/Authentication-Methods.htm"
+        },
+        {
+            "name": "CP-User-Access-Hours",
+            "number": "12",
+            "description": "Defines time-based access restrictions for users. Controls when users can connect.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "CP-User-Access-Hours = 'Mon-Fri:08:00-18:00' for business hours",
+            "use_cases": [
+                "Implement business hours access",
+                "Control contractor access times",
+                "Support shift-based policies",
+                "Enforce security policies",
+                "Manage resource availability"
+            ],
+            "implementation": [
+                "Day and time range format",
+                "Multiple ranges supported",
+                "Gateway local time used",
+                "Checked at connection time",
+                "Sessions terminated outside hours"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_IdentityAwareness_AdminGuide/Topics-IDAG/Time-Based-Access.htm"
         }
     ]
 }

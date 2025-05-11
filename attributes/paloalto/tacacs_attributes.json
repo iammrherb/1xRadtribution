@@ -5,7 +5,7 @@
         {
             "name": "PaloAlto-Admin-Role",
             "number": "N/A",
-            "description": "Assigns an administrative role to the user for Palo Alto Networks firewall management access.",
+            "description": "Assigns an administrative role to the user for Palo Alto Networks firewall management access. Requires service=PaloAlto and protocol=firewall in TACACS+ configuration.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,21 +22,27 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-Admin-Role = \"superuser\" for full administrative access.",
-            "implementation": [
-                "Configure the TACACS+ server with the required Palo Alto attributes",
-                "Set the service attribute to \"PaloAlto\"",
-                "Set the protocol attribute to \"firewall\"",
-                "Configure the PAN-OS device to use TACACS+ authentication",
-                "Set the PaloAlto-Admin-Role attribute with the desired role",
-                "Valid values include standard roles (superuser, superreader, etc.) or custom roles"
+            "example": "PaloAlto-Admin-Role=superuser for full administrative access; PaloAlto-Admin-Role=devicereader for read-only access",
+            "use_cases": [
+                "Implement role-based administration",
+                "Delegate specific management functions",
+                "Support compliance requirements",
+                "Create custom admin roles",
+                "Enable least-privilege access"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/tacacs"
+            "implementation": [
+                "Configure TACACS+ server with service=PaloAlto",
+                "Set protocol=firewall in TACACS+ config",
+                "Standard roles: superuser, superreader, deviceadmin, devicereader",
+                "Custom roles must be pre-defined on firewall",
+                "Enable admin role override in PAN-OS settings"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/tacacs"
         },
         {
             "name": "PaloAlto-Admin-Access-Domain",
             "number": "N/A",
-            "description": "Specifies the access domain for firewall administrators. Used in multi-virtual system environments to control which vsys an administrator can manage.",
+            "description": "Specifies the access domain for administrators in multi-vsys environments. Controls which virtual systems an admin can manage.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -53,21 +59,27 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-Admin-Access-Domain = \"Domain1\" for specific domain access.",
-            "implementation": [
-                "Configure access domains on the Palo Alto firewall (Device > Access Domains)",
-                "Configure the TACACS+ server with the required Palo Alto attributes",
-                "Set the service attribute to \"PaloAlto\"",
-                "Set the protocol attribute to \"firewall\"",
-                "Configure the PAN-OS device to use TACACS+ authentication",
-                "Set the PaloAlto-Admin-Access-Domain attribute with the desired domain name"
+            "example": "PaloAlto-Admin-Access-Domain=vsys1,vsys2 for specific vsys access; PaloAlto-Admin-Access-Domain=* for all vsys",
+            "use_cases": [
+                "Restrict admin access to specific vsys",
+                "Support multi-tenant environments",
+                "Implement security isolation",
+                "Enable delegated vsys management",
+                "Comply with regulatory requirements"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/tacacs"
+            "implementation": [
+                "Configure access domains on firewall",
+                "Use with service=PaloAlto, protocol=firewall",
+                "Comma-separated list for multiple vsys",
+                "Use '*' for access to all virtual systems",
+                "Case-sensitive vsys names"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/tacacs"
         },
         {
             "name": "PaloAlto-Panorama-Admin-Role",
             "number": "N/A",
-            "description": "Assigns an administrative role to the user for Panorama management access. Controls access rights in the Panorama management system.",
+            "description": "Assigns an administrative role for Panorama management. Requires service=PaloAlto and protocol=panorama in TACACS+ configuration.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -84,21 +96,27 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-Panorama-Admin-Role = \"panorama-admin\" for Panorama administration access.",
-            "implementation": [
-                "Configure the TACACS+ server with the required Palo Alto attributes",
-                "Set the service attribute to \"PaloAlto\"",
-                "Set the protocol attribute to \"panorama\"",
-                "Configure Panorama to use TACACS+ authentication",
-                "Set the PaloAlto-Panorama-Admin-Role attribute with the desired role",
-                "Valid values include standard roles (panorama-admin, etc.) or custom roles"
+            "example": "PaloAlto-Panorama-Admin-Role=panorama-admin for full Panorama access",
+            "use_cases": [
+                "Control Panorama admin access",
+                "Implement centralized management RBAC",
+                "Delegate device group management",
+                "Support hierarchical administration",
+                "Enable audit compliance"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/tacacs"
+            "implementation": [
+                "Configure TACACS+ with service=PaloAlto",
+                "Set protocol=panorama for Panorama",
+                "Standard roles: panorama-admin, custom roles supported",
+                "Roles must be pre-defined in Panorama",
+                "Enable role override in Panorama settings"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/tacacs"
         },
         {
             "name": "PaloAlto-Panorama-Admin-Access-Domain",
             "number": "N/A",
-            "description": "Specifies the access domain for Panorama administrators. Controls which device groups and templates an administrator can manage in Panorama.",
+            "description": "Specifies access domains for Panorama administrators. Controls which device groups and templates an admin can manage.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -115,16 +133,355 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-Panorama-Admin-Access-Domain = \"Domain2\" for specific Panorama domain access.",
-            "implementation": [
-                "Configure access domains on Panorama (Panorama > Access Domains)",
-                "Configure the TACACS+ server with the required Palo Alto attributes",
-                "Set the service attribute to \"PaloAlto\"",
-                "Set the protocol attribute to \"panorama\"",
-                "Configure Panorama to use TACACS+ authentication",
-                "Set the PaloAlto-Panorama-Admin-Access-Domain attribute with the desired domain name"
+            "example": "PaloAlto-Panorama-Admin-Access-Domain=DG-Branch,DG-HQ for specific device groups",
+            "use_cases": [
+                "Restrict access to device groups",
+                "Support multi-tenant management",
+                "Delegate template management",
+                "Implement administrative boundaries",
+                "Enable granular access control"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/tacacs"
+            "implementation": [
+                "Configure access domains in Panorama",
+                "Use with service=PaloAlto, protocol=panorama",
+                "Define device groups and template stacks",
+                "Comma-separated list for multiple domains",
+                "Case-sensitive names must match exactly"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/tacacs"
+        },
+        {
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Standard TACACS+ privilege level. Used when Palo Alto-specific attributes are not configured.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "priv-lvl=15 for superuser access; priv-lvl=5 for read-only access",
+            "use_cases": [
+                "Fallback for standard TACACS+ auth",
+                "Support legacy configurations",
+                "Enable basic privilege mapping",
+                "Maintain compatibility",
+                "Simple access control"
+            ],
+            "implementation": [
+                "Standard TACACS+ attribute",
+                "Maps to PAN-OS roles: 15=superuser, 5=superreader",
+                "Used when VSAs not available",
+                "Configure privilege level mapping",
+                "Works with standard TACACS+ servers"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/tacacs"
+        },
+        {
+            "name": "service",
+            "number": "N/A",
+            "description": "Specifies the TACACS+ service type. Must be set to 'PaloAlto' for Palo Alto-specific attributes to work.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "service=PaloAlto for vendor-specific attributes",
+            "use_cases": [
+                "Enable Palo Alto VSAs",
+                "Differentiate from standard TACACS+",
+                "Support vendor extensions",
+                "Control attribute processing",
+                "Maintain compatibility"
+            ],
+            "implementation": [
+                "Configure in TACACS+ server policy",
+                "Required for PaloAlto-* attributes",
+                "Use with appropriate protocol attribute",
+                "Alternative: service=shell for standard",
+                "Case-sensitive service name"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/tacacs"
+        },
+        {
+            "name": "protocol",
+            "number": "N/A",
+            "description": "Specifies the protocol context. Set to 'firewall' for PAN-OS or 'panorama' for Panorama management.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "protocol=firewall for PAN-OS management; protocol=panorama for Panorama",
+            "use_cases": [
+                "Differentiate management contexts",
+                "Enable appropriate VSAs",
+                "Support dual-mode authentication",
+                "Control attribute interpretation",
+                "Facilitate troubleshooting"
+            ],
+            "implementation": [
+                "Use with service=PaloAlto",
+                "firewall: PAN-OS device management",
+                "panorama: Panorama management",
+                "Determines which VSAs are processed",
+                "Configure in TACACS+ authorization rules"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/tacacs"
+        },
+        {
+            "name": "cmd",
+            "number": "N/A",
+            "description": "Command authorization attribute. Controls which CLI commands an administrator can execute.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "cmd=show * {permit .*} for allowing all show commands; cmd=configure {deny .*} for denying configuration",
+            "use_cases": [
+                "Implement command-level authorization",
+                "Restrict configuration changes",
+                "Allow monitoring-only access",
+                "Create custom command profiles",
+                "Support audit requirements"
+            ],
+            "implementation": [
+                "Enable command authorization on PAN-OS",
+                "Configure TACACS+ command auth rules",
+                "Use regex for command matching",
+                "Specify permit or deny actions",
+                "Test with 'debug cli on'"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/tacacs"
+        },
+        {
+            "name": "PaloAlto-Device-Group",
+            "number": "N/A",
+            "description": "Specifies device group for Panorama-managed devices. Controls policy and object visibility.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Device-Group=Branch-Offices for branch device management",
+            "use_cases": [
+                "Organize managed devices",
+                "Apply group-specific policies",
+                "Delegate device management",
+                "Support hierarchical management",
+                "Enable template inheritance"
+            ],
+            "implementation": [
+                "Define device groups in Panorama",
+                "Use with Panorama authentication",
+                "Controls policy inheritance",
+                "Supports nested device groups",
+                "Case-sensitive group names"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/panorama/10-1/panorama-admin/manage-firewalls/device-groups"
+        },
+        {
+            "name": "PaloAlto-Template-Stack",
+            "number": "N/A",
+            "description": "Specifies template stack access for Panorama administrators. Controls network and device configuration templates.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Template-Stack=Base-Template,Regional-Template for template access",
+            "use_cases": [
+                "Control template configuration access",
+                "Delegate network configuration",
+                "Support template inheritance",
+                "Enable regional management",
+                "Maintain configuration consistency"
+            ],
+            "implementation": [
+                "Create template stacks in Panorama",
+                "Assign administrators to stacks",
+                "Controls network/device settings access",
+                "Supports multiple template assignment",
+                "Works with access domains"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/panorama/10-1/panorama-admin/manage-firewalls/templates"
+        },
+        {
+            "name": "PaloAlto-Collector-Group",
+            "number": "N/A",
+            "description": "Specifies log collector group access. Controls which log collectors an administrator can manage.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Collector-Group=Regional-Collectors for regional log management",
+            "use_cases": [
+                "Delegate log collector management",
+                "Support distributed logging",
+                "Control log access by region",
+                "Enable compliance separation",
+                "Manage log retention policies"
+            ],
+            "implementation": [
+                "Define collector groups in Panorama",
+                "Assign log collectors to groups",
+                "Use with Panorama access domains",
+                "Controls log visibility and management",
+                "Supports multiple collector groups"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/panorama/10-1/panorama-admin/panorama-log-collection-and-forwarding"
+        },
+        {
+            "name": "PaloAlto-WildFire-Cluster",
+            "number": "N/A",
+            "description": "Specifies WildFire cluster access for administrators. Controls malware analysis infrastructure management.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-WildFire-Cluster=Private-Cloud for private WildFire management",
+            "use_cases": [
+                "Manage private WildFire clusters",
+                "Control malware analysis access",
+                "Support regional compliance",
+                "Delegate security operations",
+                "Enable threat research access"
+            ],
+            "implementation": [
+                "Deploy WildFire private cloud",
+                "Configure cluster access in Panorama",
+                "Assign administrators to clusters",
+                "Controls analysis and reporting access",
+                "Supports multiple cluster assignment"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/wildfire/10-1/wildfire-admin/wildfire-private-cloud"
+        },
+        {
+            "name": "PaloAlto-Admin-Session-Timeout",
+            "number": "N/A",
+            "description": "Sets administrative session timeout in minutes. Controls how long an admin session remains active.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Admin-Session-Timeout=30 for 30-minute timeout",
+            "use_cases": [
+                "Enforce security timeout policies",
+                "Support compliance requirements",
+                "Prevent unauthorized access",
+                "Control resource utilization",
+                "Enable differentiated timeout policies"
+            ],
+            "implementation": [
+                "Configure in TACACS+ response",
+                "Value in minutes (0-1440)",
+                "Overrides system default timeout",
+                "Set to 0 for no timeout",
+                "Monitor with session logs"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/tacacs"
         }
     ]
 }

@@ -5,7 +5,7 @@
         {
             "name": "PaloAlto-Admin-Role",
             "number": "1",
-            "description": "Assigns an administrative role to the user for Palo Alto Networks firewall management access.",
+            "description": "Assigns an administrative role to the user for Palo Alto Networks firewall management access. Critical for implementing role-based access control for administrators.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,15 +22,22 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-Admin-Role = \"superuser\" for full administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
-                "Configure the PAN-OS device to use RADIUS authentication",
-                "Set the VSA with the desired admin role",
-                "Valid values include standard roles (superuser, superreader, etc.) or custom roles",
-                "User will automatically be assigned the role upon successful authentication"
+            "example": "PaloAlto-Admin-Role = 'superuser' for full administrative access; PaloAlto-Admin-Role = 'devicereader' for read-only access",
+            "use_cases": [
+                "Implement role-based administration",
+                "Delegate specific administrative functions",
+                "Comply with security audit requirements",
+                "Support multi-level admin hierarchy",
+                "Enable least-privilege access"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+            "implementation": [
+                "Configure RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
+                "Configure PAN-OS device to use RADIUS authentication",
+                "Standard roles: superuser, superreader, deviceadmin, devicereader",
+                "Custom roles must be pre-defined on the firewall",
+                "Case-sensitive role names must match exactly"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/radius"
         },
         {
             "name": "PaloAlto-Admin-Access-Domain",
@@ -52,20 +59,27 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-Admin-Access-Domain = \"Domain1\" for specific domain access.",
-            "implementation": [
-                "Configure access domains on the Palo Alto firewall (Device > Access Domains)",
-                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
-                "Configure the PAN-OS device to use RADIUS authentication",
-                "Set the VSA with the desired access domain name",
-                "User will be restricted to the specified access domain upon authentication"
+            "example": "PaloAlto-Admin-Access-Domain = 'vsys1,vsys2' for multi-vsys access; PaloAlto-Admin-Access-Domain = '*' for all vsys",
+            "use_cases": [
+                "Restrict admin access to specific vsys",
+                "Support multi-tenant environments",
+                "Implement security boundaries",
+                "Enable delegated administration",
+                "Maintain regulatory compliance"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+            "implementation": [
+                "Configure access domains on PAN-OS (Device > Access Domains)",
+                "Configure RADIUS server with access domain VSA",
+                "Use comma-separated list for multiple vsys",
+                "Use '*' for access to all virtual systems",
+                "Works with both firewall and Panorama"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/radius"
         },
         {
             "name": "PaloAlto-Panorama-Admin-Role",
             "number": "3",
-            "description": "Assigns an administrative role to the user for Panorama management access. Controls access rights in the Panorama management system.",
+            "description": "Assigns an administrative role for Panorama management access. Controls access rights in the centralized management system.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -82,50 +96,27 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-Panorama-Admin-Role = \"panorama-admin\" for Panorama administration access.",
-            "implementation": [
-                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
-                "Configure Panorama to use RADIUS authentication",
-                "Set the VSA with the desired admin role",
-                "Valid values include standard roles (panorama-admin, etc.) or custom roles",
-                "User will automatically be assigned the role upon successful authentication"
+            "example": "PaloAlto-Panorama-Admin-Role = 'panorama-admin' for full Panorama access",
+            "use_cases": [
+                "Control Panorama administrative access",
+                "Implement centralized management RBAC",
+                "Delegate device group management",
+                "Support compliance requirements",
+                "Enable hierarchical administration"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
-        },
-        {
-            "name": "PaloAlto-Panorama-Admin-Access-Domain",
-            "number": "4",
-            "description": "Specifies the access domain for Panorama administrators. Controls which device groups and templates an administrator can manage in Panorama.",
-            "features": {
-                "acl": false,
-                "role": true,
-                "vlan": false,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": false,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
-                "vpn": false,
-                "ipv6": false,
-                "multicast": false
-            },
-            "network": "both",
-            "example": "PaloAlto-Panorama-Admin-Access-Domain = \"Domain2\" for specific Panorama domain access.",
             "implementation": [
-                "Configure access domains on Panorama (Panorama > Access Domains)",
-                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
+                "Configure RADIUS server with Panorama VSAs",
                 "Configure Panorama to use RADIUS authentication",
-                "Set the VSA with the desired access domain name",
-                "User will be restricted to the specified access domain upon authentication"
+                "Standard roles include panorama-admin, custom roles supported",
+                "Must match roles defined in Panorama",
+                "Combine with access domains for granular control"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/radius"
         },
         {
             "name": "PaloAlto-User-Group",
             "number": "5",
-            "description": "Specifies a user group for the authenticated user. Used for policy enforcement and VPN access control.",
+            "description": "Specifies user group membership for policy enforcement. Used to assign users to groups without local user database entries.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -142,21 +133,138 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-User-Group = \"Employees\" for group-based access control.",
-            "implementation": [
-                "Create user groups on the Palo Alto firewall",
-                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
-                "Configure the PAN-OS device to use RADIUS authentication",
-                "Set the VSA with the desired user group name",
-                "User will be assigned to the specified group upon authentication",
-                "Use the group in security policies to control access"
+            "example": "PaloAlto-User-Group = 'VPN-Users' for VPN access control; PaloAlto-User-Group = 'Domain Users\\Sales' for AD integration",
+            "use_cases": [
+                "Assign VPN users to policy groups",
+                "Implement user-based security policies",
+                "Support dynamic group assignment",
+                "Enable identity-based access control",
+                "Integrate with external directories"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+            "implementation": [
+                "Create user groups on PAN-OS firewall",
+                "Configure RADIUS to return group names",
+                "Use in security policies for access control",
+                "Supports nested groups and multiple assignments",
+                "Case-sensitive group names"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/radius"
         },
         {
-            "name": "PaloAlto-IPv6-User-Group",
-            "number": "12",
-            "description": "Specifies an IPv6 user group for the authenticated user.",
+            "name": "PaloAlto-Client-Source-IP",
+            "number": "8",
+            "description": "Specifies the source IP address of the VPN client. Used for tracking and policy enforcement.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Client-Source-IP = '192.168.1.100' for client tracking",
+            "use_cases": [
+                "Track VPN client connections",
+                "Support geo-location policies",
+                "Enable source-based routing",
+                "Implement access restrictions",
+                "Facilitate troubleshooting"
+            ],
+            "implementation": [
+                "Automatically sent during VPN authentication",
+                "Used for logging and reporting",
+                "Can be used in security policies",
+                "Supports both GlobalProtect and IPSec",
+                "IPv4 address format"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/radius"
+        },
+        {
+            "name": "PaloAlto-Gp-Client-Ip-Pool",
+            "number": "9",
+            "description": "Specifies the IP address pool for GlobalProtect VPN clients. Determines which pool to use for client address assignment.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Gp-Client-Ip-Pool = 'VPN-Pool-Sales' for sales department VPN users",
+            "use_cases": [
+                "Segregate VPN clients by department",
+                "Implement IP-based access policies",
+                "Support multiple VPN gateways",
+                "Enable geographic IP allocation",
+                "Facilitate network planning"
+            ],
+            "implementation": [
+                "Define IP pools in GlobalProtect configuration",
+                "Configure RADIUS to return pool name",
+                "Pool must exist on the firewall",
+                "Case-sensitive pool names",
+                "Monitor with 'show global-protect-gateway statistics'"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/globalprotect/10-1/globalprotect-admin/globalprotect-user-authentication"
+        },
+        {
+            "name": "PaloAlto-GP-Client-IPv6-Pool",
+            "number": "18",
+            "description": "Specifies the IPv6 address pool for GlobalProtect VPN clients. Essential for IPv6 VPN deployments.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-GP-Client-IPv6-Pool = 'IPv6-VPN-Pool' for IPv6 address assignment",
+            "use_cases": [
+                "Enable IPv6 VPN connectivity",
+                "Support dual-stack VPN deployments",
+                "Implement IPv6-only VPN access",
+                "Future-proof VPN infrastructure",
+                "Comply with IPv6 mandates"
+            ],
+            "implementation": [
+                "Configure IPv6 pools in GlobalProtect",
+                "Enable IPv6 on GP gateway",
+                "Configure RADIUS to return IPv6 pool name",
+                "Supports both /64 and /128 assignments",
+                "Monitor with GP gateway statistics"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/globalprotect/10-1/globalprotect-admin/globalprotect-user-authentication"
+        },
+        {
+            "name": "PaloAlto-Gp-Client-Config",
+            "number": "20",
+            "description": "Specifies the GlobalProtect client configuration to apply. Enables dynamic client configuration based on user identity.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -173,21 +281,27 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-IPv6-User-Group = \"IPv6-Employees\" for IPv6 group-based access control.",
-            "implementation": [
-                "Create IPv6 user groups on the Palo Alto firewall",
-                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
-                "Configure the PAN-OS device to use RADIUS authentication",
-                "Set the VSA with the desired IPv6 user group name",
-                "User will be assigned to the specified IPv6 group upon authentication",
-                "Use the group in security policies to control IPv6 access"
+            "example": "PaloAlto-Gp-Client-Config = 'Remote-Worker-Config' for remote employee settings",
+            "use_cases": [
+                "Apply different client settings by user role",
+                "Control split tunneling configurations",
+                "Manage client security settings",
+                "Enable/disable client features",
+                "Support BYOD vs corporate devices"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+            "implementation": [
+                "Define client configs in GlobalProtect portal",
+                "Configure RADIUS to return config name",
+                "Config must exist on GP portal",
+                "Supports dynamic configuration switching",
+                "Case-sensitive configuration names"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/globalprotect/10-1/globalprotect-admin/globalprotect-user-authentication"
         },
         {
-            "name": "PaloAlto-GP-Client-IPv6-Pool",
-            "number": "18",
-            "description": "Specifies the IPv6 address pool for GlobalProtect VPN clients.",
+            "name": "PaloAlto-GP-Portal-Name",
+            "number": "21",
+            "description": "Specifies which GlobalProtect portal configuration to use. Enables portal selection based on user authentication.",
             "features": {
                 "acl": false,
                 "role": false,
@@ -200,28 +314,182 @@
                 "bandwidth": false,
                 "coa": false,
                 "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-GP-Portal-Name = 'External-Portal' for external users",
+            "use_cases": [
+                "Direct users to specific portals",
+                "Support multiple portal configurations",
+                "Enable geographic portal selection",
+                "Implement portal-based policies",
+                "Support different user populations"
+            ],
+            "implementation": [
+                "Configure multiple GP portals",
+                "Configure RADIUS to return portal name",
+                "Portal must exist on firewall",
+                "Used during initial client connection",
+                "Case-sensitive portal names"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/globalprotect/10-1/globalprotect-admin/globalprotect-user-authentication"
+        },
+        {
+            "name": "PaloAlto-GP-Gateway-Name",
+            "number": "22",
+            "description": "Specifies which GlobalProtect gateway to use. Enables gateway selection based on user identity or group.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-GP-Gateway-Name = 'US-East-Gateway' for regional gateway assignment",
+            "use_cases": [
+                "Direct users to nearest gateway",
+                "Implement geographic redundancy",
+                "Load balance VPN connections",
+                "Support disaster recovery",
+                "Enable gateway maintenance"
+            ],
+            "implementation": [
+                "Configure multiple GP gateways",
+                "Configure RADIUS to return gateway name",
+                "Gateway must be defined in portal config",
+                "Supports automatic gateway selection",
+                "Monitor gateway utilization"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/globalprotect/10-1/globalprotect-admin/globalprotect-user-authentication"
+        },
+        {
+            "name": "PaloAlto-GP-Client-Allowed-Resources",
+            "number": "25",
+            "description": "Specifies allowed resources for GlobalProtect clients. Controls which internal resources VPN users can access.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
                 "ipv6": true,
                 "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-GP-Client-IPv6-Pool = \"IPv6-VPN-Pool\" for IPv6 address assignment in VPN.",
-            "implementation": [
-                "Configure IPv6 address pools on the Palo Alto firewall",
-                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
-                "Configure the PAN-OS device to use RADIUS authentication for VPN users",
-                "Set the VSA with the desired IPv6 pool name",
-                "VPN clients will receive IPv6 addresses from the specified pool",
-                "Must be used in conjunction with IPv6-enabled GlobalProtect configuration"
+            "example": "PaloAlto-GP-Client-Allowed-Resources = '10.0.0.0/8,192.168.0.0/16' for internal network access",
+            "use_cases": [
+                "Implement split tunneling policies",
+                "Restrict access to sensitive resources",
+                "Control bandwidth usage",
+                "Support compliance requirements",
+                "Enable application-specific access"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+            "implementation": [
+                "Define resource lists in GP configuration",
+                "Configure RADIUS to return resource list",
+                "Supports IP ranges and FQDNs",
+                "Can include/exclude specific resources",
+                "Works with both IPv4 and IPv6"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/globalprotect/10-1/globalprotect-admin/globalprotect-user-authentication"
         },
         {
-            "name": "PaloAlto-Multicast-Policy",
-            "number": "20",
-            "description": "Specifies the multicast policy to apply to the user session.",
+            "name": "PaloAlto-Auth-Profile",
+            "number": "30",
+            "description": "Specifies the authentication profile to use. Enables profile-based authentication settings.",
             "features": {
                 "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Auth-Profile = 'MFA-Required' for multi-factor authentication",
+            "use_cases": [
+                "Enforce different authentication methods",
+                "Implement MFA requirements",
+                "Support multiple auth protocols",
+                "Enable certificate-based auth",
+                "Control authentication timeouts"
+            ],
+            "implementation": [
+                "Define auth profiles on firewall",
+                "Configure RADIUS to return profile name",
+                "Profile determines auth requirements",
+                "Supports multi-factor authentication",
+                "Case-sensitive profile names"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/authentication/authentication-types/radius"
+        },
+        {
+            "name": "PaloAlto-Quarantine-Action",
+            "number": "35",
+            "description": "Specifies quarantine action for non-compliant endpoints. Used with GlobalProtect HIP checks.",
+            "features": {
+                "acl": true,
                 "role": false,
+                "vlan": false,
+                "url": true,
+                "captive": true,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Quarantine-Action = 'block' for non-compliant devices",
+            "use_cases": [
+                "Enforce endpoint compliance",
+                "Implement NAC policies",
+                "Support BYOD security",
+                "Enable remediation workflows",
+                "Protect against infected devices"
+            ],
+            "implementation": [
+                "Configure HIP profiles on firewall",
+                "Set up quarantine zones",
+                "Configure RADIUS for compliance checks",
+                "Actions: block, notify, or quarantine",
+                "Integrate with endpoint protection"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/globalprotect/10-1/globalprotect-admin/host-information/host-information-profile"
+        },
+        {
+            "name": "PaloAlto-User-Domain",
+            "number": "40",
+            "description": "Specifies the domain for user authentication. Used for multi-domain environments and user identification.",
+            "features": {
+                "acl": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
@@ -232,19 +500,99 @@
                 "coa": false,
                 "vpn": false,
                 "ipv6": false,
-                "multicast": true
+                "multicast": false
             },
             "network": "both",
-            "example": "PaloAlto-Multicast-Policy = \"Employee-Multicast\" for multicast access control.",
-            "implementation": [
-                "Create multicast policies on the Palo Alto firewall",
-                "Configure the RADIUS server with Palo Alto VSAs (Vendor ID: 25461)",
-                "Configure the PAN-OS device to use RADIUS authentication",
-                "Set the VSA with the desired multicast policy name",
-                "The policy will be applied to the user upon authentication",
-                "Controls which multicast groups the user can join or send to"
+            "example": "PaloAlto-User-Domain = 'CORP' for corporate domain users",
+            "use_cases": [
+                "Support multi-domain authentication",
+                "Enable domain-based policies",
+                "Facilitate user identification",
+                "Support domain trust relationships",
+                "Enable cross-domain access"
             ],
-            "reference": "https://docs.paloaltonetworks.com/pan-os/11-0/pan-os-admin/authentication/authentication-types/radius"
+            "implementation": [
+                "Configure User-ID for domain mapping",
+                "Set up domain controllers",
+                "Configure RADIUS to return domain",
+                "Used with User-ID features",
+                "Case-sensitive domain names"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/user-id"
+        },
+        {
+            "name": "PaloAlto-Custom-Field1",
+            "number": "50",
+            "description": "Custom field for additional user attributes. Enables extensible user identification and policy enforcement.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Custom-Field1 = 'Department=HR' for department identification",
+            "use_cases": [
+                "Store additional user metadata",
+                "Support custom policy requirements",
+                "Enable flexible user classification",
+                "Integrate with external systems",
+                "Support compliance tagging"
+            ],
+            "implementation": [
+                "Configure custom fields in User-ID",
+                "Configure RADIUS to populate fields",
+                "Use in custom reports and policies",
+                "String format, max 63 characters",
+                "Available fields 1-5"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/user-id"
+        },
+        {
+            "name": "PaloAlto-Security-Rule",
+            "number": "60",
+            "description": "Specifies security rules to apply to the user session. Enables dynamic rule assignment based on authentication.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "PaloAlto-Security-Rule = 'Allow-Internet-Limited' for restricted access",
+            "use_cases": [
+                "Apply user-specific security policies",
+                "Implement dynamic access control",
+                "Support time-based restrictions",
+                "Enable temporary access grants",
+                "Facilitate incident response"
+            ],
+            "implementation": [
+                "Create security rules on firewall",
+                "Configure RADIUS to return rule names",
+                "Rules must exist in security policy",
+                "Can be updated via RADIUS CoA",
+                "Monitor with traffic logs"
+            ],
+            "reference": "https://docs.paloaltonetworks.com/pan-os/10-1/pan-os-admin/policy/security-policy"
         }
     ]
 }

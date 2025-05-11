@@ -3,9 +3,9 @@
     "protocol": "tacacs",
     "attributes": [
         {
-            "name": "F5-Admin-Role",
-            "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "name": "F5-LTM-User-Role",
+            "number": "N/A",
+            "description": "Assigns administrative role for F5 BIG-IP access via TACACS+.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "F5-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with F5 VSAs (Vendor ID: 3375)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the F5 device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "F5-LTM-User-Role=Administrator for full access",
+            "use_cases": [
+                "Control BIG-IP administrative access",
+                "Implement role-based management",
+                "Support compliance requirements",
+                "Enable delegated administration",
+                "Create custom management roles"
             ],
-            "reference": "https://docs.f5.com/radius"
+            "implementation": [
+                "Configure TACACS+ server for F5",
+                "Standard roles: Administrator, Manager, User, etc.",
+                "Enable TACACS+ authentication on BIG-IP",
+                "Configure in System > Users > Authentication",
+                "Monitor with audit logs"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
         },
         {
-            "name": "F5-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Standard TACACS+ privilege level. Maps to F5 roles.",
             "features": {
                 "acl": false,
-                "role": false,
-                "vlan": true,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "F5-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the F5 device",
-                "Configure the RADIUS server with F5 VSAs (Vendor ID: 3375)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the F5 device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "priv-lvl=15 for administrator access",
+            "use_cases": [
+                "Support standard TACACS+",
+                "Map to F5 roles",
+                "Enable compatibility",
+                "Simplify configuration",
+                "Support legacy systems"
             ],
-            "reference": "https://docs.f5.com/radius"
+            "implementation": [
+                "Level 15: Administrator",
+                "Level 1: Guest",
+                "Configure role mapping",
+                "Standard TACACS+ attribute",
+                "Works with tmsh and GUI"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
         },
         {
-            "name": "F5-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "name": "F5-LTM-User-Shell",
+            "number": "N/A",
+            "description": "Specifies shell access type via TACACS+.",
             "features": {
-                "acl": true,
-                "role": false,
+                "acl": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,59 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "F5-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the F5 device",
-                "Configure the RADIUS server with F5 VSAs (Vendor ID: 3375)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the F5 device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "F5-LTM-User-Shell=tmsh for TMSH access",
+            "use_cases": [
+                "Control shell environment",
+                "Restrict advanced access",
+                "Enable troubleshooting",
+                "Support automation",
+                "Implement security policies"
             ],
-            "reference": "https://docs.f5.com/radius"
+            "implementation": [
+                "Values: tmsh, bash, disable",
+                "Configure in TACACS+ server",
+                "Requires appropriate role",
+                "tmsh is default for admins",
+                "Audit shell access"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
+        },
+        {
+            "name": "F5-LTM-User-Partition",
+            "number": "N/A",
+            "description": "Assigns administrative partition via TACACS+.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "F5-LTM-User-Partition=Common for common partition",
+            "use_cases": [
+                "Support multi-tenant management",
+                "Control resource visibility",
+                "Enable partition isolation",
+                "Implement RBAC",
+                "Maintain separation"
+            ],
+            "implementation": [
+                "Partition must exist",
+                "Default is Common",
+                "Case-sensitive names",
+                "Works with roles",
+                "Configure per user"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
         }
     ]
 }

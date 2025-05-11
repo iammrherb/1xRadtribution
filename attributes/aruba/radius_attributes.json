@@ -5,7 +5,7 @@
         {
             "name": "Aruba-User-Role",
             "number": "1",
-            "description": "Assigns a user role to the authenticated user. User roles on Aruba devices define access control policies, QoS settings, and other parameters.",
+            "description": "Assigns a user role to the authenticated user. User roles on Aruba devices define comprehensive access control policies including ACLs, QoS, VLAN assignment, and other parameters. This is the primary method for implementing role-based access control.",
             "features": {
                 "acl": true,
                 "role": true,
@@ -13,29 +13,36 @@
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": false,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
+                "dacl": true,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
                 "vpn": false,
                 "ipv6": true,
                 "multicast": false
             },
             "network": "both",
-            "example": "Aruba-User-Role = \"employee\" to assign the employee role defined on the Aruba device.",
-            "implementation": [
-                "Define user roles on the Aruba controller (Configuration > Security > Roles)",
-                "Configure access control rules, VLAN assignments, and other parameters for each role",
-                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The Aruba device applies the assigned role upon successful authentication"
+            "example": "Aruba-User-Role = 'employee' for corporate access; Aruba-User-Role = 'guest' for limited internet access",
+            "use_cases": [
+                "Implement comprehensive RBAC for wireless users",
+                "Apply different policies for employees vs guests",
+                "Control network access based on device type",
+                "Support BYOD with appropriate restrictions",
+                "Enable dynamic policy changes via CoA"
             ],
-            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+            "implementation": [
+                "Define user roles on Aruba controller (Configuration > Roles & Policies)",
+                "Configure firewall policies, QoS, and VLAN assignments for each role",
+                "Configure RADIUS server with Aruba VSAs (Vendor ID: 14823)",
+                "Ensure role names match exactly (case-sensitive)",
+                "Test with 'show user-table' and 'show rights <role-name>'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/security/roles-policies.htm"
         },
         {
-            "name": "Aruba-VLAN",
+            "name": "Aruba-User-Vlan",
             "number": "2",
-            "description": "Assigns a VLAN to an authenticated user. Can be used for dynamic VLAN assignment based on user or device.",
+            "description": "Assigns a VLAN to an authenticated user. Can be used independently or in conjunction with user roles for dynamic VLAN assignment.",
             "features": {
                 "acl": false,
                 "role": false,
@@ -46,26 +53,33 @@
                 "dacl": false,
                 "qos": false,
                 "bandwidth": false,
-                "coa": false,
+                "coa": true,
                 "vpn": false,
                 "ipv6": false,
                 "multicast": false
             },
             "network": "both",
-            "example": "Aruba-VLAN = \"100\" to place the user in VLAN 100.",
-            "implementation": [
-                "Configure the VLANs on the Aruba device",
-                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VSA can contain a VLAN name or a VLAN ID",
-                "Can be used with Aruba-User-Role for more comprehensive access control"
+            "example": "Aruba-User-Vlan = '100' for VLAN 100; Aruba-User-Vlan = 'employees' for named VLAN",
+            "use_cases": [
+                "Dynamic VLAN assignment based on user identity",
+                "Network segmentation for security",
+                "Support for multi-tenant environments",
+                "IoT device isolation",
+                "Guest network segregation"
             ],
-            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+            "implementation": [
+                "Configure VLANs on Aruba controller",
+                "VLAN must exist on the controller and upstream switches",
+                "Can use VLAN ID (1-4094) or VLAN name",
+                "Override VLAN specified in user role if both are present",
+                "Verify with 'show user-table verbose'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/security/vlan-assignment.htm"
         },
         {
             "name": "Aruba-Admin-Role",
             "number": "3",
-            "description": "Assigns a specific admin role to the user. Used for administrative access control to Aruba device management.",
+            "description": "Assigns a specific admin role for management access to Aruba devices. Controls what administrative functions a user can perform.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -82,112 +96,64 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Aruba-Admin-Role = \"root\" for full administrative access; Aruba-Admin-Role = \"read-only\" for monitoring-only access.",
-            "implementation": [
-                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
-                "Set up RADIUS authentication for admin access on the Aruba device",
-                "Configure the server to return this VSA with the desired admin role",
-                "Common admin roles: root, read-only, guest-provisioning, location-api-mgmt, network-operations",
-                "Custom admin roles can also be created and assigned"
+            "example": "Aruba-Admin-Role = 'root' for full access; Aruba-Admin-Role = 'network-operations' for limited admin",
+            "use_cases": [
+                "Implement administrative RBAC",
+                "Delegate specific management functions",
+                "Support compliance requirements",
+                "Enable multi-level administration",
+                "Restrict configuration changes"
             ],
-            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+            "implementation": [
+                "Configure admin roles on controller (Configuration > System > Admin Roles)",
+                "Standard roles: root, read-only, network-operations, location-api-mgmt",
+                "Custom admin roles can be created with specific permissions",
+                "Enable external authentication for management users",
+                "Test with 'show rights' and 'show mgmt-user'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/mgmt/admin-auth.htm"
         },
         {
-            "name": "Aruba-Url-Redirect",
-            "number": "5",
-            "description": "Specifies a URL to which the user should be redirected. Used for captive portal redirections and custom welcome pages.",
-            "features": {
-                "acl": false,
-                "role": false,
-                "vlan": false,
-                "url": true,
-                "captive": true,
-                "sgt": false,
-                "dacl": false,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
-                "vpn": false,
-                "ipv6": false,
-                "multicast": false
-            },
-            "network": "both",
-            "example": "Aruba-Url-Redirect = \"https://login.example.com\" for URL redirection.",
-            "implementation": [
-                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "Configure the Aruba device to allow URL redirection in the role settings",
-                "The user will be redirected to the specified URL upon authentication",
-                "Can be used for welcome pages, terms of service acceptance, or additional authentication"
-            ],
-            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
-        },
-        {
-            "name": "Aruba-ACL-Name",
-            "number": "10",
-            "description": "Specifies the name of an ACL to be applied to the user session. Controls network access permissions.",
+            "name": "Aruba-Template-User",
+            "number": "4",
+            "description": "Specifies a template user profile to apply. Inherits all settings from the template user.",
             "features": {
                 "acl": true,
                 "role": true,
-                "vlan": false,
+                "vlan": true,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": false,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
-                "vpn": false,
-                "ipv6": true,
-                "multicast": false
-            },
-            "network": "both",
-            "example": "Aruba-ACL-Name = \"Guest-ACL\" for applying guest ACL.",
-            "implementation": [
-                "Define the ACL on the Aruba device (Configuration > Security > Access Control)",
-                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The Aruba device applies the specified ACL to the user upon authentication",
-                "ACLs define traffic filtering rules and can be restrictive or permissive",
-                "Supports both IPv4 and IPv6 ACLs"
-            ],
-            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
-        },
-        {
-            "name": "Aruba-Bandwidth-Contract",
-            "number": "7",
-            "description": "Specifies bandwidth limits for the user session. Used to control downstream and upstream bandwidth.",
-            "features": {
-                "acl": false,
-                "role": false,
-                "vlan": false,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": false,
-                "qos": false,
+                "dacl": true,
+                "qos": true,
                 "bandwidth": true,
-                "coa": false,
+                "coa": true,
                 "vpn": false,
                 "ipv6": true,
                 "multicast": false
             },
             "network": "both",
-            "example": "Aruba-Bandwidth-Contract = \"100000/50000\" for 100 kbps upstream and 50 kbps downstream.",
-            "implementation": [
-                "Configure bandwidth contracts on the Aruba device",
-                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "Format is \"upstream-rate/downstream-rate\" in kbps",
-                "The Aruba device enforces the bandwidth limitations upon authentication",
-                "Supports both IPv4 and IPv6 traffic"
+            "example": "Aruba-Template-User = 'corp-template' for corporate user template",
+            "use_cases": [
+                "Simplify user provisioning",
+                "Maintain consistent user settings",
+                "Support complex configurations",
+                "Enable rapid deployment",
+                "Facilitate troubleshooting"
             ],
-            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+            "implementation": [
+                "Create template users on controller",
+                "Configure all desired settings on template",
+                "Template must exist before authentication",
+                "Settings are copied at authentication time",
+                "Monitor with 'show user-table verbose'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/users/template-users.htm"
         },
         {
-            "name": "Aruba-CoA-URL",
-            "number": "22",
-            "description": "Specifies the URL for Change of Authorization (CoA) requests. Used for dynamic policy changes.",
+            "name": "Aruba-PPort-Bounce-Host",
+            "number": "5",
+            "description": "Enables port bounce (link down/up) for wired 802.1X ports. Forces client to re-authenticate.",
             "features": {
                 "acl": false,
                 "role": false,
@@ -203,24 +169,253 @@
                 "ipv6": false,
                 "multicast": false
             },
-            "network": "both",
-            "example": "Aruba-CoA-URL = \"https://radius.example.com/coa\" for CoA requests.",
-            "implementation": [
-                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "Configure the Aruba device to accept CoA requests",
-                "Ensure the CoA server is available at the specified URL",
-                "Used for dynamic policy enforcement and session termination"
+            "network": "wired",
+            "example": "Aruba-PPort-Bounce-Host = '1' to bounce the port",
+            "use_cases": [
+                "Force client re-authentication",
+                "Apply new security policies",
+                "Resolve connectivity issues",
+                "Implement security responses",
+                "Support troubleshooting"
             ],
-            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+            "implementation": [
+                "Used with wired 802.1X authentication",
+                "Set to '1' to trigger port bounce",
+                "Can be sent via RADIUS CoA",
+                "Port goes down briefly then back up",
+                "Monitor with 'show port-access clients'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/wired/port-access.htm"
         },
         {
-            "name": "Aruba-IPv6-User-Role",
-            "number": "30",
-            "description": "Assigns an IPv6-specific user role to the authenticated user.",
+            "name": "Aruba-Bandwidth-Max-User",
+            "number": "6",
+            "description": "Sets the maximum bandwidth for a user session. Applies bidirectional rate limiting.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-Bandwidth-Max-User = '10240' for 10 Mbps limit",
+            "use_cases": [
+                "Implement fair usage policies",
+                "Control bandwidth by user type",
+                "Prevent network congestion",
+                "Support tiered services",
+                "Enable bandwidth management"
+            ],
+            "implementation": [
+                "Value in Kbps (kilobits per second)",
+                "Applies to both upstream and downstream",
+                "Can be changed via CoA",
+                "Overrides role-based bandwidth settings",
+                "Monitor with 'show datapath session'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/firewall/bandwidth-contracts.htm"
+        },
+        {
+            "name": "Aruba-Bandwidth-Max-User-Upstream",
+            "number": "7",
+            "description": "Sets the maximum upstream bandwidth for a user. Enables asymmetric bandwidth control.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-Bandwidth-Max-User-Upstream = '5120' for 5 Mbps upstream",
+            "use_cases": [
+                "Control upload bandwidth separately",
+                "Prevent upstream congestion",
+                "Support asymmetric services",
+                "Manage video conferencing impact",
+                "Enable granular bandwidth control"
+            ],
+            "implementation": [
+                "Value in Kbps",
+                "Use with downstream attribute for full control",
+                "Can be updated via CoA",
+                "Overrides symmetric bandwidth limits",
+                "Verify with 'show rights' and traffic tests"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/firewall/bandwidth-contracts.htm"
+        },
+        {
+            "name": "Aruba-Bandwidth-Max-User-Downstream",
+            "number": "8",
+            "description": "Sets the maximum downstream bandwidth for a user. Pairs with upstream for asymmetric control.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-Bandwidth-Max-User-Downstream = '20480' for 20 Mbps downstream",
+            "use_cases": [
+                "Control download bandwidth",
+                "Implement service tiers",
+                "Manage streaming impact",
+                "Support fair usage policies",
+                "Enable bandwidth-on-demand"
+            ],
+            "implementation": [
+                "Value in Kbps",
+                "Often higher than upstream limit",
+                "Dynamic updates via CoA",
+                "Works with QoS policies",
+                "Monitor with bandwidth reports"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/firewall/bandwidth-contracts.htm"
+        },
+        {
+            "name": "Aruba-ACL-Name",
+            "number": "10",
+            "description": "Specifies a named ACL to apply to the user session. Provides granular traffic control.",
             "features": {
                 "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-ACL-Name = 'GUEST-ACL' for guest restrictions",
+            "use_cases": [
+                "Apply specific security policies",
+                "Override role-based ACLs",
+                "Implement temporary restrictions",
+                "Support compliance requirements",
+                "Enable dynamic security"
+            ],
+            "implementation": [
+                "ACL must be pre-configured on controller",
+                "Can specify session or standard ACL",
+                "Overrides ACLs in user role",
+                "Supports both IPv4 and IPv6 rules",
+                "Verify with 'show rights' and 'show acl'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/firewall/acl-policies.htm"
+        },
+        {
+            "name": "Aruba-Captive-Portal-Profile",
+            "number": "11",
+            "description": "Specifies which captive portal profile to use for the session. Enables customized portal experiences.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": true,
+                "captive": true,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-Captive-Portal-Profile = 'guest-portal' for guest authentication",
+            "use_cases": [
+                "Provide branded login experiences",
+                "Support multiple portal types",
+                "Enable terms acceptance",
+                "Implement guest registration",
+                "Support payment gateways"
+            ],
+            "implementation": [
+                "Create captive portal profiles on controller",
+                "Configure portal pages and authentication",
+                "Profile must exist before use",
+                "Can be changed dynamically",
+                "Monitor with 'show captive-portal'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/captive-portal/captive-portal.htm"
+        },
+        {
+            "name": "Aruba-NAP-Id",
+            "number": "12",
+            "description": "Specifies the Network Access Profile ID. Used for advanced policy decisions.",
+            "features": {
+                "acl": false,
                 "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-NAP-Id = 'BYOD-Profile' for BYOD devices",
+            "use_cases": [
+                "Implement device-based policies",
+                "Support BYOD classifications",
+                "Enable posture assessment",
+                "Control access by device type",
+                "Support NAC integration"
+            ],
+            "implementation": [
+                "Define NAP profiles on controller",
+                "Used with ClearPass integration",
+                "Supports device profiling",
+                "Works with enforcement policies",
+                "Monitor with 'show user-table'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/security/nap-profiles.htm"
+        },
+        {
+            "name": "Aruba-Framed-IPv6-Address",
+            "number": "15",
+            "description": "Assigns a specific IPv6 address to the user. Supports IPv6-only or dual-stack deployments.",
+            "features": {
+                "acl": false,
+                "role": false,
                 "vlan": false,
                 "url": false,
                 "captive": false,
@@ -234,15 +429,392 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Aruba-IPv6-User-Role = \"employee-ipv6\" to assign the IPv6-specific employee role.",
-            "implementation": [
-                "Define IPv6-specific user roles on the Aruba controller",
-                "Configure access control rules for IPv6 traffic",
-                "Configure the RADIUS server with Aruba VSAs (Vendor ID: 14823)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The Aruba device applies the assigned IPv6 role upon successful authentication"
+            "example": "Aruba-Framed-IPv6-Address = '2001:db8::1234/128' for static IPv6",
+            "use_cases": [
+                "Assign static IPv6 addresses",
+                "Support IPv6-only networks",
+                "Enable dual-stack operations",
+                "Facilitate IPv6 migration",
+                "Support specific applications"
             ],
-            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_8.6.0_Web_Help/Content/arubaos-solutions/aaa/rad-vsa.htm"
+            "implementation": [
+                "Enable IPv6 on controller and VLANs",
+                "Configure IPv6 addressing",
+                "Use with IPv6 router advertisements",
+                "Monitor with 'show user-table ipv6'",
+                "Verify with 'show datapath session ipv6'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/ipv6/ipv6-deployment.htm"
+        },
+        {
+            "name": "Aruba-API-Role",
+            "number": "20",
+            "description": "Assigns an API access role for REST API authentication. Controls programmatic access to the controller.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-API-Role = 'api-read-only' for monitoring access",
+            "use_cases": [
+                "Enable REST API access",
+                "Support automation tools",
+                "Implement monitoring systems",
+                "Control API permissions",
+                "Enable integration platforms"
+            ],
+            "implementation": [
+                "Define API roles on controller",
+                "Configure REST API access",
+                "Enable HTTPS/API on management interface",
+                "Use with API authentication",
+                "Monitor with 'show api_acl_stats'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/mgmt/rest-api.htm"
+        },
+        {
+            "name": "Aruba-Device-Type",
+            "number": "21",
+            "description": "Specifies the device type for policy decisions. Enables device-specific access control.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-Device-Type = 'iPhone' for Apple devices",
+            "use_cases": [
+                "Apply device-specific policies",
+                "Support BYOD initiatives",
+                "Control IoT device access",
+                "Implement device-based QoS",
+                "Enable device visibility"
+            ],
+            "implementation": [
+                "Usually set by device profiling",
+                "Can be manually specified",
+                "Used in policy conditions",
+                "Works with fingerprinting",
+                "Verify with 'show user-table verbose'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/device/device-fingerprinting.htm"
+        },
+        {
+            "name": "Aruba-AP-Group",
+            "number": "22",
+            "description": "Assigns the user to a specific AP group. Enables location-based policies and services.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wireless",
+            "example": "Aruba-AP-Group = 'Building-A' for location-specific policies",
+            "use_cases": [
+                "Implement location-based access",
+                "Support multi-site deployments",
+                "Enable regional policies",
+                "Control RF settings by location",
+                "Support emergency services"
+            ],
+            "implementation": [
+                "Create AP groups on controller",
+                "Assign APs to groups",
+                "Configure group-specific settings",
+                "Use in policy decisions",
+                "Monitor with 'show ap-group'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/rf/ap-groups.htm"
+        },
+        {
+            "name": "Aruba-ESSID",
+            "number": "25",
+            "description": "Specifies the ESSID (SSID) for the wireless connection. Used for SSID-specific policies.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wireless",
+            "example": "Aruba-ESSID = 'Corporate-WiFi' for corporate network",
+            "use_cases": [
+                "Apply SSID-specific policies",
+                "Support multiple wireless networks",
+                "Enable service differentiation",
+                "Track usage by SSID",
+                "Support guest networks"
+            ],
+            "implementation": [
+                "Configure SSIDs on controller",
+                "Set in RADIUS during authentication",
+                "Used for policy matching",
+                "Available in session information",
+                "Monitor with 'show user-table essid'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/wlan-config/ssid-profiles.htm"
+        },
+        {
+            "name": "Aruba-Location-Id",
+            "number": "27",
+            "description": "Specifies the location identifier for the user. Enables location-aware services and policies.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-Location-Id = 'Floor2-East' for building locations",
+            "use_cases": [
+                "Enable location services",
+                "Support wayfinding applications",
+                "Implement geo-fencing",
+                "Track user locations",
+                "Support emergency response"
+            ],
+            "implementation": [
+                "Configure location hierarchy",
+                "Enable location services",
+                "Use with ALE or Meridian",
+                "Integrate with third-party systems",
+                "Monitor with location APIs"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/location/location-services.htm"
+        },
+        {
+            "name": "Aruba-Port-Id",
+            "number": "28",
+            "description": "Identifies the physical port for wired connections. Used for port-based policies and troubleshooting.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wired",
+            "example": "Aruba-Port-Id = '1/1/5' for specific switch port",
+            "use_cases": [
+                "Track wired connections",
+                "Apply port-specific policies",
+                "Support troubleshooting",
+                "Enable port security",
+                "Implement device tracking"
+            ],
+            "implementation": [
+                "Automatically populated for wired auth",
+                "Used in policy conditions",
+                "Available in session logs",
+                "Supports port-based ACLs",
+                "Monitor with 'show port-access clients'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/wired/wired-authentication.htm"
+        },
+        {
+            "name": "Aruba-Template-User",
+            "number": "30",
+            "description": "Specifies a template user whose attributes should be copied to this session. Simplifies user provisioning.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-Template-User = 'employee-template' for standard employee settings",
+            "use_cases": [
+                "Standardize user configurations",
+                "Simplify RADIUS server setup",
+                "Support complex role combinations",
+                "Enable quick deployments",
+                "Maintain consistent policies"
+            ],
+            "implementation": [
+                "Create template users in local database",
+                "Configure all desired attributes",
+                "Reference template in RADIUS response",
+                "Template settings applied at auth time",
+                "Verify with 'show user-table verbose'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/users/user-templates.htm"
+        },
+        {
+            "name": "Aruba-MPSK-Passphrase",
+            "number": "31",
+            "description": "Specifies a unique pre-shared key for the user. Enables Multi-PSK (MPSK) deployments.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wireless",
+            "example": "Aruba-MPSK-Passphrase = 'UniqueKey123!' for per-user PSK",
+            "use_cases": [
+                "Enable per-user PSK authentication",
+                "Support IoT device onboarding",
+                "Improve WPA2-PSK security",
+                "Enable key rotation per user",
+                "Support BYOD without certificates"
+            ],
+            "implementation": [
+                "Configure MPSK authentication method",
+                "Create unique keys per user/device",
+                "Minimum 8 characters required",
+                "Can be changed via CoA",
+                "Monitor with 'show user-table mpsk'"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/mpsk/mpsk-overview.htm"
+        },
+        {
+            "name": "Aruba-MPSK-Passphrase-Type",
+            "number": "32",
+            "description": "Specifies the type/format of the MPSK passphrase. Determines how the key is processed.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wireless",
+            "example": "Aruba-MPSK-Passphrase-Type = '0' for ASCII passphrase",
+            "use_cases": [
+                "Support different key formats",
+                "Enable hex key input",
+                "Maintain compatibility",
+                "Support legacy systems",
+                "Enable automated provisioning"
+            ],
+            "implementation": [
+                "0 = ASCII passphrase",
+                "1 = Hex string (64 characters)",
+                "Use with MPSK-Passphrase attribute",
+                "Must match key format",
+                "Verify with authentication logs"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/mpsk/mpsk-configuration.htm"
+        },
+        {
+            "name": "Aruba-WorkSpace-App-Name",
+            "number": "35",
+            "description": "Specifies Aruba Workspace application name. Used for application-aware policies.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Aruba-WorkSpace-App-Name = 'Microsoft-Teams' for Teams policies",
+            "use_cases": [
+                "Enable application-specific QoS",
+                "Support unified communications",
+                "Prioritize business applications",
+                "Control application access",
+                "Monitor application usage"
+            ],
+            "implementation": [
+                "Configure AppRF on controller",
+                "Define application policies",
+                "Integrate with UCC features",
+                "Monitor with AppRF dashboard",
+                "Use with DPI engine"
+            ],
+            "reference": "https://www.arubanetworks.com/techdocs/ArubaOS_86_Web_Help/Content/arubaos-solutions/dpi/apprf-overview.htm"
         }
     ]
 }

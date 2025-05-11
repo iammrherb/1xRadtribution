@@ -3,9 +3,9 @@
     "protocol": "radius",
     "attributes": [
         {
-            "name": "Zyxel-Admin-Role",
+            "name": "Zyxel-Privilege-AVPair",
             "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "description": "Sets administrative privilege level for Zyxel device management.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Zyxel-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Zyxel VSAs (Vendor ID: 890)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Zyxel device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "Zyxel-Privilege-AVPair = 'shell:priv-lvl=14' for admin access",
+            "use_cases": [
+                "Control administrative access",
+                "Implement privilege levels",
+                "Support role-based management",
+                "Enable graduated access rights",
+                "Maintain security compliance"
             ],
-            "reference": "https://docs.zyxel.com/radius"
+            "implementation": [
+                "Configure RADIUS server with Zyxel VSAs (Vendor ID: 890)",
+                "Format: shell:priv-lvl=X",
+                "Levels 0-14 (14 highest)",
+                "Enable RADIUS authentication",
+                "Monitor with 'show users'"
+            ],
+            "reference": "https://support.zyxel.eu/hc/en-us/articles/360001285313"
         },
         {
-            "name": "Zyxel-VLAN-ID",
+            "name": "Zyxel-Callback-Phone-Num",
             "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "description": "Specifies callback phone number for dial-in connections.",
             "features": {
                 "acl": false,
                 "role": false,
-                "vlan": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Zyxel-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Zyxel device",
-                "Configure the RADIUS server with Zyxel VSAs (Vendor ID: 890)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Zyxel device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "Zyxel-Callback-Phone-Num = '+1234567890' for callback",
+            "use_cases": [
+                "Enable callback authentication",
+                "Support dial-in users",
+                "Reduce toll charges",
+                "Improve security",
+                "Legacy modem support"
             ],
-            "reference": "https://docs.zyxel.com/radius"
+            "implementation": [
+                "Phone number format",
+                "Used with dial-in services",
+                "Legacy feature",
+                "Requires modem support",
+                "Less common in modern networks"
+            ],
+            "reference": "https://support.zyxel.eu/hc/en-us/articles/360001285313"
         },
         {
-            "name": "Zyxel-ACL-Name",
+            "name": "Zyxel-Callback-Option",
             "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "description": "Controls callback behavior for dial-in connections.",
             "features": {
-                "acl": true,
+                "acl": false,
                 "role": false,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,59 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Zyxel-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Zyxel device",
-                "Configure the RADIUS server with Zyxel VSAs (Vendor ID: 890)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Zyxel device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "Zyxel-Callback-Option = 1 for mandatory callback",
+            "use_cases": [
+                "Configure callback behavior",
+                "Support different callback modes",
+                "Enable security options",
+                "Control connection flow",
+                "Legacy compatibility"
             ],
-            "reference": "https://docs.zyxel.com/radius"
+            "implementation": [
+                "Numeric values for options",
+                "Works with callback number",
+                "Dial-in specific feature",
+                "Legacy implementation",
+                "Check device support"
+            ],
+            "reference": "https://support.zyxel.eu/hc/en-us/articles/360001285313"
+        },
+        {
+            "name": "Zyxel-ACS-URL",
+            "number": "4",
+            "description": "Specifies Auto Configuration Server URL for device management.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": true,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Zyxel-ACS-URL = 'https://acs.company.com/tr069' for TR-069",
+            "use_cases": [
+                "Enable remote management",
+                "Support TR-069/CWMP",
+                "Configure auto-provisioning",
+                "Centralize device management",
+                "Enable firmware updates"
+            ],
+            "implementation": [
+                "Full URL format",
+                "Used with TR-069 clients",
+                "Applied during authentication",
+                "Enables remote config",
+                "Monitor with ACS logs"
+            ],
+            "reference": "https://support.zyxel.eu/hc/en-us/articles/360001285313"
         }
     ]
 }

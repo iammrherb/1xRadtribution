@@ -3,9 +3,9 @@
     "protocol": "tacacs",
     "attributes": [
         {
-            "name": "Microsoftnas-Admin-Role",
-            "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Standard TACACS+ privilege level. Limited support in Microsoft NAS.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,75 +22,22 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Microsoftnas-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Microsoftnas VSAs (Vendor ID: 311)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Microsoftnas device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "priv-lvl=15 for administrative access",
+            "use_cases": [
+                "Basic privilege control",
+                "Support standard TACACS+",
+                "Enable compatibility",
+                "Simple authorization",
+                "Legacy support"
             ],
-            "reference": "https://docs.microsoftnas.com/radius"
-        },
-        {
-            "name": "Microsoftnas-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
-            "features": {
-                "acl": false,
-                "role": false,
-                "vlan": true,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": false,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
-                "vpn": false,
-                "ipv6": false,
-                "multicast": false
-            },
-            "network": "both",
-            "example": "Microsoftnas-VLAN-ID = \"100\" for VLAN assignment.",
             "implementation": [
-                "Configure the VLAN on the Microsoftnas device",
-                "Configure the RADIUS server with Microsoftnas VSAs (Vendor ID: 311)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Microsoftnas device",
-                "Used for dynamic VLAN assignment based on user authentication"
+                "Limited TACACS+ support",
+                "Mainly for compatibility",
+                "Prefer RADIUS for full features",
+                "Basic implementation only",
+                "Check specific Windows version"
             ],
-            "reference": "https://docs.microsoftnas.com/radius"
-        },
-        {
-            "name": "Microsoftnas-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
-            "features": {
-                "acl": true,
-                "role": false,
-                "vlan": false,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": true,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
-                "vpn": false,
-                "ipv6": false,
-                "multicast": false
-            },
-            "network": "both",
-            "example": "Microsoftnas-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Microsoftnas device",
-                "Configure the RADIUS server with Microsoftnas VSAs (Vendor ID: 311)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Microsoftnas device",
-                "Used for dynamic ACL assignment based on user authentication"
-            ],
-            "reference": "https://docs.microsoftnas.com/radius"
+            "reference": "https://docs.microsoft.com/en-us/windows-server/networking/technologies/nps/nps-radius-attributes"
         }
     ]
 }

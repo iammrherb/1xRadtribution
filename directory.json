@@ -1,0 +1,99 @@
+{
+    "vendors": [
+        {
+            "name": "Cisco",
+            "id": "cisco",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Juniper",
+            "id": "juniper",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Aruba",
+            "id": "aruba",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Fortinet",
+            "id": "fortinet",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Palo Alto",
+            "id": "paloalto",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "HP/HPE",
+            "id": "hp",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Extreme Networks",
+            "id": "extreme",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Dell",
+            "id": "dell",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Brocade",
+            "id": "brocade",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Meraki",
+            "id": "meraki",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Ruckus",
+            "id": "ruckus",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Check Point",
+            "id": "checkpoint",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "SonicWall",
+            "id": "sonicwall",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "F5",
+            "id": "f5",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Huawei",
+            "id": "huawei",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Microsoft NAS",
+            "id": "microsoftnas",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Zyxel",
+            "id": "zyxel",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "WatchGuard",
+            "id": "watchguard",
+            "protocols": ["radius", "tacacs"]
+        },
+        {
+            "name": "Standard",
+            "id": "standard",
+            "protocols": ["radius", "tacacs"]
+        }
+    ]
+}

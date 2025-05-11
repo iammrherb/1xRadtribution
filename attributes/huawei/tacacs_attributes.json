@@ -3,9 +3,9 @@
     "protocol": "tacacs",
     "attributes": [
         {
-            "name": "Huawei-Admin-Role",
-            "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Standard TACACS+ privilege level for Huawei device administration.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Huawei-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Huawei VSAs (Vendor ID: 2011)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Huawei device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "priv-lvl=15 for level-15 administrator",
+            "use_cases": [
+                "Control administrative access",
+                "Implement standard TACACS+",
+                "Support privilege levels",
+                "Enable graduated access",
+                "Maintain compatibility"
             ],
-            "reference": "https://docs.huawei.com/radius"
+            "implementation": [
+                "Configure TACACS+ server",
+                "Enable HWTACACS on device",
+                "Level 15: Full admin",
+                "Level 0: Monitor level",
+                "Monitor with 'display hwtacacs'"
+            ],
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
         },
         {
-            "name": "Huawei-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "Huawei-Exec-Privilege",
+            "number": "N/A",
+            "description": "Huawei-specific privilege level for command execution.",
             "features": {
                 "acl": false,
-                "role": false,
-                "vlan": true,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Huawei-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Huawei device",
-                "Configure the RADIUS server with Huawei VSAs (Vendor ID: 2011)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Huawei device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "Huawei-Exec-Privilege=15 for full access",
+            "use_cases": [
+                "Define Huawei-specific privileges",
+                "Override standard levels",
+                "Support custom roles",
+                "Enable vendor features",
+                "Implement granular control"
             ],
-            "reference": "https://docs.huawei.com/radius"
+            "implementation": [
+                "Huawei VSA format",
+                "Takes precedence over priv-lvl",
+                "Configure in TACACS+ server",
+                "Maps to command levels",
+                "Verify with 'display local-user'"
+            ],
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
         },
         {
-            "name": "Huawei-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "name": "cmd",
+            "number": "N/A",
+            "description": "Command authorization for Huawei device CLI.",
             "features": {
                 "acl": true,
-                "role": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,22 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Huawei-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Huawei device",
-                "Configure the RADIUS server with Huawei VSAs (Vendor ID: 2011)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Huawei device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "cmd=display for display commands",
+            "use_cases": [
+                "Control command execution",
+                "Implement command authorization",
+                "Create custom command sets",
+                "Support audit requirements",
+                "Enable detailed control"
             ],
-            "reference": "https://docs.huawei.com/radius"
+            "implementation": [
+                "Enable command authorization",
+                "Configure on TACACS+ server",
+                "Use with cmd-arg",
+                "Supports permit/deny",
+                "Monitor with debug commands"
+            ],
+            "reference": "https://support.huawei.com/enterprise/en/doc/EDOC1100278189"
         }
     ]
 }

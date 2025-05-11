@@ -3,9 +3,9 @@
     "protocol": "tacacs",
     "attributes": [
         {
-            "name": "Hp-Admin-Role",
-            "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "name": "hp-privilege-level",
+            "number": "N/A",
+            "description": "Sets the privilege level for administrative access to HP/HPE switches. Determines command access rights.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Hp-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Hp VSAs (Vendor ID: 11)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Hp device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "hp-privilege-level=15 for manager access; hp-privilege-level=1 for operator",
+            "use_cases": [
+                "Control administrative access levels",
+                "Implement role-based management",
+                "Support compliance requirements",
+                "Enable delegated administration",
+                "Create custom privilege levels"
             ],
-            "reference": "https://docs.hp.com/radius"
+            "implementation": [
+                "Configure TACACS+ server to return this attribute",
+                "Enable TACACS+ authentication on HP switch",
+                "Level 15: Manager (full access)",
+                "Level 1: Operator (limited access)",
+                "Levels 2-14 can be customized"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
         },
         {
-            "name": "Hp-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Standard TACACS+ privilege level attribute. Alternative to hp-privilege-level for compatibility.",
             "features": {
                 "acl": false,
-                "role": false,
-                "vlan": true,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Hp-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Hp device",
-                "Configure the RADIUS server with Hp VSAs (Vendor ID: 11)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Hp device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "priv-lvl=15 for full access; priv-lvl=1 for read-only",
+            "use_cases": [
+                "Support standard TACACS+ implementations",
+                "Maintain cross-vendor compatibility",
+                "Enable centralized authentication",
+                "Support legacy systems",
+                "Implement basic access control"
             ],
-            "reference": "https://docs.hp.com/radius"
+            "implementation": [
+                "Standard TACACS+ attribute",
+                "Recognized by HP switches",
+                "Same levels as hp-privilege-level",
+                "Works with most TACACS+ servers",
+                "Enable TACACS+ authorization"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
         },
         {
-            "name": "Hp-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "name": "cmd",
+            "number": "N/A",
+            "description": "Command authorization attribute. Controls which commands administrators can execute.",
             "features": {
                 "acl": true,
-                "role": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,281 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Hp-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Hp device",
-                "Configure the RADIUS server with Hp VSAs (Vendor ID: 11)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Hp device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "cmd=show for show commands; cmd=configure for config mode",
+            "use_cases": [
+                "Implement command-level authorization",
+                "Create custom command sets",
+                "Restrict dangerous commands",
+                "Support audit requirements",
+                "Enable granular access control"
             ],
-            "reference": "https://docs.hp.com/radius"
+            "implementation": [
+                "Enable 'aaa authorization commands' on switch",
+                "Configure command lists on TACACS+ server",
+                "Used with cmd-arg for complete command",
+                "Supports permit/deny actions",
+                "Regular expressions supported"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "cmd-arg",
+            "number": "N/A",
+            "description": "Command arguments for authorization. Used with cmd attribute for complete command authorization.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "cmd=interface cmd-arg='vlan 10' for specific interface commands",
+            "use_cases": [
+                "Authorize complete commands",
+                "Control access to specific resources",
+                "Implement fine-grained authorization",
+                "Support complex command syntax",
+                "Enable detailed audit trails"
+            ],
+            "implementation": [
+                "Used together with cmd attribute",
+                "Contains command parameters",
+                "TACACS+ server evaluates full command",
+                "Supports pattern matching",
+                "Part of command authorization flow"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "service",
+            "number": "N/A",
+            "description": "TACACS+ service type. Specifies the service context for authorization.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "service=shell for CLI access",
+            "use_cases": [
+                "Specify authorization context",
+                "Support different access methods",
+                "Enable service-specific policies",
+                "Maintain protocol compliance",
+                "Control service authorization"
+            ],
+            "implementation": [
+                "Standard TACACS+ attribute",
+                "Usually set to 'shell' for CLI",
+                "Required for proper authorization",
+                "Different services may have different attributes",
+                "Configure in TACACS+ server policy"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Member-Of-Role",
+            "number": "N/A",
+            "description": "Assigns user to a predefined role on HP switches. Alternative role assignment method.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-Member-Of-Role=network-admin for network administrator role",
+            "use_cases": [
+                "Implement role-based access control",
+                "Use predefined switch roles",
+                "Simplify authorization management",
+                "Support complex permissions",
+                "Enable consistent access control"
+            ],
+            "implementation": [
+                "Role must exist on switch",
+                "Configure custom roles as needed",
+                "Alternative to privilege levels",
+                "Includes all role permissions",
+                "Case-sensitive role names"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Management-Protocol",
+            "number": "N/A",
+            "description": "Controls which management protocols the user can access via TACACS+.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-Management-Protocol=SSH for SSH-only access",
+            "use_cases": [
+                "Restrict management protocols",
+                "Enforce secure access methods",
+                "Disable insecure protocols",
+                "Support security policies",
+                "Control management access"
+            ],
+            "implementation": [
+                "Specify allowed protocols",
+                "Options: SSH, Telnet, HTTP, HTTPS",
+                "Can combine multiple protocols",
+                "Overrides global settings",
+                "Applied per user session"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Command-Exception",
+            "number": "N/A",
+            "description": "Specifies command exceptions to standard privilege level restrictions.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-Command-Exception='permit:show running-config' to allow config viewing",
+            "use_cases": [
+                "Create privilege level exceptions",
+                "Allow specific commands outside normal rights",
+                "Enable custom access profiles",
+                "Support special requirements",
+                "Fine-tune access control"
+            ],
+            "implementation": [
+                "Format: 'permit:command' or 'deny:command'",
+                "Multiple exceptions supported",
+                "Applied after privilege level",
+                "Supports regular expressions",
+                "Creates custom authorization profiles"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "timeout",
+            "number": "N/A",
+            "description": "Sets the session timeout for administrative sessions. Controls idle timeout behavior.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "timeout=30 for 30-minute session timeout",
+            "use_cases": [
+                "Control session duration",
+                "Implement security policies",
+                "Manage resource usage",
+                "Support compliance requirements",
+                "Prevent unauthorized access"
+            ],
+            "implementation": [
+                "Value in minutes",
+                "Applied to admin sessions",
+                "Overrides global timeout",
+                "0 may mean no timeout",
+                "Monitor active sessions"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "protocol",
+            "number": "N/A",
+            "description": "TACACS+ protocol type. Used with service attribute for proper authorization.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "protocol=ip for standard access",
+            "use_cases": [
+                "Specify protocol context",
+                "Support service differentiation",
+                "Enable proper authorization",
+                "Maintain protocol compliance",
+                "Support various access types"
+            ],
+            "implementation": [
+                "Standard TACACS+ attribute",
+                "Often set to 'ip' or 'shell'",
+                "Used with service attribute",
+                "Configure in server policy",
+                "Part of authorization flow"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
         }
     ]
 }

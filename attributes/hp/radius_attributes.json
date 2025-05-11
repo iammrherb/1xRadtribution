@@ -3,72 +3,12 @@
     "protocol": "radius",
     "attributes": [
         {
-            "name": "HPE-Port-Client-Limit-Dot1x",
-            "number": "10",
-            "description": "Sets a temporary 802.1X client limit for the port. Values range from 0 (disabled) to 32 clients.",
-            "features": {
-                "acl": false,
-                "role": false,
-                "vlan": false,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": false,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
-                "vpn": false,
-                "ipv6": false,
-                "multicast": false
-            },
-            "network": "wired",
-            "example": "HPE-Port-Client-Limit-Dot1x = 5 to limit to 5 clients.",
-            "implementation": [
-                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
-                "Set up RADIUS authentication on the HP switch",
-                "Configure port-based authentication with 802.1X",
-                "The VSA value can range from 0 to 32 (0 disables the client limit)",
-                "Used when multiple clients need to authenticate through the same physical port"
-            ],
-            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
-        },
-        {
-            "name": "HPE-VLAN-ID",
-            "number": "80",
-            "description": "Assigns a VLAN to the authenticated user. Used for dynamic VLAN assignment based on user credentials.",
-            "features": {
-                "acl": false,
-                "role": false,
-                "vlan": true,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": false,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
-                "vpn": false,
-                "ipv6": false,
-                "multicast": false
-            },
-            "network": "wired",
-            "example": "HPE-VLAN-ID = 100 to dynamically assign VLAN 100.",
-            "implementation": [
-                "Configure the VLAN on the HP switch",
-                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
-                "Set up RADIUS authentication with 802.1X on the switch ports",
-                "When a user authenticates, they are assigned to the specified VLAN",
-                "Alternative to using the standard Tunnel-Private-Group-ID attribute"
-            ],
-            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
-        },
-        {
             "name": "HP-Privilege-Level",
             "number": "1",
-            "description": "Specifies the privilege level for administrative access to HP devices.",
+            "description": "Specifies the privilege level for administrative access to HP devices. Controls what commands and features administrators can access.",
             "features": {
-                "acl": true,
-                "role": false,
+                "acl": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
@@ -82,20 +22,27 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "HP-Privilege-Level = 15 for full administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
-                "Set up RADIUS authentication for administrative access",
-                "Privilege levels range from 0 (lowest) to 15 (highest)",
-                "Common levels: 0 (user), 1 (manager), 15 (administrator)",
-                "The switch automatically assigns the specified privilege level after successful authentication"
+            "example": "HP-Privilege-Level = 15 for manager access; HP-Privilege-Level = 0 for operator",
+            "use_cases": [
+                "Control administrative access levels",
+                "Implement role-based management",
+                "Delegate specific functions",
+                "Support compliance requirements",
+                "Enable multi-level administration"
             ],
-            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+            "implementation": [
+                "Configure RADIUS server with HP VSAs",
+                "Values typically 0-15",
+                "Level 15: Full manager access",
+                "Level 1: Limited operator access",
+                "Level 0: Basic read-only access"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
         },
         {
-            "name": "HPE-Command-Exception",
-            "number": "22",
-            "description": "Specifies CLI commands that are exceptions to the user's authorization level.",
+            "name": "HP-Command-String",
+            "number": "2",
+            "description": "Specifies allowed or denied commands for the user. Enables granular command authorization.",
             "features": {
                 "acl": true,
                 "role": true,
@@ -112,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "HPE-Command-Exception = \"show running-config; show interfaces\" to allow specific commands.",
-            "implementation": [
-                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
-                "Set up RADIUS authentication for administrative access",
-                "Commands can be allowed or denied as exceptions to the privilege level",
-                "Multiple commands separated by semicolons",
-                "Allows fine-grained control over CLI command authorization"
+            "example": "HP-Command-String = 'permit:show.*;deny:config.*' for read-only with show commands",
+            "use_cases": [
+                "Implement command authorization",
+                "Create custom access profiles",
+                "Restrict configuration changes",
+                "Allow specific diagnostics",
+                "Support audit requirements"
             ],
-            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+            "implementation": [
+                "Use permit/deny syntax",
+                "Supports regular expressions",
+                "Multiple patterns separated by semicolon",
+                "Applied during command execution",
+                "Works with privilege levels"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
         },
         {
-            "name": "HPE-IP-Filter-Raw",
-            "number": "61",
-            "description": "Specifies IP filters to be applied to the user's traffic.",
+            "name": "HP-Management-Protocol",
+            "number": "26",
+            "description": "Specifies which management protocols the user can access (HTTP, HTTPS, SSH, Telnet, SNMP).",
             "features": {
                 "acl": true,
-                "role": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -142,51 +96,64 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "HPE-IP-Filter-Raw = \"permit ip 10.1.1.0/24 any\" for IP filtering.",
-            "implementation": [
-                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
-                "Set up RADIUS authentication for user access",
-                "Define IP filter rules directly in the VSA",
-                "Can include multiple filter rules for comprehensive control",
-                "Applied dynamically when the user authenticates"
+            "example": "HP-Management-Protocol = 'SSH+HTTPS' for secure management only",
+            "use_cases": [
+                "Control management access methods",
+                "Enforce secure protocols only",
+                "Disable insecure access methods",
+                "Support security policies",
+                "Enable protocol-specific access"
             ],
-            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+            "implementation": [
+                "Combine protocols with '+' separator",
+                "Options: HTTP, HTTPS, SSH, Telnet, SNMP",
+                "Case-sensitive protocol names",
+                "Overrides global settings",
+                "Applied per user session"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
         },
         {
-            "name": "HPE-IPv6-Filter-Raw",
-            "number": "62",
-            "description": "Specifies IPv6 filters to be applied to the user's traffic.",
+            "name": "HP-User-Role",
+            "number": "25",
+            "description": "Assigns a predefined user role to the authenticated user. Comprehensive role-based access control.",
             "features": {
                 "acl": true,
-                "role": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
                 "vpn": false,
-                "ipv6": true,
+                "ipv6": false,
                 "multicast": false
             },
             "network": "both",
-            "example": "HPE-IPv6-Filter-Raw = \"permit ipv6 2001:db8::/64 any\" for IPv6 filtering.",
-            "implementation": [
-                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
-                "Set up RADIUS authentication for user access",
-                "Define IPv6 filter rules directly in the VSA",
-                "Can include multiple filter rules for comprehensive control",
-                "Applied dynamically when the user authenticates",
-                "Used specifically for IPv6 traffic filtering"
+            "example": "HP-User-Role = 'network-admin' for network administrator role",
+            "use_cases": [
+                "Implement role-based access control",
+                "Simplify user management",
+                "Apply consistent permissions",
+                "Support compliance requirements",
+                "Enable delegated administration"
             ],
-            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+            "implementation": [
+                "Roles must be predefined on switch",
+                "Configure custom roles as needed",
+                "Standard roles: admin, operator, monitor",
+                "Role includes all permissions",
+                "Simplifies RADIUS configuration"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
         },
         {
-            "name": "HPE-Rate-Limit",
-            "number": "100",
-            "description": "Specifies bandwidth rate limits for the user's traffic.",
+            "name": "HP-Bandwidth-Max-Ingress",
+            "number": "40",
+            "description": "Sets the maximum ingress (inbound) bandwidth for the user's port in Kbps.",
             "features": {
                 "acl": false,
                 "role": false,
@@ -197,22 +164,398 @@
                 "dacl": false,
                 "qos": true,
                 "bandwidth": true,
-                "coa": false,
+                "coa": true,
                 "vpn": false,
                 "ipv6": true,
                 "multicast": false
             },
             "network": "both",
-            "example": "HPE-Rate-Limit = \"1000 2000\" for 1 Mbps ingress and 2 Mbps egress limits.",
-            "implementation": [
-                "Configure the RADIUS server with HP VSAs (Vendor ID 25506)",
-                "Set up RADIUS authentication for user access",
-                "Specify ingress and egress rate limits in kbps",
-                "Format is typically \"ingress-limit egress-limit\"",
-                "Applied dynamically when the user authenticates",
-                "Used for QoS and bandwidth management"
+            "example": "HP-Bandwidth-Max-Ingress = 100000 for 100 Mbps ingress limit",
+            "use_cases": [
+                "Implement per-user bandwidth limits",
+                "Control network resource usage",
+                "Support tiered service levels",
+                "Prevent bandwidth abuse",
+                "Enable fair usage policies"
             ],
-            "reference": "https://support.hpe.com/techhub/eginfolib/networking/docs/switches/RA/"
+            "implementation": [
+                "Value in Kilobits per second",
+                "Applied to switch port",
+                "Can be changed via CoA",
+                "Works with 802.1X authentication",
+                "Supports both IPv4 and IPv6 traffic"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Bandwidth-Max-Egress",
+            "number": "41",
+            "description": "Sets the maximum egress (outbound) bandwidth for the user's port in Kbps.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-Bandwidth-Max-Egress = 50000 for 50 Mbps egress limit",
+            "use_cases": [
+                "Control upload bandwidth",
+                "Implement asymmetric limits",
+                "Manage server traffic",
+                "Support QoS policies",
+                "Enable traffic shaping"
+            ],
+            "implementation": [
+                "Value in Kilobits per second",
+                "Independent from ingress limit",
+                "Dynamic updates via CoA",
+                "Per-port enforcement",
+                "Monitor with interface statistics"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Port-Priority",
+            "number": "42",
+            "description": "Sets the port priority for QoS. Higher priority traffic gets preferential treatment.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": true
+            },
+            "network": "both",
+            "example": "HP-Port-Priority = 7 for highest priority (voice/video)",
+            "use_cases": [
+                "Prioritize critical applications",
+                "Support voice/video traffic",
+                "Implement QoS policies",
+                "Enable service differentiation",
+                "Support real-time applications"
+            ],
+            "implementation": [
+                "Values typically 0-7",
+                "Higher values = higher priority",
+                "Applied to switch port",
+                "Affects queuing behavior",
+                "Works with CoS/DSCP marking"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Cos",
+            "number": "45",
+            "description": "Sets the Class of Service value for the user's traffic. Used for QoS marking.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": true
+            },
+            "network": "both",
+            "example": "HP-Cos = 5 for voice traffic marking",
+            "use_cases": [
+                "Mark traffic for QoS",
+                "Support end-to-end QoS",
+                "Prioritize applications",
+                "Enable VLAN priority tagging",
+                "Support service classes"
+            ],
+            "implementation": [
+                "802.1p CoS values 0-7",
+                "Applied to Ethernet frames",
+                "Preserved across network",
+                "Maps to internal queues",
+                "Interoperates with DSCP"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Rate-Limit",
+            "number": "46",
+            "description": "Generic rate limiting attribute. Can specify various rate limit parameters.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-Rate-Limit = '10m/5m' for 10Mbps down/5Mbps up",
+            "use_cases": [
+                "Implement bandwidth policies",
+                "Control traffic rates",
+                "Support various limit types",
+                "Enable flexible QoS",
+                "Manage network resources"
+            ],
+            "implementation": [
+                "Format varies by switch model",
+                "Can include multiple parameters",
+                "Supports various units",
+                "Applied per port/user",
+                "Check model-specific docs"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Ip-Filter-Raw",
+            "number": "61",
+            "description": "Specifies raw IP filter rules to apply to the user's traffic. Downloadable ACL functionality.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-Ip-Filter-Raw = 'permit tcp any any eq 80;deny ip any any'",
+            "use_cases": [
+                "Apply dynamic ACLs",
+                "Implement security policies",
+                "Control user access",
+                "Support zero-trust networking",
+                "Enable granular filtering"
+            ],
+            "implementation": [
+                "Extended ACL syntax",
+                "Multiple rules separated by semicolon",
+                "Applied to user session",
+                "No pre-configuration needed",
+                "Can be updated via CoA"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Time-Of-Day",
+            "number": "70",
+            "description": "Specifies time-based access restrictions. Controls when users can access the network.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-Time-Of-Day = 'Mon-Fri:08:00-17:00' for business hours access",
+            "use_cases": [
+                "Implement time-based access",
+                "Control after-hours access",
+                "Support shift workers",
+                "Enable maintenance windows",
+                "Enforce security policies"
+            ],
+            "implementation": [
+                "Day and time range format",
+                "Multiple ranges supported",
+                "Local switch time used",
+                "Automatic enforcement",
+                "Session terminated outside hours"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-NAS-Filter-Rule",
+            "number": "400",
+            "description": "Specifies filter rules for network access. Enhanced ACL functionality with more options.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-NAS-Filter-Rule = 'permit in tcp from any to 10.0.0.0/8 80'",
+            "use_cases": [
+                "Advanced traffic filtering",
+                "Direction-specific rules",
+                "Support complex policies",
+                "Enable stateful filtering",
+                "Implement security zones"
+            ],
+            "implementation": [
+                "Enhanced ACL syntax",
+                "Includes direction (in/out)",
+                "Supports advanced matching",
+                "Multiple rules per user",
+                "Applied dynamically"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Port-Auth-Mode",
+            "number": "50",
+            "description": "Specifies the port authentication mode (single, multi-host, multi-auth).",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "wired",
+            "example": "HP-Port-Auth-Mode = 'multi-auth' for multiple device authentication",
+            "use_cases": [
+                "Control port authentication behavior",
+                "Support multiple devices per port",
+                "Enable IP phones with PCs",
+                "Implement security policies",
+                "Support various deployments"
+            ],
+            "implementation": [
+                "Modes: single, multi-host, multi-auth",
+                "Applied to switch port",
+                "Changes authentication behavior",
+                "Affects MAC address limits",
+                "Works with 802.1X/MAB"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-Captive-Portal-Profile",
+            "number": "55",
+            "description": "Assigns a captive portal profile to the user session. Used for guest authentication.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": true,
+                "captive": true,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-Captive-Portal-Profile = 'GUEST_PORTAL' for guest access",
+            "use_cases": [
+                "Enable guest authentication",
+                "Display terms of service",
+                "Implement web authentication",
+                "Support temporary access",
+                "Enable self-registration"
+            ],
+            "implementation": [
+                "Profile must exist on switch",
+                "Defines portal behavior",
+                "Includes redirect URL",
+                "Session limits configurable",
+                "Can be cleared via CoA"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
+        },
+        {
+            "name": "HP-User-Priority",
+            "number": "56",
+            "description": "Sets the user priority for various operations. Higher values indicate higher priority.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": true,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": true,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "HP-User-Priority = 6 for high priority users",
+            "use_cases": [
+                "Prioritize user traffic",
+                "Support VIP users",
+                "Implement service tiers",
+                "Control resource allocation",
+                "Enable preferential treatment"
+            ],
+            "implementation": [
+                "Numeric priority value",
+                "Higher = more important",
+                "Affects QoS decisions",
+                "Applied per user session",
+                "Can be updated dynamically"
+            ],
+            "reference": "https://support.hpe.com/hpesc/public/docDisplay?docId=a00114271en_us"
         }
     ]
 }

@@ -3,9 +3,9 @@
     "protocol": "tacacs",
     "attributes": [
         {
-            "name": "Fortinet-Access-Profile",
+            "name": "admin_prof",
             "number": "N/A",
-            "description": "Assigns an access profile to the administrator session. Critical for remote administration, determining what level of administrative access a user has to FortiGate features.",
+            "description": "Assigns administrative access profile for FortiGate management. Overrides local admin profile settings and determines feature access permissions.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,30 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Fortinet-Access-Profile = \"super_admin\" for full administrative privileges; Fortinet-Access-Profile = \"read_only\" for monitoring-only access",
-            "implementation": [
-                "Create access profiles on the FortiGate under System > Admin Profiles",
-                "Define the permissions for each profile (read/write access to specific functions)",
-                "Configure the TACACS+ server to return this attribute with the profile name",
-                "The profile name is case-sensitive and must match exactly with the profile on the FortiGate",
-                "Enable the admin_prof attribute override in the FortiGate system admin configuration",
-                "Use with Fortinet-Vdom-Name for VDOM-specific administrative restrictions"
+            "example": "admin_prof=super_admin for full access; admin_prof=network_operator for limited network configuration access",
+            "use_cases": [
+                "Implement role-based administration (RBAC)",
+                "Delegate specific administrative functions",
+                "Comply with security audit requirements",
+                "Support multi-level administrative hierarchy",
+                "Protect sensitive configuration areas"
             ],
-            "reference": "https://docs.fortinet.com/document/fortigate/7.0.0/administration-guide/651398/tacacs-servers"
+            "implementation": [
+                "Create admin profiles on FortiGate (System > Admin Profiles)",
+                "Configure TACACS+ server to return this attribute",
+                "Enable 'set admin-prof-override enable' in FortiGate config",
+                "Profile name must match exactly (case-sensitive)",
+                "Works with both service=fortigate and service=shell"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/756731/remote-administrators-with-tacacs-vsa-attributes"
         },
         {
-            "name": "Fortinet-Vdom-Name",
+            "name": "vdom_override",
             "number": "N/A",
-            "description": "Specifies the virtual domain (VDOM) name to which the administrator is restricted. Used in multi-tenant environments to control administrative access to specific VDOMs.",
+            "description": "Enables VDOM override functionality. When set, allows the memberof attribute to specify which VDOMs an administrator can access.",
             "features": {
                 "acl": false,
-                "role": false,
+                "role": true,
                 "vlan": true,
                 "url": false,
                 "captive": false,
@@ -53,21 +59,138 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Fortinet-Vdom-Name = \"customer_A\" to restrict administrator access to the customer_A VDOM only",
-            "implementation": [
-                "Enable multi-VDOM mode on the FortiGate",
-                "Create the VDOMs that will be used",
-                "Configure the TACACS+ server to return this attribute with the VDOM name",
-                "The VDOM name is case-sensitive and must match exactly with the VDOM configured on the FortiGate",
-                "Enable the vdom_override attribute in the FortiGate system admin configuration",
-                "This is particularly useful for service providers with multi-tenant environments"
+            "example": "vdom_override=enable to activate VDOM restriction",
+            "use_cases": [
+                "Enable VDOM-specific administrative access",
+                "Support multi-tenant environments",
+                "Isolate administrative domains",
+                "Implement security boundaries",
+                "Control access in MSP environments"
             ],
-            "reference": "https://docs.fortinet.com/document/fortigate/7.0.0/administration-guide/651398/tacacs-servers"
+            "implementation": [
+                "Set vdom_override=enable in TACACS+ response",
+                "Must be used with memberof attribute",
+                "Configure 'set vdom-override enable' in FortiGate",
+                "Applies to administrative sessions only",
+                "Monitor with 'diagnose debug application tacacsd'"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/756731/remote-administrators-with-tacacs-vsa-attributes"
+        },
+        {
+            "name": "memberof",
+            "number": "N/A",
+            "description": "Specifies VDOM membership when vdom_override is enabled. Controls which VDOMs an administrator can access and manage.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "memberof=root for global access; memberof=customer_a,customer_b for multi-VDOM access",
+            "use_cases": [
+                "Restrict admin access to specific VDOMs",
+                "Support multi-tenant administration",
+                "Implement delegated administration",
+                "Enable MSP service delivery",
+                "Maintain security isolation"
+            ],
+            "implementation": [
+                "Use with vdom_override=enable",
+                "Specify single VDOM or comma-separated list",
+                "VDOM names must exist on FortiGate",
+                "Case-sensitive VDOM names",
+                "Verify with 'show system admin'"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/756731/remote-administrators-with-tacacs-vsa-attributes"
+        },
+        {
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Sets privilege level for administrative access. Standard TACACS+ attribute for controlling access levels.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "priv-lvl=15 for full administrative access",
+            "use_cases": [
+                "Map to standard privilege levels",
+                "Support legacy TACACS+ integration",
+                "Enable gradual access control",
+                "Integrate with other network devices",
+                "Maintain consistent access levels"
+            ],
+            "implementation": [
+                "Standard TACACS+ attribute",
+                "Values 0-15 (15 highest)",
+                "Mapped to FortiGate permissions",
+                "Works with command authorization",
+                "Used when admin_prof not specified"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/756731/remote-administrators-with-tacacs-vsa-attributes"
+        },
+        {
+            "name": "service",
+            "number": "N/A",
+            "description": "Specifies the TACACS+ service type. FortiGate supports both 'fortigate' and 'shell' services for different authorization modes.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "service=fortigate for Fortinet-specific attributes; service=shell for standard shell access",
+            "use_cases": [
+                "Select authorization mode",
+                "Enable Fortinet-specific features",
+                "Support standard TACACS+ clients",
+                "Maintain compatibility",
+                "Control attribute processing"
+            ],
+            "implementation": [
+                "Use service=fortigate for VSAs",
+                "Use service=shell for compatibility",
+                "Configure in TACACS+ server rules",
+                "Affects which attributes are processed",
+                "Monitor with authentication logs"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/756731/remote-administrators-with-tacacs-vsa-attributes"
         },
         {
             "name": "cmd",
             "number": "N/A",
-            "description": "Controls command authorization for the user. Used to restrict administrator access to specific commands.",
+            "description": "Controls command authorization. Specifies which CLI commands are allowed or denied for the administrator.",
             "features": {
                 "acl": true,
                 "role": true,
@@ -84,21 +207,64 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "cmd = show for permitting all show commands; cmd = \"system interface\" to allow interface configuration",
-            "implementation": [
-                "Configure command authorization on the FortiGate",
-                "Configure the TACACS+ server with command permissions",
-                "For each command, specify permit (default) or deny",
-                "Can use wildcards (e.g., \"diagnose *\" to permit all diagnostic commands)",
-                "Enable command authorization on the FortiGate with \"set authorization enable\"",
-                "Very granular control is possible by specifying complete command paths"
+            "example": "cmd=get * {permit .+} for allowing all 'get' commands; cmd=config * {deny .*} for denying all config commands",
+            "use_cases": [
+                "Implement granular command control",
+                "Restrict configuration changes",
+                "Allow monitoring-only access",
+                "Support compliance requirements",
+                "Create custom admin roles"
             ],
-            "reference": "https://docs.fortinet.com/document/fortigate/7.0.0/administration-guide/651398/tacacs-servers"
+            "implementation": [
+                "Configure command authorization on FortiGate",
+                "Use regex patterns for matching",
+                "Specify permit or deny actions",
+                "Process in order of configuration",
+                "Test with 'diagnose debug application tacacsd'"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/756731/remote-administrators-with-tacacs-vsa-attributes"
         },
         {
-            "name": "Fortinet-Group-Name",
+            "name": "Fortinet-Vdom-Name",
             "number": "N/A",
-            "description": "Specifies the user group for administrative access and policy application.",
+            "description": "Alternative method to specify VDOM access. Can be used instead of memberof attribute for VDOM restriction.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Vdom-Name=customer_vdom for single VDOM access",
+            "use_cases": [
+                "Simplify VDOM assignment",
+                "Support single VDOM scenarios",
+                "Maintain backward compatibility",
+                "Enable quick VDOM switching",
+                "Support automated provisioning"
+            ],
+            "implementation": [
+                "Alternative to vdom_override/memberof",
+                "Specify single VDOM name",
+                "VDOM must exist on FortiGate",
+                "Case-sensitive matching",
+                "Works with both service types"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/756731/remote-administrators-with-tacacs-vsa-attributes"
+        },
+        {
+            "name": "Fortinet-Access-Profile",
+            "number": "N/A",
+            "description": "Alternative attribute name for admin_prof. Provides same functionality for administrative profile assignment.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -115,15 +281,96 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Fortinet-Group-Name = \"network_admins\" for grouping administrators",
-            "implementation": [
-                "Create user groups on the FortiGate",
-                "Configure the TACACS+ server to return this attribute with the group name",
-                "The group name must match a group defined on the FortiGate",
-                "Used to apply group-based policies and permissions",
-                "Helps organize administrators by function or department"
+            "example": "Fortinet-Access-Profile=read_only for monitoring access",
+            "use_cases": [
+                "Alternative to admin_prof attribute",
+                "Maintain naming consistency",
+                "Support different TACACS+ servers",
+                "Enable profile-based access",
+                "Simplify configuration"
             ],
-            "reference": "https://docs.fortinet.com/document/fortigate/7.0.0/administration-guide/651398/tacacs-servers"
+            "implementation": [
+                "Same as admin_prof functionality",
+                "Profile name must match exactly",
+                "Enable profile override in FortiGate",
+                "Works with both service types",
+                "Monitor with debug commands"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/756731/remote-administrators-with-tacacs-vsa-attributes"
+        },
+        {
+            "name": "Fortinet-Group-Name",
+            "number": "N/A",
+            "description": "Assigns user to a FortiGate user group. Used for group-based policy enforcement in administrative contexts.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Fortinet-Group-Name=network_admins for network administrator group",
+            "use_cases": [
+                "Group administrators by function",
+                "Apply group-based policies",
+                "Simplify access management",
+                "Support organizational structure",
+                "Enable audit tracking"
+            ],
+            "implementation": [
+                "Group must exist on FortiGate",
+                "Configure in User & Authentication",
+                "Used for policy matching",
+                "Case-sensitive group names",
+                "Verify with 'show user group'"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/756731/remote-administrators-with-tacacs-vsa-attributes"
+        },
+        {
+            "name": "cmd-arg",
+            "number": "N/A",
+            "description": "Provides arguments for command authorization. Used with cmd attribute for detailed command control.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "cmd-arg=system admin for checking 'config system admin' authorization",
+            "use_cases": [
+                "Enable fine-grained command control",
+                "Support complex authorization rules",
+                "Implement security policies",
+                "Control configuration scope",
+                "Enable audit compliance"
+            ],
+            "implementation": [
+                "Used with cmd authorization",
+                "Contains command arguments",
+                "Matched against authorization rules",
+                "Supports regex patterns",
+                "Debug with TACACS+ logging"
+            ],
+            "reference": "https://docs.fortinet.com/document/fortigate/7.4.4/administration-guide/756731/remote-administrators-with-tacacs-vsa-attributes"
         }
     ]
 }

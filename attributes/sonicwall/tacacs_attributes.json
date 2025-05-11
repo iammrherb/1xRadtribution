@@ -3,9 +3,9 @@
     "protocol": "tacacs",
     "attributes": [
         {
-            "name": "Sonicwall-Admin-Role",
-            "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Standard TACACS+ privilege level for SonicWall administrative access.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Sonicwall-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Sonicwall VSAs (Vendor ID: 8741)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Sonicwall device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "priv-lvl=15 for full administrative access",
+            "use_cases": [
+                "Control SonicOS admin access",
+                "Implement standard TACACS+",
+                "Support privilege levels",
+                "Enable graduated access",
+                "Maintain compatibility"
             ],
-            "reference": "https://docs.sonicwall.com/radius"
+            "implementation": [
+                "Configure TACACS+ server",
+                "Enable TACACS+ on SonicWall",
+                "Level 15: Full admin",
+                "Level 1: Read-only",
+                "Maps to SonicOS privileges"
+            ],
+            "reference": "https://www.sonicwall.com/support/knowledge-base/how-to-configure-tacacs-authentication/170504210153667/"
         },
         {
-            "name": "Sonicwall-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "SonicWall-Admin-Role",
+            "number": "N/A",
+            "description": "Assigns specific administrative role for SonicOS management.",
             "features": {
                 "acl": false,
-                "role": false,
-                "vlan": true,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Sonicwall-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Sonicwall device",
-                "Configure the RADIUS server with Sonicwall VSAs (Vendor ID: 8741)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Sonicwall device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "SonicWall-Admin-Role=ADMIN for full access",
+            "use_cases": [
+                "Define specific admin rights",
+                "Override privilege levels",
+                "Support custom roles",
+                "Enable role-based access",
+                "Implement least privilege"
             ],
-            "reference": "https://docs.sonicwall.com/radius"
+            "implementation": [
+                "Roles: ADMIN, LIMITED_ADMIN, GUEST",
+                "Configure in TACACS+ server",
+                "SonicWall-specific attribute",
+                "Takes precedence over priv-lvl",
+                "Audit role assignments"
+            ],
+            "reference": "https://www.sonicwall.com/support/knowledge-base/how-to-configure-tacacs-authentication/170504210153667/"
         },
         {
-            "name": "Sonicwall-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "name": "cmd",
+            "number": "N/A",
+            "description": "Command authorization for SonicWall CLI access.",
             "features": {
                 "acl": true,
-                "role": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,22 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Sonicwall-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Sonicwall device",
-                "Configure the RADIUS server with Sonicwall VSAs (Vendor ID: 8741)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Sonicwall device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "cmd=show for show commands",
+            "use_cases": [
+                "Control CLI command access",
+                "Implement command authorization",
+                "Create custom command sets",
+                "Support audit requirements",
+                "Enable granular control"
             ],
-            "reference": "https://docs.sonicwall.com/radius"
+            "implementation": [
+                "Enable command authorization",
+                "Configure on TACACS+ server",
+                "Limited CLI in SonicOS",
+                "Mainly for show commands",
+                "Used with cmd-arg"
+            ],
+            "reference": "https://www.sonicwall.com/support/knowledge-base/how-to-configure-tacacs-authentication/170504210153667/"
         }
     ]
 }

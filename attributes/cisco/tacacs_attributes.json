@@ -5,7 +5,7 @@
         {
             "name": "priv-lvl",
             "number": "N/A",
-            "description": "Specifies the privilege level for the user. Used to determine administrative access rights.",
+            "description": "Specifies the privilege level for the user. Standard TACACS+ attribute for controlling administrative access levels.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,20 +22,28 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "priv-lvl = 15 for full administrative access.",
-            "implementation": [
-                "Configure the TACACS+ server to return this attribute with privilege level",
-                "Configure the Cisco device to use TACACS+ for authentication",
-                "Privilege levels range from 0 (lowest) to 15 (highest)",
-                "Common levels: 0 (user EXEC), 1 (privileged EXEC), 15 (enable)",
-                "The device will automatically assign the specified privilege level"
+            "example": "priv-lvl=15 for full administrative access; priv-lvl=1 for read-only",
+            "use_cases": [
+                "Control administrative access levels",
+                "Implement role-based CLI access",
+                "Support standard privilege levels",
+                "Enable graduated access control",
+                "Maintain compatibility across platforms"
             ],
-            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html"
+            "implementation": [
+                "Configure TACACS+ server to return priv-lvl",
+                "Enable TACACS+ on Cisco device",
+                "Levels 0-15 (15 highest privilege)",
+                "Level 1: User EXEC mode",
+                "Level 15: Privileged EXEC mode",
+                "Custom levels 2-14 can be configured"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
         },
         {
             "name": "cmd",
             "number": "N/A",
-            "description": "Used for command authorization to control which commands a user can execute.",
+            "description": "Used for command authorization to control which commands a user can execute. Core TACACS+ authorization attribute.",
             "features": {
                 "acl": true,
                 "role": true,
@@ -52,20 +60,64 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "cmd = show for permitting all show commands.",
-            "implementation": [
-                "Configure the Cisco device to use TACACS+ for command authorization",
-                "Configure the TACACS+ server with command permissions",
-                "For each command, specify permit or deny",
-                "Can use wildcards (e.g., \"show *\" to permit all show commands)",
-                "Enable command authorization on the device with \"aaa authorization commands\""
+            "example": "cmd=show for show commands; cmd=configure for config mode",
+            "use_cases": [
+                "Implement command-level authorization",
+                "Restrict specific commands",
+                "Create custom command profiles",
+                "Support audit requirements",
+                "Enable granular access control"
             ],
-            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html"
+            "implementation": [
+                "Enable 'aaa authorization commands' on device",
+                "Configure command lists on TACACS+ server",
+                "Use with cmd-arg for complete command",
+                "Supports permit and deny actions",
+                "Can use wildcards and regex"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_aaa/configuration/xe-16/sec-usr-aaa-xe-16-book/sec-cfg-author.html"
+        },
+        {
+            "name": "cmd-arg",
+            "number": "N/A",
+            "description": "Provides command arguments for authorization. Used with cmd attribute for complete command authorization.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "cmd=interface cmd-arg='GigabitEthernet0/1' for interface commands",
+            "use_cases": [
+                "Authorize complete commands with arguments",
+                "Control access to specific interfaces",
+                "Restrict configuration scope",
+                "Support fine-grained authorization",
+                "Enable audit trails"
+            ],
+            "implementation": [
+                "Used with cmd attribute",
+                "Contains command parameters",
+                "TACACS+ server evaluates full command",
+                "Supports regex matching",
+                "Debug with 'debug aaa authorization'"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_aaa/configuration/xe-16/sec-usr-aaa-xe-16-book/sec-cfg-author.html"
         },
         {
             "name": "service",
             "number": "N/A",
-            "description": "Specifies the service for which authorization is to be performed.",
+            "description": "Specifies the service for which authorization is being performed. Core TACACS+ attribute.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -82,22 +134,29 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "service = shell for shell login authorization.",
-            "implementation": [
-                "Configure the Cisco device to use TACACS+ for authorization",
-                "Configure the TACACS+ server with services",
-                "Common services: shell (exec), network, admin, ppp",
-                "Each service can have different attributes (e.g., priv-lvl)",
-                "Enable service authorization on the device with \"aaa authorization\""
+            "example": "service=shell for CLI access; service=ppp for PPP; service=exec for EXEC",
+            "use_cases": [
+                "Specify authorization context",
+                "Support multiple service types",
+                "Enable service-specific policies",
+                "Control access methods",
+                "Maintain protocol compliance"
             ],
-            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html"
+            "implementation": [
+                "Common services: shell, exec, ppp, slip",
+                "Shell service most common for admin",
+                "Different services have different attributes",
+                "Configure in TACACS+ server policy",
+                "Required for proper authorization flow"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
         },
         {
-            "name": "roles",
+            "name": "protocol",
             "number": "N/A",
-            "description": "Specifies the role(s) to assign to the user. Used for role-based access control, particularly for NX-OS.",
+            "description": "Specifies the protocol context for authorization. Used with service attribute.",
             "features": {
-                "acl": true,
+                "acl": false,
                 "role": true,
                 "vlan": false,
                 "url": false,
@@ -112,20 +171,27 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "roles = \"network-admin\" for full administrative access on NX-OS devices.",
-            "implementation": [
-                "Configure the Cisco NX-OS device to use TACACS+ for authentication",
-                "Define roles on the device or use predefined roles",
-                "Configure the TACACS+ server to return this attribute with role names",
-                "Multiple roles can be separated by spaces",
-                "Common NX-OS roles: network-admin, network-operator, vdc-admin"
+            "example": "protocol=ip for IP services; protocol=ipx for IPX",
+            "use_cases": [
+                "Specify protocol context",
+                "Support multi-protocol environments",
+                "Enable protocol-specific policies",
+                "Control service authorization",
+                "Maintain backward compatibility"
             ],
-            "reference": "https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/7-x/security/configuration/guide/b_Cisco_Nexus_9000_Series_NX-OS_Security_Configuration_Guide_7x/b_Cisco_Nexus_9000_Series_NX-OS_Security_Configuration_Guide_7x_chapter_01001.html"
+            "implementation": [
+                "Common protocols: ip, ipx, atalk, vines",
+                "Used primarily with PPP/SLIP services",
+                "Less relevant for modern networks",
+                "Configure in TACACS+ authorization",
+                "IP most commonly used"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
         },
         {
-            "name": "addr",
+            "name": "acl",
             "number": "N/A",
-            "description": "Specifies IP address restrictions for the authenticated user.",
+            "description": "Specifies an ACL number or name to apply to the user session. Used for traffic filtering.",
             "features": {
                 "acl": true,
                 "role": false,
@@ -138,24 +204,253 @@
                 "bandwidth": false,
                 "coa": false,
                 "vpn": false,
-                "ipv6": true,
+                "ipv6": false,
                 "multicast": false
             },
             "network": "both",
-            "example": "addr = 10.1.1.0/24 to restrict access to this IP range.",
-            "implementation": [
-                "Configure the TACACS+ server to return this attribute",
-                "Can specify individual IP addresses or CIDR notation for ranges",
-                "User will only be able to access from the specified IP addresses",
-                "Useful for restricting administrative access to specific networks",
-                "Supports both IPv4 and IPv6 address restrictions"
+            "example": "acl=101 for numbered ACL; acl=ADMIN_ACL for named ACL",
+            "use_cases": [
+                "Apply user-specific ACLs",
+                "Control traffic for VPN users",
+                "Implement security policies",
+                "Support compliance requirements",
+                "Enable dynamic filtering"
             ],
-            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html"
+            "implementation": [
+                "ACL must exist on device",
+                "Can use numbered or named ACLs",
+                "Applied to user session/interface",
+                "Works with VTY and physical interfaces",
+                "Verify with 'show access-lists'"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "inacl",
+            "number": "N/A",
+            "description": "Downloadable inbound ACL definition. Allows dynamic ACL creation without pre-configuration.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "inacl#1=permit tcp any any eq 80; inacl#2=deny ip any any",
+            "use_cases": [
+                "Deploy dynamic ACLs",
+                "Eliminate pre-configured ACLs",
+                "Support user-specific policies",
+                "Enable centralized ACL management",
+                "Simplify security implementation"
+            ],
+            "implementation": [
+                "Use format inacl#<num>=<ace>",
+                "Multiple entries create complete ACL",
+                "Downloaded during authentication",
+                "Applied to user session",
+                "No pre-configuration required"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "outacl",
+            "number": "N/A",
+            "description": "Downloadable outbound ACL definition. Controls egress traffic dynamically.",
+            "features": {
+                "acl": true,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "outacl#1=deny tcp any any eq 25; outacl#2=permit ip any any",
+            "use_cases": [
+                "Control outbound traffic",
+                "Prevent data exfiltration",
+                "Implement egress filtering",
+                "Support security policies",
+                "Enable content restrictions"
+            ],
+            "implementation": [
+                "Format: outacl#<num>=<ace>",
+                "Multiple entries supported",
+                "Applied to egress traffic",
+                "Downloaded during auth",
+                "Works with inacl for full control"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "addr-pool",
+            "number": "N/A",
+            "description": "Specifies the IP address pool for user allocation. Common in VPN and dial-up scenarios.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "addr-pool=VPN_POOL for VPN client addressing",
+            "use_cases": [
+                "Assign VPN client addresses",
+                "Support dial-up users",
+                "Implement dynamic addressing",
+                "Enable pool-based allocation",
+                "Support multiple address ranges"
+            ],
+            "implementation": [
+                "Pool must exist on device",
+                "Used with PPP/VPN services",
+                "Configure local IP pools",
+                "Monitor with 'show ip local pool'",
+                "Supports named pools"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "route",
+            "number": "N/A",
+            "description": "Installs routes for the user session. Used for VPN client routing and network access.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "route='192.168.1.0 255.255.255.0' for network route",
+            "use_cases": [
+                "Install VPN client routes",
+                "Enable split tunneling",
+                "Support network access",
+                "Configure static routes",
+                "Enable subnet access"
+            ],
+            "implementation": [
+                "Format: 'network mask [gateway]'",
+                "Multiple routes supported",
+                "Applied to routing table",
+                "Removed on session end",
+                "Monitor with 'show ip route'"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "timeout",
+            "number": "N/A",
+            "description": "Sets the session timeout value in minutes. Controls how long a session remains active.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "timeout=60 for 1-hour timeout",
+            "use_cases": [
+                "Control session duration",
+                "Implement security policies",
+                "Manage resource usage",
+                "Support compliance requirements",
+                "Enable automatic disconnection"
+            ],
+            "implementation": [
+                "Value in minutes",
+                "Applied to user session",
+                "Overrides default timeout",
+                "0 means no timeout",
+                "Monitor active sessions"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "idletime",
+            "number": "N/A",
+            "description": "Sets the idle timeout in minutes. Disconnects inactive sessions to free resources.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "idletime=10 for 10-minute idle timeout",
+            "use_cases": [
+                "Disconnect idle sessions",
+                "Free system resources",
+                "Improve security posture",
+                "Manage concurrent sessions",
+                "Support resource policies"
+            ],
+            "implementation": [
+                "Value in minutes",
+                "Monitors session activity",
+                "Disconnects after idle period",
+                "Can be disabled with 0",
+                "Works with absolute timeout"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
         },
         {
             "name": "autocmd",
             "number": "N/A",
-            "description": "Specifies a command that is automatically executed after user login.",
+            "description": "Specifies a command to execute automatically after user login. Used for automation and user experience.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -172,15 +467,96 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "autocmd = \"show version\" to automatically show version info after login.",
-            "implementation": [
-                "Configure the TACACS+ server to return this attribute",
-                "Command is executed automatically after successful authentication",
-                "Useful for displaying messages, collecting information, or setting context",
-                "Can specify any valid command that the user would have permission to run",
-                "Multiple autocmd attributes can be specified for sequential execution"
+            "example": "autocmd='show version' to display version after login",
+            "use_cases": [
+                "Display login messages",
+                "Run diagnostic commands",
+                "Start user applications",
+                "Configure user environment",
+                "Automate routine tasks"
             ],
-            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/15-mt/sec-usr-tacacs-15-mt-book/sec-cfg-tacacs.html"
+            "implementation": [
+                "Command runs after authentication",
+                "User must have permission for command",
+                "Can chain multiple commands",
+                "Supports command scripts",
+                "Exit behavior configurable"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "noescape",
+            "number": "N/A",
+            "description": "Prevents users from escaping to command line. Used with autocmd for restricted access.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "noescape=true with autocmd for menu-only access",
+            "use_cases": [
+                "Create restricted shells",
+                "Implement menu systems",
+                "Prevent CLI access",
+                "Support kiosk mode",
+                "Enable application-only access"
+            ],
+            "implementation": [
+                "Used with autocmd attribute",
+                "Prevents escape sequences",
+                "User locked into autocmd",
+                "Session ends when command exits",
+                "Useful for restricted environments"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
+        },
+        {
+            "name": "callback-number",
+            "number": "N/A",
+            "description": "Specifies the phone number for callback authentication. Used in dial-up scenarios.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "callback-number='18005551234' for callback authentication",
+            "use_cases": [
+                "Implement callback security",
+                "Reduce toll charges",
+                "Verify user location",
+                "Support legacy dial systems",
+                "Enable cost control"
+            ],
+            "implementation": [
+                "Used with dial-up connections",
+                "System calls back to authenticate",
+                "Number must be pre-authorized",
+                "Legacy feature for PSTN",
+                "Less relevant in modern networks"
+            ],
+            "reference": "https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_usr_tacacs/configuration/xe-16/sec-usr-tacacs-xe-16-book/sec-cfg-tacacs.html"
         }
     ]
 }

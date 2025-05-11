@@ -3,9 +3,46 @@
     "protocol": "radius",
     "attributes": [
         {
-            "name": "Sonicwall-Admin-Role",
+            "name": "SonicWall-User-Group",
             "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "description": "Assigns a user group for SonicWall firewall policies. Used for group-based access control.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "SonicWall-User-Group = 'VPN Users' for VPN access control",
+            "use_cases": [
+                "Implement group-based firewall rules",
+                "Control VPN access by group",
+                "Apply content filtering policies",
+                "Support user-based networking",
+                "Enable policy-based routing"
+            ],
+            "implementation": [
+                "Configure RADIUS server with SonicWall VSAs (Vendor ID: 8741)",
+                "Group must exist on SonicWall device",
+                "Used with firewall access rules",
+                "Case-sensitive group names",
+                "Monitor with user status page"
+            ],
+            "reference": "https://www.sonicwall.com/support/knowledge-base/how-to-configure-radius-authentication/170503796508490/"
+        },
+        {
+            "name": "SonicWall-User-Privileges",
+            "number": "2",
+            "description": "Sets administrative privileges for SonicWall management access.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,22 +59,103 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Sonicwall-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Sonicwall VSAs (Vendor ID: 8741)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Sonicwall device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "SonicWall-User-Privileges = 'ADMIN' for full administrative access",
+            "use_cases": [
+                "Control management access levels",
+                "Implement role-based administration",
+                "Support compliance requirements",
+                "Enable delegated management",
+                "Create custom admin roles"
             ],
-            "reference": "https://docs.sonicwall.com/radius"
+            "implementation": [
+                "Standard values: ADMIN, LIMITED_ADMIN, GUEST",
+                "Configure on RADIUS server",
+                "Enable admin authentication",
+                "Maps to SonicOS admin levels",
+                "Audit admin access"
+            ],
+            "reference": "https://www.sonicwall.com/support/knowledge-base/how-to-configure-radius-authentication/170503796508490/"
         },
         {
-            "name": "Sonicwall-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "SonicWall-AVPair",
+            "number": "3",
+            "description": "Multi-purpose attribute-value pair for various SonicWall-specific functions.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": true,
+                "bandwidth": true,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "SonicWall-AVPair = 'ip:addr-pool=VPN_POOL' for VPN address assignment",
+            "use_cases": [
+                "Configure multiple parameters",
+                "Assign VPN IP pools",
+                "Set firewall zones",
+                "Apply bandwidth limits",
+                "Enable specific features"
+            ],
+            "implementation": [
+                "Format: type:parameter=value",
+                "Multiple AVPairs supported",
+                "Common types: ip, zone, bw",
+                "Used for advanced configs",
+                "Check SonicOS version compatibility"
+            ],
+            "reference": "https://www.sonicwall.com/support/knowledge-base/how-to-configure-radius-authentication/170503796508490/"
+        },
+        {
+            "name": "SonicWall-VPN-Group",
+            "number": "4",
+            "description": "Assigns VPN group membership for SonicWall VPN policies.",
             "features": {
                 "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": true,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "SonicWall-VPN-Group = 'Remote_Workers' for remote access VPN",
+            "use_cases": [
+                "Control VPN access policies",
+                "Apply group-specific VPN settings",
+                "Implement split tunneling rules",
+                "Set bandwidth limits per group",
+                "Enable group-based routing"
+            ],
+            "implementation": [
+                "VPN group must exist in SonicOS",
+                "Configure in VPN settings",
+                "Applied during VPN authentication",
+                "Controls VPN policy application",
+                "Monitor with VPN statistics"
+            ],
+            "reference": "https://www.sonicwall.com/support/knowledge-base/how-to-configure-ssl-vpn-radius-authentication/170503432254072/"
+        },
+        {
+            "name": "SonicWall-Zone",
+            "number": "5",
+            "description": "Assigns user to a specific security zone for policy application.",
+            "features": {
+                "acl": true,
                 "role": false,
                 "vlan": true,
                 "url": false,
@@ -52,45 +170,22 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Sonicwall-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Sonicwall device",
-                "Configure the RADIUS server with Sonicwall VSAs (Vendor ID: 8741)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Sonicwall device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "SonicWall-Zone = 'DMZ' for DMZ zone assignment",
+            "use_cases": [
+                "Control firewall zone placement",
+                "Apply zone-based policies",
+                "Implement security segmentation",
+                "Support dynamic zone assignment",
+                "Enable zone-specific rules"
             ],
-            "reference": "https://docs.sonicwall.com/radius"
-        },
-        {
-            "name": "Sonicwall-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
-            "features": {
-                "acl": true,
-                "role": false,
-                "vlan": false,
-                "url": false,
-                "captive": false,
-                "sgt": false,
-                "dacl": true,
-                "qos": false,
-                "bandwidth": false,
-                "coa": false,
-                "vpn": false,
-                "ipv6": false,
-                "multicast": false
-            },
-            "network": "both",
-            "example": "Sonicwall-ACL-Name = \"Guest-ACL\" for ACL assignment.",
             "implementation": [
-                "Configure the ACL on the Sonicwall device",
-                "Configure the RADIUS server with Sonicwall VSAs (Vendor ID: 8741)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Sonicwall device",
-                "Used for dynamic ACL assignment based on user authentication"
+                "Zone must exist on firewall",
+                "Applied to user sessions",
+                "Affects policy evaluation",
+                "Common zones: LAN, WAN, DMZ, VPN",
+                "Monitor in connection monitor"
             ],
-            "reference": "https://docs.sonicwall.com/radius"
+            "reference": "https://www.sonicwall.com/support/knowledge-base/understanding-zones-interfaces-and-security/170503988583283/"
         }
     ]
 }

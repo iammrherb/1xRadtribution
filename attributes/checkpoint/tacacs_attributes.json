@@ -3,9 +3,9 @@
     "protocol": "tacacs",
     "attributes": [
         {
-            "name": "Checkpoint-Admin-Role",
-            "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "name": "CP-Role",
+            "number": "N/A",
+            "description": "Assigns administrative role for Check Point management access via TACACS+.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Checkpoint-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Checkpoint VSAs (Vendor ID: 2620)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Checkpoint device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "CP-Role=Super User for full administrative access",
+            "use_cases": [
+                "Control SmartConsole access",
+                "Implement role-based administration",
+                "Support Multi-Domain management",
+                "Enable delegated administration",
+                "Maintain audit compliance"
             ],
-            "reference": "https://docs.checkpoint.com/radius"
+            "implementation": [
+                "Configure TACACS+ server for Check Point",
+                "Role must exist in SmartConsole",
+                "Standard roles: Super User, Read Only, etc.",
+                "Enable TACACS+ in SmartConsole",
+                "Monitor with SmartLog"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_SecurityManagement_AdminGuide/Topics-SECMG/TACACS-Authentication.htm"
         },
         {
-            "name": "Checkpoint-VLAN-ID",
-            "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "name": "CP-Gaia-User-Role",
+            "number": "N/A",
+            "description": "Assigns Gaia OS administrative role via TACACS+.",
             "features": {
                 "acl": false,
-                "role": false,
-                "vlan": true,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Checkpoint-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Checkpoint device",
-                "Configure the RADIUS server with Checkpoint VSAs (Vendor ID: 2620)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Checkpoint device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "CP-Gaia-User-Role=adminRole for full Gaia access",
+            "use_cases": [
+                "Control Gaia OS access",
+                "Implement OS-level permissions",
+                "Support compliance requirements",
+                "Enable expert mode access",
+                "Manage system configuration"
             ],
-            "reference": "https://docs.checkpoint.com/radius"
+            "implementation": [
+                "Configure Gaia for TACACS+",
+                "Standard roles: adminRole, monitorRole",
+                "Custom roles supported",
+                "Enable in Gaia Portal",
+                "Verify with 'show users'"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_Gaia_AdminGuide/Topics-GAG/TACACS-Authentication.htm"
         },
         {
-            "name": "Checkpoint-ACL-Name",
-            "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "name": "priv-lvl",
+            "number": "N/A",
+            "description": "Standard TACACS+ privilege level. Maps to Check Point roles.",
             "features": {
-                "acl": true,
-                "role": false,
+                "acl": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,59 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Checkpoint-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Checkpoint device",
-                "Configure the RADIUS server with Checkpoint VSAs (Vendor ID: 2620)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Checkpoint device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "priv-lvl=15 for superuser access",
+            "use_cases": [
+                "Support standard TACACS+",
+                "Map to Check Point roles",
+                "Enable cross-vendor management",
+                "Maintain compatibility",
+                "Simplify configuration"
             ],
-            "reference": "https://docs.checkpoint.com/radius"
+            "implementation": [
+                "Level 15: Super User",
+                "Level 1: Read Only",
+                "Configure privilege mapping",
+                "Standard TACACS+ attribute",
+                "Works with Gaia and SmartConsole"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_SecurityManagement_AdminGuide/Topics-SECMG/TACACS-Authentication.htm"
+        },
+        {
+            "name": "CP-Gaia-SuperUser-Access",
+            "number": "N/A",
+            "description": "Enables expert mode access in Gaia OS via TACACS+.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "CP-Gaia-SuperUser-Access=1 to enable expert mode",
+            "use_cases": [
+                "Enable expert shell access",
+                "Support advanced troubleshooting",
+                "Allow system modifications",
+                "Control privileged access",
+                "Audit expert mode usage"
+            ],
+            "implementation": [
+                "Set to 1 to enable",
+                "Requires appropriate role",
+                "User must know expert password",
+                "Audit all expert access",
+                "Monitor with system logs"
+            ],
+            "reference": "https://sc1.checkpoint.com/documents/R81/WebAdminGuides/EN/CP_R81_Gaia_AdminGuide/Topics-GAG/TACACS-Authentication.htm"
         }
     ]
 }

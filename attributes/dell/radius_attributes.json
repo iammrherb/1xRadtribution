@@ -3,9 +3,9 @@
     "protocol": "radius",
     "attributes": [
         {
-            "name": "Dell-Admin-Role",
+            "name": "Dell-User-Role",
             "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "description": "Assigns a user role for Dell Networking switches. Controls administrative access and permissions.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Dell-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with Dell VSAs (Vendor ID: 6027)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the Dell device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "Dell-User-Role = 'sysadmin' for full administrative access",
+            "use_cases": [
+                "Implement role-based access control",
+                "Control administrative privileges",
+                "Support compliance requirements",
+                "Enable delegated administration",
+                "Create custom management roles"
             ],
-            "reference": "https://docs.dell.com/radius"
+            "implementation": [
+                "Configure RADIUS server with Dell VSAs (Vendor ID: 674)",
+                "Standard roles: sysadmin, operator, netadmin",
+                "Custom roles can be defined on switch",
+                "Enable RADIUS authentication on Dell switch",
+                "Monitor with 'show authentication methods'"
+            ],
+            "reference": "https://www.dell.com/support/manuals/en-us/networking-s4100-series/s4100_cl_guide/"
         },
         {
-            "name": "Dell-VLAN-ID",
+            "name": "Dell-Privilege-Level",
             "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "description": "Sets privilege level for CLI access on Dell switches.",
             "features": {
                 "acl": false,
-                "role": false,
-                "vlan": true,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Dell-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the Dell device",
-                "Configure the RADIUS server with Dell VSAs (Vendor ID: 6027)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the Dell device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "Dell-Privilege-Level = 15 for full access",
+            "use_cases": [
+                "Control command execution rights",
+                "Implement graduated access levels",
+                "Support standard privilege model",
+                "Enable read-only access",
+                "Create operator-level access"
             ],
-            "reference": "https://docs.dell.com/radius"
+            "implementation": [
+                "Values 0-15 (15 is highest)",
+                "Level 15: Full administrative access",
+                "Level 1: User EXEC mode",
+                "Level 0: Limited access",
+                "Maps to CLI command availability"
+            ],
+            "reference": "https://www.dell.com/support/manuals/en-us/networking-s4100-series/s4100_cl_guide/"
         },
         {
-            "name": "Dell-ACL-Name",
+            "name": "Dell-Admin-Role",
             "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "description": "Alternative attribute for admin role assignment on Dell EMC switches.",
             "features": {
-                "acl": true,
-                "role": false,
+                "acl": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,96 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "Dell-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the Dell device",
-                "Configure the RADIUS server with Dell VSAs (Vendor ID: 6027)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the Dell device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "Dell-Admin-Role = 'admin' for administrator access",
+            "use_cases": [
+                "Define administrative access levels",
+                "Support Dell EMC switches",
+                "Enable role-based management",
+                "Control configuration access",
+                "Implement security policies"
             ],
-            "reference": "https://docs.dell.com/radius"
+            "implementation": [
+                "Used on newer Dell EMC models",
+                "Configure custom roles on switch",
+                "Role must exist before authentication",
+                "Case-sensitive role names",
+                "Verify with 'show users roles'"
+            ],
+            "reference": "https://www.dell.com/support/manuals/en-us/networking-s4100-series/s4100_cl_guide/"
+        },
+        {
+            "name": "Dell-VLAN-ID",
+            "number": "4",
+            "description": "Assigns VLAN ID to authenticated users on Dell switches.",
+            "features": {
+                "acl": false,
+                "role": false,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Dell-VLAN-ID = 100 for VLAN 100 assignment",
+            "use_cases": [
+                "Dynamic VLAN assignment",
+                "Network segmentation",
+                "Support 802.1X authentication",
+                "Implement security zones",
+                "Enable user-based VLANs"
+            ],
+            "implementation": [
+                "VLAN must exist on switch",
+                "Used with 802.1X or MAB",
+                "Numeric VLAN ID (1-4094)",
+                "Can be updated via CoA",
+                "Monitor with 'show dot1x interface'"
+            ],
+            "reference": "https://www.dell.com/support/manuals/en-us/networking-s4100-series/s4100_cl_guide/"
+        },
+        {
+            "name": "Dell-AVPair",
+            "number": "5",
+            "description": "Multi-purpose attribute-value pair for various Dell-specific functions.",
+            "features": {
+                "acl": true,
+                "role": true,
+                "vlan": true,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": true,
+                "qos": true,
+                "bandwidth": true,
+                "coa": true,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "Dell-AVPair = 'shell:roles=network-admin' for role assignment",
+            "use_cases": [
+                "Assign roles and privileges",
+                "Apply ACLs dynamically",
+                "Configure QoS parameters",
+                "Set bandwidth limits",
+                "Multiple configurations in one attribute"
+            ],
+            "implementation": [
+                "Format: type:parameter=value",
+                "Multiple AVPairs can be sent",
+                "Common types: shell, acl, qos",
+                "Flexible configuration method",
+                "Check Dell documentation for formats"
+            ],
+            "reference": "https://www.dell.com/support/manuals/en-us/networking-s4100-series/s4100_cl_guide/"
         }
     ]
 }

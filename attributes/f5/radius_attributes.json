@@ -3,9 +3,9 @@
     "protocol": "radius",
     "attributes": [
         {
-            "name": "F5-Admin-Role",
+            "name": "F5-LTM-User-Role",
             "number": "1",
-            "description": "Assigns an administrative role to the user.",
+            "description": "Assigns administrative role for F5 BIG-IP Local Traffic Manager access. Controls management permissions.",
             "features": {
                 "acl": false,
                 "role": true,
@@ -22,24 +22,31 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "F5-Admin-Role = \"admin\" for administrative access.",
-            "implementation": [
-                "Configure the RADIUS server with F5 VSAs (Vendor ID: 3375)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The role must be defined on the F5 device",
-                "Determines the level of administrative access",
-                "Common values include admin, read-only, operator"
+            "example": "F5-LTM-User-Role = Administrator for full administrative access",
+            "use_cases": [
+                "Control BIG-IP administrative access",
+                "Implement role-based management",
+                "Support compliance requirements",
+                "Enable delegated administration",
+                "Create custom management roles"
             ],
-            "reference": "https://docs.f5.com/radius"
+            "implementation": [
+                "Configure RADIUS server with F5 VSAs (Vendor ID: 3375)",
+                "Standard roles: Administrator, Resource Administrator, User Manager, etc.",
+                "Custom roles can be created on BIG-IP",
+                "Enable external authentication on BIG-IP",
+                "Monitor with audit logs"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
         },
         {
-            "name": "F5-VLAN-ID",
+            "name": "F5-LTM-User-Info-1",
             "number": "2",
-            "description": "Assigns a VLAN to the authenticated user.",
+            "description": "Primary user information field. Often used for role assignment or custom attributes.",
             "features": {
                 "acl": false,
-                "role": false,
-                "vlan": true,
+                "role": true,
+                "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
@@ -52,28 +59,35 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "F5-VLAN-ID = \"100\" for VLAN assignment.",
-            "implementation": [
-                "Configure the VLAN on the F5 device",
-                "Configure the RADIUS server with F5 VSAs (Vendor ID: 3375)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The VLAN must be defined on the F5 device",
-                "Used for dynamic VLAN assignment based on user authentication"
+            "example": "F5-LTM-User-Info-1 = 'administrator' for role information",
+            "use_cases": [
+                "Pass custom user attributes",
+                "Support legacy configurations",
+                "Enable flexible authentication",
+                "Map external groups to roles",
+                "Support complex deployments"
             ],
-            "reference": "https://docs.f5.com/radius"
+            "implementation": [
+                "Generic string attribute",
+                "Interpretation depends on configuration",
+                "Can be used for role mapping",
+                "Processed by authentication module",
+                "Check F5 configuration for usage"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
         },
         {
-            "name": "F5-ACL-Name",
+            "name": "F5-LTM-User-Info-2",
             "number": "3",
-            "description": "Assigns an ACL to the authenticated user.",
+            "description": "Secondary user information field. Used for additional attributes or metadata.",
             "features": {
-                "acl": true,
-                "role": false,
+                "acl": false,
+                "role": true,
                 "vlan": false,
                 "url": false,
                 "captive": false,
                 "sgt": false,
-                "dacl": true,
+                "dacl": false,
                 "qos": false,
                 "bandwidth": false,
                 "coa": false,
@@ -82,15 +96,207 @@
                 "multicast": false
             },
             "network": "both",
-            "example": "F5-ACL-Name = \"Guest-ACL\" for ACL assignment.",
-            "implementation": [
-                "Configure the ACL on the F5 device",
-                "Configure the RADIUS server with F5 VSAs (Vendor ID: 3375)",
-                "Set up RADIUS authentication and configure the server to return this VSA",
-                "The ACL must be defined on the F5 device",
-                "Used for dynamic ACL assignment based on user authentication"
+            "example": "F5-LTM-User-Info-2 = 'partition=Common' for partition assignment",
+            "use_cases": [
+                "Specify administrative partition",
+                "Pass additional metadata",
+                "Support multi-tenant setups",
+                "Enable custom configurations",
+                "Extend authentication data"
             ],
-            "reference": "https://docs.f5.com/radius"
+            "implementation": [
+                "Secondary attribute field",
+                "Used with User-Info-1",
+                "Application-specific interpretation",
+                "Configure based on requirements",
+                "Document usage patterns"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
+        },
+        {
+            "name": "F5-LTM-User-Partition",
+            "number": "4",
+            "description": "Specifies the administrative partition for the user. Controls resource visibility and access.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "F5-LTM-User-Partition = 'Finance' for finance partition access",
+            "use_cases": [
+                "Implement multi-tenant administration",
+                "Control resource visibility",
+                "Support departmental isolation",
+                "Enable delegated management",
+                "Maintain configuration separation"
+            ],
+            "implementation": [
+                "Partition must exist on BIG-IP",
+                "Controls object visibility",
+                "Works with role assignments",
+                "Default is 'Common' partition",
+                "Case-sensitive partition names"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
+        },
+        {
+            "name": "F5-LTM-User-Shell",
+            "number": "5",
+            "description": "Specifies the shell type for terminal access. Controls CLI environment.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "F5-LTM-User-Shell = 'tmsh' for TMSH shell; 'bash' for bash shell",
+            "use_cases": [
+                "Control terminal environment",
+                "Restrict shell access",
+                "Enable advanced troubleshooting",
+                "Support different workflows",
+                "Implement security policies"
+            ],
+            "implementation": [
+                "Common values: tmsh, bash, disable",
+                "tmsh: Traffic Management Shell",
+                "bash: Advanced shell (if permitted)",
+                "disable: No shell access",
+                "Requires appropriate role"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
+        },
+        {
+            "name": "F5-LTM-User-Context",
+            "number": "6",
+            "description": "Sets the user context for advanced configurations. Used in specific deployment scenarios.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "F5-LTM-User-Context = 'system' for system-level access",
+            "use_cases": [
+                "Set operational context",
+                "Support complex deployments",
+                "Enable specific features",
+                "Control access scope",
+                "Implement custom behaviors"
+            ],
+            "implementation": [
+                "Context-specific attribute",
+                "Usage varies by deployment",
+                "Check F5 documentation",
+                "May affect command scope",
+                "Test thoroughly"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
+        },
+        {
+            "name": "F5-LTM-User-Console",
+            "number": "7",
+            "description": "Controls console access permissions. Determines if user can access serial console.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "F5-LTM-User-Console = 1 to enable console access",
+            "use_cases": [
+                "Control physical console access",
+                "Enable emergency access",
+                "Support data center operations",
+                "Implement security policies",
+                "Manage out-of-band access"
+            ],
+            "implementation": [
+                "1 = Enable console access",
+                "0 = Disable console access",
+                "Applies to serial console",
+                "Requires appropriate role",
+                "Audit console usage"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
+        },
+        {
+            "name": "F5-LTM-User-Remote-Role",
+            "number": "10",
+            "description": "Maps remote groups to local roles. Used for group-based role assignment.",
+            "features": {
+                "acl": false,
+                "role": true,
+                "vlan": false,
+                "url": false,
+                "captive": false,
+                "sgt": false,
+                "dacl": false,
+                "qos": false,
+                "bandwidth": false,
+                "coa": false,
+                "vpn": false,
+                "ipv6": false,
+                "multicast": false
+            },
+            "network": "both",
+            "example": "F5-LTM-User-Remote-Role = 'AD-Group=Admins:Administrator' for AD group mapping",
+            "use_cases": [
+                "Map AD/LDAP groups to roles",
+                "Support group-based access",
+                "Simplify user management",
+                "Enable SSO configurations",
+                "Maintain central identity"
+            ],
+            "implementation": [
+                "Format: 'group=role' pairs",
+                "Multiple mappings supported",
+                "Semicolon separated",
+                "Case-sensitive matching",
+                "Process in order"
+            ],
+            "reference": "https://techdocs.f5.com/en-us/bigip-15-1-0/big-ip-systems-user-account-administration/external-authentication.html"
         }
     ]
 }
