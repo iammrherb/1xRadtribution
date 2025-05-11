@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1Xer Radtribution - Authentication Flows</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Same theme styles as main pages */
+        :root {
+            --primary-color: #00ff88;
+            --secondary-color: #ff0088;
+            --accent-color: #00ccff;
+            --bg-dark: #0a0a0a;
+            --bg-light: #1a1a1a;
+            --text-light: #e0e0e0;
+            --text-dark: #0a0a0a;
+            --card-bg: #1e1e1e;
+            --hover-glow: 0 0 20px var(--primary-color);
+        }
+
+        [data-theme="light"] {
+            --bg-dark: #ffffff;
+            --bg-light: #f5f5f5;
+            --text-light: #333333;
+            --text-dark: #000000;
+            --card-bg: #ffffff;
+            --primary-color: #00cc66;
+            --secondary-color: #cc0066;
+            --accent-color: #0099cc;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(45deg, var(--bg-light), var(--bg-dark));
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .diagram-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .diagram-card {
+            background: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .diagram-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .diagram-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .diagram-container {
+            background: var(--bg-dark);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .diagram-container svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .code-example {
+            background: var(--bg-dark);
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: var(--primary-color);
+        }
+
+        .nav-link {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            box-shadow: var(--hover-glow);
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="container">
+        <a href="index.html" class="nav-link">
+            <i class="fas fa-rocket"></i> Back to Mothership
+        </a>
+
+        <div class="header">
+            <h1>Authentication Flow Diagrams</h1>
+            <p style="color: var(--accent-color);">Visual guides to authentication workflows</p>
+        </div>
+
+        <div class="diagram-grid">
+            <!-- Complex RADIUS Flow -->
+            <div class="diagram-card">
+                <h2 class="diagram-title">802.1X EAP Authentication Flow</h2>
+                <div class="diagram-container">
+                    <svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+                        <!-- SVG content for 802.1X flow diagram -->
+                        <!-- This would be a detailed flow showing EAP exchange -->
+                    </svg>
+                </div>
+                <div class="code-example">EAP-TLS Configuration:
+aaa authentication dot1x default group radius
+radius-server host 192.168.1.10 key secret123
+dot1x system-auth-control
+
+interface GigabitEthernet0/1
+ switchport mode access
+ authentication port-control auto
+ dot1x pae authenticator</div>
+            </div>
+
+            <!-- TACACS+ Command Authorization -->
+            <div class="diagram-card">
+                <h2 class="diagram-title">TACACS+ Command Authorization</h2>
+                <div class="diagram-container">
+                    <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                        <!-- SVG content for TACACS+ command auth -->
+                    </svg>
+                </div>
+                <div class="code-example">TACACS+ Command Auth:
+aaa authorization exec default group tacacs+ local
+aaa authorization commands 15 default group tacacs+ local
+
+tacacs-server host 192.168.1.20 key secret123
+tacacs-server timeout 5</div>
+            </div>
+
+            <!-- Dynamic VLAN Assignment -->
+            <div class="diagram-card">
+                <h2 class="diagram-title">Dynamic VLAN Assignment Flow</h2>
+                <div class="diagram-container">
+                    <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                        <!-- SVG for VLAN assignment process -->
+                    </svg>
+                </div>
+                <div class="code-example">Dynamic VLAN Configuration:
+interface GigabitEthernet0/1
+ switchport mode access
+ switchport access vlan 999
+ authentication order dot1x mab
+ authentication port-control auto
+ dot1x pae authenticator
+
+! RADIUS returns:
+Tunnel-Type = VLAN
+Tunnel-Medium-Type = IEEE-802  
+Tunnel-Private-Group-ID = 100</div>
+            </div>
+
+            <!-- CoA Process -->
+            <div class="diagram-card">
+                <h2 class="diagram-title">Change of Authorization (CoA)</h2>
+                <div class="diagram-container">
+                    <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                        <!-- SVG for CoA process -->
+                    </svg>
+                </div>
+                <div class="code-example">CoA Configuration:
+aaa server radius dynamic-author
+ client 192.168.1.10 server-key secret123
+ port 3799
+
+! CoA packet format:
+User-Name = "user@domain.com"
+Acct-Session-Id = "0000B25F"
+Cisco-AVPair = "subscriber:command=reauthenticate"</div>
+            </div>
+
+            <!-- MAB Flow -->
+            <div class="diagram-card">
+                <h2 class="diagram-title">MAC Authentication Bypass</h2>
+                <div class="diagram-container">
+                    <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                        <!-- SVG for MAB process -->
+                    </svg>
+                </div>
+                <div class="code-example">MAB Configuration:
+interface GigabitEthernet0/1
+ authentication order mab dot1x
+ authentication priority dot1x mab
+ mab
+ 
+! RADIUS MAB format:
+User-Name = "aabbcc112233"
+User-Password = "aabbcc112233"
+Service-Type = Call-Check</div>
+            </div>
+
+            <!-- Guest Portal Flow -->
+            <div class="diagram-card">
+                <h2 class="diagram-title">Guest Portal Authentication</h2>
+                <div class="diagram-container">
+                    <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                        <!-- SVG for guest portal flow -->
+                    </svg>
+                </div>
+                <div class="code-example">Guest Portal Setup:
+ip http server
+ip http secure-server
+
+! Pre-auth ACL
+ip access-list extended GUEST_REDIRECT
+ permit tcp any any eq 80
+ permit tcp any any eq 443
+ permit udp any any eq 53
+ deny ip any any
+
+! RADIUS returns:
+Cisco-URL-Redirect = "https://portal.company.com"
+Cisco-URL-Redirect-ACL = "GUEST_REDIRECT"</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle function
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle i');
+            
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeToggle.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Check for saved theme
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.setAttribute('data-theme', 'light');
+            document.querySelector('.theme-toggle i').className = 'fas fa-sun';
+        }
+    </script>
+</body>
+</html>
